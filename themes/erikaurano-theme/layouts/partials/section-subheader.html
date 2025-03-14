@@ -3,12 +3,16 @@
 {{ if gt (len $navItems) 0 }}
   {{ $navItem := index $navItems 0 }}
   <div class="section-subheader">
-    <div class="nav-item">
-      <div class="nav-image">
-        <img src="{{ $navItem.image | relURL }}" alt="{{ $navItem.name }}">
+    <div class="nav-wrapper">
+      <div class="nav-list">
+      <div class="nav-item">
+        <div class="nav-image">
+          <img src="{{ $navItem.image | relURL }}" alt="{{ $navItem.name }}">
+        </div>
+        <div class="nav-text">
+          {{ $navItem.name }}
+        </div>
       </div>
-      <div class="nav-text">
-        <h2>{{ $navItem.name }}</h2>
       </div>
     </div>
   </div>
