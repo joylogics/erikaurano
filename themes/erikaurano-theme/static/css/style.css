@@ -1,0 +1,98 @@
+/* Global Styles */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  background-color: #fff;
+}
+
+#background-image {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("/images/bg.jpg") no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+}
+
+/* Header Styles */
+.site-header {
+  text-align: center;
+  margin: 20px auto;
+  width: 100%;
+}
+.header-title,
+.sub-header {
+  max-width: 80%;
+  height: auto;
+  margin: 0 auto; /* Center each image */
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+}
+
+/* Navigation List Styles */
+.nav-wrapper {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.nav-list {
+  display: inline-block;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+}
+
+/* Adjust the following as needed */
+.nav-image {
+  width: 100px;
+  flex-shrink: 0;
+/*  text-align: right; */
+/*  margin-right: 50px; */
+}
+
+.nav-text {
+  flex: 1;
+  text-align: left;
+  margin-left: 5px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 32pt;
+}
+
+.nav-image img {
+  max-width: 100px;
+  height: auto;
+}
+
+.nav-text a {
+  text-decoration: none;
+  color: #333;
+}
+
+/* Section Subheader */
+.section-subheader {
+  margin: 20px auto;
+  text-align: center;
+}
+.section-subheader .nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.section-subheader .nav-image {
+  text-align: right;
+  margin-right: 50px;
+}
+.section-subheader .nav-text {
+  text-align: left;
+  margin-left: -50px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 32pt;
+}

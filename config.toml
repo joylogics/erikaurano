@@ -1,0 +1,14 @@
+baseURL = "https://erikaurano.com/"
+title = "Erika Urano"
+theme = "erikaurano-theme"
+
+[params]
+  [[params.navItems]]
+    name = "Films"
+    image = "images/film_reel.gif"
+    url = "/films/"
+
+  [[params.navItems]]
+    name = "About"
+    image = "images/about.gif"
+    url = "/about/"

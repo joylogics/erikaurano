@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>{{ .Site.Title }}</title>
+    <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+  </head>
+  <body>
+    <div id="background-image"></div>
+    {{ partial "header.html" . }}
+    {{ block "main" . }}{{ end }}
+    <script src="{{ "js/script.js" | relURL }}"></script>
+  </body>
+</html>

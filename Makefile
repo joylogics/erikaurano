@@ -1,0 +1,31 @@
+# Pattern rule: for any target X that depends on X.mp4
+%: %.mp4
+	@echo "Creating output folder '$*' and converting $<..."
+	@mkdir -p $*
+	@# 1080p Rendition (Full HD, 1920x1080)
+	ffmpeg -i $< \
+	  -vf "scale=w=1920:h=1080:force_original_aspect_ratio=decrease" \
+	  -c:a aac -ar 48000 -b:a 128k \
+	  -c:v h264 -profile:v main -crf 20 -g 48 -sc_threshold 0 \
+	  -b:v 5000k -maxrate 5350k -bufsize 7500k \
+	  -hls_time 4 -hls_playlist_type vod \
+	  -hls_segment_filename "$*/1080p_%03d.ts" \
+	  $*/1080p.m3u8
+	@# 720p Rendition (1280x720)
+	ffmpeg -i $< \
+	  -vf "scale=w=1280:h=720:force_original_aspect_ratio=decrease" \
+	  -c:a aac -ar 48000 -b:a 128k \
+	  -c:v h264 -profile:v main -crf 22 -g 48 -sc_threshold 0 \
+	  -b:v 3000k -maxrate 3210k -bufsize 4500k \
+	  -hls_time 4 -hls_playlist_type vod \
+	  -hls_segment_filename "$*/720p_%03d.ts" \
+	  $*/720p.m3u8
+	@# 480p Rendition (854x480) with pad to force even dimensions
+	ffmpeg -i $< \
+	  -vf "scale=w=854:h=480:force_original_aspect_ratio=decrease,pad=854:480:(854-iw)/2:(480-ih)/2" \
+	  -c:a aac -ar 48000 -b:a 128k \
+	  -c:v h264 -profile:v main -crf 24 -g 48 -sc_threshold 0 \
+	  -b:v 1500k -maxrate 1605k -bufsize 2250k \
+	  -hls_time 4 -hls_playlist_type vod \
+	  -hls_segment_filename "$*/480p_%03d.ts" \
+	  $*/480p.m3u8
