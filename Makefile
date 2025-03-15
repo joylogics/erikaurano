@@ -7,6 +7,15 @@ download-films: $(addsuffix .mp4,$(addprefix films/raw/,$(FILMS)))
 
 .PHONY: process-films
 process-films: $(addprefix films/,$(FILMS))
+	ln -s $$(pwd)/films static/films
+
+.PHONY: publish-next
+publish-next:
+	$(MAKE) publish S3_BUCKET=next.erikaurano.com
+
+.PHONY: publish-prod
+publish-prod:
+	$(MAKE) publish S3_BUCKET=erikaurano.com
 
 films/raw/%:
 	mkdir -p films/raw
@@ -55,4 +64,16 @@ films/%: films/raw/%.mp4
 	@echo "" >> films/$*/master.m3u8
 	@echo "#EXT-X-STREAM-INF:BANDWIDTH=1605000,RESOLUTION=854x480" >> films/$*/master.m3u8
 	@echo "480p.m3u8" >> films/$*/master.m3u8
+
+
+.PHONY: publish
+publish:
+	@if [ -z "$(S3_BUCKET)" ]; then \
+	  echo "Error: S3_BUCKET is not defined. Please set S3_BUCKET to your target bucket."; \
+	  exit 1; \
+	fi
+	@echo "Building Hugo site..."
+	hugo
+	@echo "Uploading public/ to $(S3_BUCKET)..."
+	aws s3 cp public/ $(S3_BUCKET)/ --recursive
 
