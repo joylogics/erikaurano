@@ -3,13 +3,10 @@
        src="{{ "images/erika_urano.webp" | relURL }}" 
        alt="Erika Urano" 
        class="header-title" 
-       data-duration="2500" 
-       style="display: none;">
+       {{ if .IsHome }} data-home="true" {{ end }}>
   {{ if .IsHome }}
-    <img id="sub-header-animation" 
-         src="{{ "images/erika_title.webp" | relURL }}" 
-         alt="a film student at NYU" 
-         class="sub-header" 
-         style="display: none;">
+    <div id="sub-header" class="sub-header">
+      NYU/Tisch class of 2026
+    </div>
   {{ end }}
 </header>

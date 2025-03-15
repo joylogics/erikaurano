@@ -1,7 +1,13 @@
 {{ define "main" }}
-  {{ partial "section-subheader.html" . }}
-  <div class="films-content">
-    <h1>Films</h1>
-    <!-- Films-specific content goes here -->
+  <div id="body-content">
+    {{ partial "section-subheader.html" . }}
+    <div class="films-players">
+      {{ range .Site.Params.films }}
+        <div class="film-player">
+          <h3>{{ .title }}</h3>
+          <video poster="{{ .preview }}" data-playlist="{{ .playlist }}" controls width="640" height="360"></video>
+        </div>
+      {{ end }}
+    </div>
   </div>
 {{ end }}

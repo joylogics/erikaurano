@@ -2,6 +2,21 @@ baseURL = "https://erikaurano.com/"
 title = "Erika Urano"
 theme = "erikaurano-theme"
 
+
+[mediaTypes]
+  [mediaTypes."application/vnd.apple.mpegurl"]
+    suffixes = ["m3u8"]
+
+  [mediaTypes."video/MP2T"]
+    suffixes = ["ts"]
+
+[outputFormats]
+  [outputFormats.M3U8]
+    mediaType = "application/vnd.apple.mpegurl"
+    baseName = "index"
+    isPlainText = true
+    notAlternative = true
+
 [params]
   [[params.navItems]]
     name = "Films"
@@ -12,3 +27,23 @@ theme = "erikaurano-theme"
     name = "About"
     image = "images/about.gif"
     url = "/about/"
+
+  [[params.films]]
+    title = "Nowhere to Hide"
+    playlist = "/films/NowhereToHide/master.m3u8"
+    preview = "/images/NowhereToHide.jpg"
+
+  [[params.films]]
+    title = "The Room without Walls"
+    playlist = "/films/TheRoomWithoutWalls/master.m3u8"
+    preview = "/images/TheRoomWithoutWalls.jpg"
+
+  [[params.films]]
+    title = "Ton Poertefeuille"
+    playlist = "/films/TonPoertefeuille/master.m3u8"
+    preview = "/images/TonPoertefeuille.jpg"
+
+  [[params.films]]
+    title = "You Loved to Dance"
+    playlist = "/films/YouLovedToDance/master.m3u8"
+    preview = "/images/YouLovedToDance.jpg"

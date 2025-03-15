@@ -20,16 +20,18 @@ body {
 /* Header Styles */
 .site-header {
   text-align: center;
-  margin: 20px auto 40px auto;
+  margin: 20px auto;
   width: 100%;
 }
-.header-title,
+/*.header-title,*/
 .sub-header {
   max-width: 80%;
   height: auto;
-  margin: 0 auto; /* Center each image */
-  opacity: 0;
-  transition: opacity 1.5s ease-in-out;
+  margin: 20px auto; /* Center each image */
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 28px;
+  color: #444;
+  text-align: center;
 }
 
 /* Navigation List Styles */
@@ -79,5 +81,26 @@ body {
 .section-subheader {
   max-width: 80%;
   text-align: center;
-  margin: 0 auto;
+  margin: 0 auto 40px auto;
+}
+
+.films-players {
+  max-width: 800px;
+  margin: 20px auto;  /* centers the container and adds vertical space */
+  text-align: center; /* centers inline content */
+}
+
+.film-player {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 18pt;
+  margin-bottom: 40px; /* space between players */
+  border: 1px solid #222; /* dark gray border */
+  border-radius: 2px;  /* optional: rounded corners */
+}
+
+.about-content {
+  max-width: 800px; /* restrict width so it doesn't span the entire browser */
+  margin: 0 auto;   /* centers the container horizontally */
+  padding: 20px;    /* optional padding for better spacing */
+  text-align: center; /* centers inline content, such as text, within the container */
 }

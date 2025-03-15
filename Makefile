@@ -43,3 +43,16 @@ films/%: films/raw/%.mp4
 	  -hls_time 4 -hls_playlist_type vod \
 	  -hls_segment_filename "films/$*/480p_%03d.ts" \
 	  films/$*/480p.m3u8
+	@echo "Generating master playlist..."
+	@echo "#EXTM3U" > films/$*/master.m3u8
+	@echo "#EXT-X-VERSION:3" >> films/$*/master.m3u8
+	@echo "" >> films/$*/master.m3u8
+	@echo "#EXT-X-STREAM-INF:BANDWIDTH=5350000,RESOLUTION=1920x1080" >> films/$*/master.m3u8
+	@echo "1080p.m3u8" >> films/$*/master.m3u8
+	@echo "" >> films/$*/master.m3u8
+	@echo "#EXT-X-STREAM-INF:BANDWIDTH=3210000,RESOLUTION=1280x720" >> films/$*/master.m3u8
+	@echo "720p.m3u8" >> films/$*/master.m3u8
+	@echo "" >> films/$*/master.m3u8
+	@echo "#EXT-X-STREAM-INF:BANDWIDTH=1605000,RESOLUTION=854x480" >> films/$*/master.m3u8
+	@echo "480p.m3u8" >> films/$*/master.m3u8
+
