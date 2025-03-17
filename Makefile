@@ -75,5 +75,5 @@ publish:
 	@echo "Building Hugo site..."
 	hugo
 	@echo "Uploading public/ to $(S3_BUCKET)..."
-	aws s3 cp public/ $(S3_BUCKET)/ --recursive
+	aws s3 cp public/ s3://$(S3_BUCKET)/ --recursive
 

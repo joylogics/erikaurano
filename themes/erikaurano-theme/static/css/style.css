@@ -98,6 +98,8 @@ body {
   border-radius: 2px;  /* optional: rounded corners */
 }
 
+.props-content,
+.art-content,
 .about-content {
   max-width: 800px; /* restrict width so it doesn't span the entire browser */
   margin: 0 auto;   /* centers the container horizontally */

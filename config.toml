@@ -24,6 +24,16 @@ theme = "erikaurano-theme"
     url = "/films/"
 
   [[params.navItems]]
+    name = "Props"
+    image = "images/props.gif"
+    url = "/props/"
+
+  [[params.navItems]]
+    name = "Art"
+    image = "images/art.gif"
+    url = "/art/"
+
+  [[params.navItems]]
     name = "About"
     image = "images/about.gif"
     url = "/about/"
