@@ -2,7 +2,23 @@
 <div id="body-content">
     {{ partial "section-subheader.html" . }}
     <div class="props-content">
-      <p>This is a placeholder for the Props section. More details coming soon.</p>
+      {{ range .Pages }}
+        <div class="prop-item">
+          <h3>{{ .Title }}</h3>
+          <p class="description">{{ .Description }}</p>
+          {{ if .Params.link }}
+            <a href="{{ .Params.link }}" target="_blank" class="prop-link">
+              {{ if eq .Params.type "music-video" }}
+                Watch on YouTube
+              {{ else if eq .Params.type "short-film" }}
+                Watch Film
+              {{ end }}
+            </a>
+          {{ else if eq .Params.status "unreleased" }}
+            <span class="unreleased">Coming Soon</span>
+          {{ end }}
+        </div>
+      {{ end }}
     </div>
-  </div>
+</div>
 {{ end }}

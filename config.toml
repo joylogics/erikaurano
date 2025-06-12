@@ -19,14 +19,14 @@ theme = "erikaurano-theme"
 
 [params]
   [[params.navItems]]
-    name = "Films"
-    image = "images/film_reel.gif"
-    url = "/films/"
+    name = "Home"
+    image = "images/home.gif"
+    url = "/"
 
   [[params.navItems]]
-    name = "Props"
-    image = "images/props.gif"
-    url = "/props/"
+    name = "Films"
+    image = "images/director.gif"
+    url = "/films/"
 
   [[params.navItems]]
     name = "Art"
@@ -42,18 +42,26 @@ theme = "erikaurano-theme"
     title = "Nowhere to Hide"
     playlist = "/films/NowhereToHide/master.m3u8"
     preview = "/images/NowhereToHide.jpg"
+    roles = ["Director", "Writer"]
+    year = "2023"
 
   [[params.films]]
     title = "The Room without Walls"
     playlist = "/films/TheRoomWithoutWalls/master.m3u8"
     preview = "/images/TheRoomWithoutWalls.jpg"
+    roles = ["Director", "Production Designer"]
+    year = "2022"
 
   [[params.films]]
     title = "Ton Poertefeuille"
     playlist = "/films/TonPoertefeuille/master.m3u8"
     preview = "/images/TonPoertefeuille.jpg"
+    roles = ["Writer", "Production Designer"]
+    year = "2022"
 
   [[params.films]]
     title = "You Loved to Dance"
     playlist = "/films/YouLovedToDance/master.m3u8"
     preview = "/images/YouLovedToDance.jpg"
+    roles = ["Director"]
+    year = "2021"

@@ -1,13 +1,73 @@
 {{ define "main" }}
   <div id="body-content">
     {{ partial "section-subheader.html" . }}
-    <div class="films-players">
-      {{ range .Site.Params.films }}
-        <div class="film-player">
-          <h3>{{ .title }}</h3>
-          <video poster="{{ .preview }}" data-playlist="{{ .playlist }}" controls width="640" height="360"></video>
+    
+    <div class="films-controls">
+      <div class="role-filters">
+        <button class="filter-btn active" data-role="all">All</button>
+        <button class="filter-btn" data-role="Director">Director</button>
+        <button class="filter-btn" data-role="Writer">Writer</button>
+        <button class="filter-btn" data-role="Production Designer">Production Designer</button>
+      </div>
+    </div>
+
+    <div class="films-grid">
+      {{ range .Pages.ByWeight }}
+        <div class="film-card" data-roles="{{ delimit .Params.roles " " }}">
+          <div class="film-preview">
+            {{ if .Params.preview }}
+              <img src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
+            {{ end }}
+            <div class="film-overlay">
+              {{ if .Params.playlist }}
+                <video poster="{{ .Params.preview }}" data-playlist="{{ .Params.playlist }}" controls width="640" height="360"></video>
+              {{ else if .Params.link }}
+                <a href="{{ .Params.link }}" target="_blank" class="watch-link">
+                  Watch {{ if eq .Params.type "music-video" }}on YouTube{{ else }}Film{{ end }}
+                </a>
+              {{ else if eq .Params.status "unreleased" }}
+                <span class="unreleased-badge">Coming Soon</span>
+              {{ end }}
+            </div>
+          </div>
+          <div class="film-info">
+            <h3>{{ .Title }}</h3>
+            <div class="film-meta">
+              <span class="film-year">{{ .Params.year }}</span>
+              <div class="film-roles">
+                {{ range .Params.roles }}
+                  <span class="role-badge">{{ . }}</span>
+                {{ end }}
+              </div>
+            </div>
+            <p class="film-description">{{ .Description }}</p>
+          </div>
         </div>
       {{ end }}
     </div>
   </div>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const roleFilterBtns = document.querySelectorAll('.role-filters .filter-btn');
+    const filmCards = document.querySelectorAll('.film-card');
+
+    roleFilterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        roleFilterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const selectedRole = btn.dataset.role;
+        
+        filmCards.forEach(card => {
+          if (selectedRole === 'all' || card.dataset.roles.includes(selectedRole)) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  });
+  </script>
 {{ end }}
