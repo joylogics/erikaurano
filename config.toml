@@ -19,11 +19,6 @@ theme = "erikaurano-theme"
 
 [params]
   [[params.navItems]]
-    name = "Home"
-    image = "images/home.gif"
-    url = "/"
-
-  [[params.navItems]]
     name = "Films"
     image = "images/director.gif"
     url = "/films/"
