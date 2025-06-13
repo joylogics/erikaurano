@@ -6,7 +6,6 @@ resources/
 .hugo_build.lock
 
 # All static content (stored in S3)
-static/
 /static
 
 # Generated files in root directory

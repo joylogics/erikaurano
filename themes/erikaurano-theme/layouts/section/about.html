@@ -1,8 +1,34 @@
 {{ define "main" }}
-<div id="body-content">
+  <div id="body-content">
     {{ partial "section-subheader.html" . }}
-    <div class="about-content">
-      <p>This is a placeholder for the About section. More details coming soon.</p>
+    <div class="about-container">
+      <div class="about-header">
+        <div class="about-image">
+          {{ if .Params.cover }}
+            <img src="{{ .Params.cover }}" alt="Erika Urano - Portfolio Photo" class="portfolio-image">
+          {{ end }}
+        </div>
+        <div class="about-content">
+          {{ .Content }}
+        </div>
+      </div>
+      
+      <div class="about-gallery">
+        <div class="gallery-item">
+          <img src="/about/images/beginning.jpeg" alt="Career beginnings" class="gallery-image">
+          <p class="gallery-caption">Career beginnings: age two, Canon lens, and a very patient grandpa.</p>
+        </div>
+        
+        <div class="gallery-item">
+          <img src="/about/images/onset2.JPG" alt="On set" class="gallery-image">
+          <p class="gallery-caption">Half filmmaker, half set gremlin. All in.</p>
+        </div>
+        
+        <div class="gallery-item">
+          <img src="/about/images/shooting.jpeg" alt="During shooting" class="gallery-image">
+          <p class="gallery-caption">Somewhere between golden hour and final cut.</p>
+        </div>
+      </div>
     </div>
   </div>
 {{ end }}
