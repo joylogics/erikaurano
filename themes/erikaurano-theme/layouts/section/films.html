@@ -13,34 +13,47 @@
 
     <div class="films-grid">
       {{ range .Pages.ByWeight }}
-        {{ $thumbnail := "" }}
+        {{ $videoEmbed := "" }}
         {{ if .Params.link }}
           {{ if findRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+)" .Params.link }}
             {{ $youtubeId := replaceRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+).*" "$1" .Params.link }}
-            {{ $thumbnail = printf "https://img.youtube.com/vi/%s/hqdefault.jpg" $youtubeId }}
+            {{ $videoEmbed = printf "https://www.youtube.com/embed/%s" $youtubeId }}
           {{ else if findRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+)" .Params.link }}
             {{ $vimeoId := replaceRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+).*" "$1" .Params.link }}
-            {{ $thumbnail = printf "https://vumbnail.com/%s.jpg" $vimeoId }}
+            {{ $videoEmbed = printf "https://player.vimeo.com/video/%s" $vimeoId }}
           {{ end }}
         {{ end }}
         <div class="film-card" data-roles="{{ delimit .Params.roles " " }}">
           <div class="film-preview">
-            {{ if .Params.preview }}
+            {{ if .Params.playlist }}
+              <div class="video-container">
+                <video poster="{{ .Params.preview }}" data-playlist="{{ .Params.playlist }}" controls></video>
+              </div>
+            {{ else if $videoEmbed }}
+              <div class="video-container">
+                <iframe 
+                  src="{{ $videoEmbed }}" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen
+                  loading="lazy"
+                  title="{{ .Title }}"
+                ></iframe>
+              </div>
+            {{ else if .Params.preview }}
               <img src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
-            {{ else if $thumbnail }}
-              <img src="{{ $thumbnail }}" alt="{{ .Title }}" loading="lazy">
             {{ end }}
-            <div class="film-overlay">
-              {{ if .Params.playlist }}
-                <video poster="{{ .Params.preview }}" data-playlist="{{ .Params.playlist }}" controls width="640" height="360"></video>
-              {{ else if .Params.link }}
-                <a href="{{ .Params.link }}" target="_blank" class="watch-link">
-                  Watch {{ if eq .Params.type "music-video" }}on YouTube{{ else }}Film{{ end }}
-                </a>
-              {{ else if eq .Params.status "unreleased" }}
-                <span class="unreleased-badge">Coming Soon</span>
-              {{ end }}
-            </div>
+            {{ if not $videoEmbed }}
+              <div class="film-overlay">
+                {{ if .Params.link }}
+                  <a href="{{ .Params.link }}" target="_blank" class="watch-link">
+                    Watch {{ if eq .Params.type "music-video" }}on YouTube{{ else }}Film{{ end }}
+                  </a>
+                {{ else if eq .Params.status "unreleased" }}
+                  <span class="unreleased-badge">Coming Soon</span>
+                {{ end }}
+              </div>
+            {{ end }}
           </div>
           <div class="film-info">
             <h3>{{ .Title }}</h3>
