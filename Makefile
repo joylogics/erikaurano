@@ -1,30 +1,26 @@
+#
+# targets to process films to hls renditions
+#
 
-FILMS_SRC_S3=s3://enthusiate.com
+# Media SRC Bucket
+# we'll presume the bucket is mounted at $(MOUNT_POINT) below
+MOUNT_POINT ?= $(HOME)/mnt/jl-urano
+SRC_BUCKET ?= enthusiate.com
+SRC_PREFIX ?= erika/website
+SRCDIR = $(MOUNT_POINT)/$(SRC_BUCKET)/$(SRC_PREFIX)
+
+# Films to process
 FILMS=NowhereToHide TheRoomWithoutWalls TonPoertefeuille YouLovedToDance
 
-.PHONY: download-films
-download-films: $(addsuffix .mp4,$(addprefix films/raw/,$(FILMS)))
-
+# targets to process films to hls renditions
 .PHONY: process-films
-process-films: $(addprefix films/,$(FILMS))
-	ln -s $$(pwd)/films static/films
-
-.PHONY: publish-next
-publish-next:
-	$(MAKE) publish S3_BUCKET=next.erikaurano.com
-
-.PHONY: publish-prod
-publish-prod:
-	$(MAKE) publish S3_BUCKET=erikaurano.com
-
-films/raw/%:
-	mkdir -p films/raw
-	aws s3 cp $(FILMS_SRC_S3)/$* films/raw/
+process-films: $(addsuffix /hls,$(addprefix $(SRCDIR)/static/films/,$(FILMS)))
+	@echo "Films processed: $(FILMS)"
 
 # Pattern rule: for any target X that depends on X.mp4
-films/%: films/raw/%.mp4
-	@echo "Creating output folder 'films/$*' and converting $<..."
-	@mkdir -p films/$*
+$(SRCDIR)/static/films/%/hls: $(SRCDIR)/raw/films/%.mp4
+	@echo "Creating output folder '$@' and converting $<..."
+	@mkdir -p $@
 	@# 1080p Rendition (Full HD, 1920x1080)
 	ffmpeg -i $< \
 	  -vf "scale=w=1920:h=1080:force_original_aspect_ratio=decrease" \
@@ -32,8 +28,8 @@ films/%: films/raw/%.mp4
 	  -c:v h264 -profile:v main -crf 20 -g 48 -sc_threshold 0 \
 	  -b:v 5000k -maxrate 5350k -bufsize 7500k \
 	  -hls_time 4 -hls_playlist_type vod \
-	  -hls_segment_filename "films/$*/1080p_%03d.ts" \
-	  films/$*/1080p.m3u8
+	  -hls_segment_filename "$@/1080p_%03d.ts" \
+	  $@/1080p.m3u8
 	@# 720p Rendition (1280x720)
 	ffmpeg -i $< \
 	  -vf "scale=w=1280:h=720:force_original_aspect_ratio=decrease" \
@@ -41,8 +37,8 @@ films/%: films/raw/%.mp4
 	  -c:v h264 -profile:v main -crf 22 -g 48 -sc_threshold 0 \
 	  -b:v 3000k -maxrate 3210k -bufsize 4500k \
 	  -hls_time 4 -hls_playlist_type vod \
-	  -hls_segment_filename "films/$*/720p_%03d.ts" \
-	  films/$*/720p.m3u8
+	  -hls_segment_filename "$@/720p_%03d.ts" \
+	  $@/720p.m3u8
 	@# 480p Rendition (854x480) with pad to force even dimensions
 	ffmpeg -i $< \
 	  -vf "scale=w=854:h=480:force_original_aspect_ratio=decrease,pad=854:480:(854-iw)/2:(480-ih)/2" \
@@ -50,21 +46,31 @@ films/%: films/raw/%.mp4
 	  -c:v h264 -profile:v main -crf 24 -g 48 -sc_threshold 0 \
 	  -b:v 1500k -maxrate 1605k -bufsize 2250k \
 	  -hls_time 4 -hls_playlist_type vod \
-	  -hls_segment_filename "films/$*/480p_%03d.ts" \
-	  films/$*/480p.m3u8
+	  -hls_segment_filename "$@/480p_%03d.ts" \
+	  $@/480p.m3u8
 	@echo "Generating master playlist..."
-	@echo "#EXTM3U" > films/$*/master.m3u8
-	@echo "#EXT-X-VERSION:3" >> films/$*/master.m3u8
-	@echo "" >> films/$*/master.m3u8
-	@echo "#EXT-X-STREAM-INF:BANDWIDTH=5350000,RESOLUTION=1920x1080" >> films/$*/master.m3u8
-	@echo "1080p.m3u8" >> films/$*/master.m3u8
-	@echo "" >> films/$*/master.m3u8
-	@echo "#EXT-X-STREAM-INF:BANDWIDTH=3210000,RESOLUTION=1280x720" >> films/$*/master.m3u8
-	@echo "720p.m3u8" >> films/$*/master.m3u8
-	@echo "" >> films/$*/master.m3u8
-	@echo "#EXT-X-STREAM-INF:BANDWIDTH=1605000,RESOLUTION=854x480" >> films/$*/master.m3u8
-	@echo "480p.m3u8" >> films/$*/master.m3u8
+	@echo "#EXTM3U" > $@/master.m3u8
+	@echo "#EXT-X-VERSION:3" >> $@/master.m3u8
+	@echo "" >> $@/master.m3u8
+	@echo "#EXT-X-STREAM-INF:BANDWIDTH=5350000,RESOLUTION=1920x1080" >> $@/master.m3u8
+	@echo "1080p.m3u8" >> $@/master.m3u8
+	@echo "" >> $@/master.m3u8
+	@echo "#EXT-X-STREAM-INF:BANDWIDTH=3210000,RESOLUTION=1280x720" >> $@/master.m3u8
+	@echo "720p.m3u8" >> $@/master.m3u8
+	@echo "" >> $@/master.m3u8
+	@echo "#EXT-X-STREAM-INF:BANDWIDTH=1605000,RESOLUTION=854x480" >> $@/master.m3u8
+	@echo "480p.m3u8" >> $@/master.m3u8
 
+#
+# targets to publish the site
+#
+.PHONY: publish-next
+publish-next:
+	$(MAKE) publish S3_BUCKET=next.erikaurano.com
+
+.PHONY: publish-prod
+publish-prod:
+	$(MAKE) publish S3_BUCKET=erikaurano.com
 
 .PHONY: publish
 publish:
@@ -77,3 +83,11 @@ publish:
 	@echo "Uploading public/ to $(S3_BUCKET)..."
 	aws s3 cp public/ s3://$(S3_BUCKET)/ --recursive
 
+#
+# targets to set up the static directory symlink
+#
+.PHONY: setup-static
+setup-static:
+	@echo "Setting up symbolic link to mounted static directory..."
+	@ln -s $(SRCDIR)/static static
+	@echo "Symbolic link created: static -> $(SRCDIR)/static"

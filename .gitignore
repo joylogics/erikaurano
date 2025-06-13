@@ -1,2 +1,30 @@
-public
-films
+# Hugo default output directory
+public/
+resources/
+
+# Temporary files
+.hugo_build.lock
+
+# All static content (stored in S3)
+static/
+/static
+
+# Generated files
+films/
+*.ts
+*.m3u8
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo

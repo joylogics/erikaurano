@@ -1,4 +1,4 @@
 ---
 title: "Films"
-description: "A collection of films by Erika Urano."
+description: "A collection of films Erika Urano worked on."
 ---
