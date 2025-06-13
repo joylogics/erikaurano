@@ -73,24 +73,41 @@ document.addEventListener("DOMContentLoaded", function() {
   var filmVideos = document.querySelectorAll('video[data-playlist]');
   filmVideos.forEach(function(video) {
     var playlist = video.getAttribute('data-playlist');
-    console.log("Attaching HLS to video with playlist:", playlist);
+
+    if (typeof Hls === 'undefined') {
+      console.error("HLS.js is not loaded!");
+      return;
+    }
 
     if (Hls.isSupported()) {
-      var hls = new Hls();
+      var hls = new Hls({
+        debug: false,
+        enableWorker: true,
+        lowLatencyMode: true,
+        backBufferLength: 90
+      });
+
+      hls.on(Hls.Events.ERROR, function(event, data) {
+        if (data.fatal) {
+          switch(data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              console.error("Network error:", data);
+              hls.startLoad();
+              break;
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              console.error("Media error:", data);
+              hls.recoverMediaError();
+              break;
+            default:
+              console.error("Fatal error:", data);
+              hls.destroy();
+              break;
+          }
+        }
+      });
+
       hls.loadSource(playlist);
       hls.attachMedia(video);
-      hls.on(Hls.Events.MANIFEST_PARSED, function() {
-        console.log("HLS manifest parsed for:", playlist);
-        console.log("Initial level is:", hls.currentLevel);
-        console.log("Available levels:", hls.levels);
-        // Optionally auto-play: video.play();
-      });
-      hls.on(Hls.Events.LEVEL_SWITCHED, function(event, data) {
-        var level = data.level; // the index of the current level
-        var currentLevel = hls.levels[level];
-        console.log("Switched to level:", level, currentLevel);
-        // For example, currentLevel.width and currentLevel.height give resolution.
-      });
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
       // For Safari or other native HLS players
       video.src = playlist;
