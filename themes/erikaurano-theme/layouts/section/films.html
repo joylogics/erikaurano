@@ -68,27 +68,5 @@
     </div>
   </div>
 
-  <script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const roleFilterBtns = document.querySelectorAll('.role-filters .filter-btn');
-    const filmCards = document.querySelectorAll('.film-card');
 
-    roleFilterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        roleFilterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const selectedRole = btn.dataset.role;
-        
-        filmCards.forEach(card => {
-          if (selectedRole === 'all' || card.dataset.roles.includes(selectedRole)) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-  });
-  </script>
 {{ end }}

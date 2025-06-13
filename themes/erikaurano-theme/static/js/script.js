@@ -191,5 +191,53 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
+  // Animated film filtering functionality
+  const roleFilterBtns = document.querySelectorAll('.role-filters .filter-btn');
+  const filmCards = document.querySelectorAll('.film-card');
+
+  if (roleFilterBtns.length > 0 && filmCards.length > 0) {
+    function animateFilter(selectedRole) {
+      // First, hide cards that don't match
+      filmCards.forEach(card => {
+        const shouldShow = selectedRole === 'all' || card.dataset.roles.includes(selectedRole);
+        
+        if (!shouldShow) {
+          card.classList.add('hiding');
+          card.classList.remove('showing');
+        }
+      });
+
+      // After hiding animation, show matching cards
+      setTimeout(() => {
+        filmCards.forEach(card => {
+          const shouldShow = selectedRole === 'all' || card.dataset.roles.includes(selectedRole);
+          
+          if (shouldShow) {
+            card.classList.remove('hiding');
+            card.classList.add('showing');
+          }
+        });
+      }, 200); // Half of the transition duration
+    }
+
+    roleFilterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        // Don't animate if already active
+        if (btn.classList.contains('active')) return;
+        
+        roleFilterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const selectedRole = btn.dataset.role;
+        animateFilter(selectedRole);
+      });
+    });
+
+    // Initialize all cards as showing
+    filmCards.forEach(card => {
+      card.classList.add('showing');
+    });
+  }
+
 });
 
