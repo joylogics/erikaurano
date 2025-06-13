@@ -3,4 +3,4 @@ title: "Art"
 date: 2025-03-14T00:00:00Z
 ---
 
-This is a placeholder for the Art page. More details coming soon.
+Explore a collection of drawings and animations that delve into themes of memory, identity, transformation, and the spaces between perception and reality.
