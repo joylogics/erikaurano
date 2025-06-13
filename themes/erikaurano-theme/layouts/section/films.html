@@ -43,30 +43,26 @@
             {{ else if .Params.preview }}
               <img src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
             {{ end }}
-            {{ if not $videoEmbed }}
-              <div class="film-overlay">
-                {{ if .Params.link }}
-                  <a href="{{ .Params.link }}" target="_blank" class="watch-link">
-                    Watch {{ if eq .Params.type "music-video" }}on YouTube{{ else }}Film{{ end }}
-                  </a>
-                {{ else if eq .Params.status "unreleased" }}
-                  <span class="unreleased-badge">Coming Soon</span>
-                {{ end }}
-              </div>
-            {{ end }}
-          </div>
-          <div class="film-info">
-            <h3>{{ .Title }}</h3>
-            <div class="film-meta">
-              <span class="film-year">{{ .Params.year }}</span>
-              <div class="film-roles">
-                {{ range .Params.roles }}
-                  <span class="role-badge">{{ . }}</span>
-                {{ end }}
-              </div>
+            <div class="film-overlay">
+              <a href="{{ .Permalink }}" class="film-overlay-link">
+                <span class="view-details">View Details</span>
+              </a>
             </div>
-            <p class="film-description">{{ .Description }}</p>
           </div>
+          <a href="{{ .Permalink }}" class="film-info-link">
+            <div class="film-info">
+              <h3>{{ .Title }}</h3>
+              <div class="film-meta">
+                <span class="film-year">{{ .Params.year }}</span>
+                <div class="film-roles">
+                  {{ range .Params.roles }}
+                    <span class="role-badge">{{ . }}</span>
+                  {{ end }}
+                </div>
+              </div>
+              <p class="film-description">{{ .Description }}</p>
+            </div>
+          </a>
         </div>
       {{ end }}
     </div>

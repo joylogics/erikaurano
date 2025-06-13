@@ -1,0 +1,95 @@
+{{ define "main" }}
+  <div id="body-content">
+    {{ partial "section-subheader.html" . }}
+    
+    <div class="film-single">
+      <div class="film-header">
+        <h1>{{ .Title }}</h1>
+        <div class="film-meta">
+          <span class="film-year">{{ .Params.year }}</span>
+          <div class="film-roles">
+            {{ range .Params.roles }}
+              <span class="role-badge">{{ . }}</span>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+
+      <div class="film-content">
+        <div class="film-player">
+          {{ $videoEmbed := "" }}
+          {{ if .Params.link }}
+            {{ if findRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+)" .Params.link }}
+              {{ $youtubeId := replaceRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+).*" "$1" .Params.link }}
+              {{ $videoEmbed = printf "https://www.youtube.com/embed/%s" $youtubeId }}
+            {{ else if findRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+)" .Params.link }}
+              {{ $vimeoId := replaceRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+).*" "$1" .Params.link }}
+              {{ $videoEmbed = printf "https://player.vimeo.com/video/%s" $vimeoId }}
+            {{ end }}
+          {{ end }}
+
+          {{ if .Params.playlist }}
+            <div class="video-container-single">
+              <video poster="{{ .Params.preview }}" data-playlist="{{ .Params.playlist }}" controls></video>
+            </div>
+          {{ else if $videoEmbed }}
+            <div class="video-container-single">
+              <iframe 
+                src="{{ $videoEmbed }}" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                loading="lazy"
+                title="{{ .Title }}"
+              ></iframe>
+            </div>
+          {{ else if .Params.preview }}
+            <div class="film-image">
+              <img src="{{ .Params.preview }}" alt="{{ .Title }}">
+            </div>
+          {{ end }}
+        </div>
+
+        <div class="film-description">
+          {{ .Content }}
+          
+          {{ if and .Params.link (not $videoEmbed) }}
+            <div class="film-links">
+              <a href="{{ .Params.link }}" target="_blank" class="watch-link-single">
+                Watch {{ if eq .Params.type "music-video" }}on YouTube{{ else }}Film{{ end }}
+              </a>
+            </div>
+          {{ end }}
+        </div>
+      </div>
+
+      {{ $locationPath := printf "/films/%s/location/" .File.BaseFileName }}
+      {{ $locationImages := slice }}
+      {{ $locationDir := printf "static/films/%s/location" .File.BaseFileName }}
+      {{ if fileExists $locationDir }}
+        {{ range (readDir $locationDir) }}
+          {{ if or (strings.HasSuffix .Name ".jpg") (strings.HasSuffix .Name ".jpeg") (strings.HasSuffix .Name ".png") (strings.HasSuffix .Name ".webp") }}
+            {{ $locationImages = $locationImages | append (printf "%s%s" $locationPath .Name) }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+
+      {{ if $locationImages }}
+        <div class="location-gallery">
+          <h2>Location Photos</h2>
+          <div class="gallery-grid">
+            {{ range $locationImages }}
+              <div class="gallery-item">
+                <img src="{{ . }}" alt="Location photo" loading="lazy">
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+
+      <div class="film-navigation">
+        <a href="/films/" class="back-to-films">← Back to Films</a>
+      </div>
+    </div>
+  </div>
+{{ end }} 
