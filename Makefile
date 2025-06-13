@@ -1,5 +1,5 @@
 #
-# targets to process films to hls renditions
+# targets to process films to HLS renditions
 #
 
 # Media SRC Bucket
@@ -9,16 +9,24 @@ SRC_BUCKET ?= enthusiate.com
 SRC_PREFIX ?= erika/website
 SRCDIR = $(MOUNT_POINT)/$(SRC_BUCKET)/$(SRC_PREFIX)
 
-# Films to process
-FILMS=NowhereToHide TheRoomWithoutWalls TonPoertefeuille YouLovedToDance
+# Define the Film targets
+FILMS = nowhere-to-hide the-room-without-walls ton-poertefeuille you-loved-to-dance deliver-your-love
+FILM_TARGETS := $(addsuffix /hls,$(addprefix $(SRCDIR)/static/films/,$(FILMS)))
 
-# targets to process films to hls renditions
+# targets to process all films to hls renditions
 .PHONY: process-films
-process-films: $(addsuffix /hls,$(addprefix $(SRCDIR)/static/films/,$(FILMS)))
-	@echo "Films processed: $(FILMS)"
+process-films: $(FILM_TARGETS)
+	@echo "Films processed: $(FILM_TARGETS)"
 
-# Pattern rule: for any target X that depends on X.mp4
-$(SRCDIR)/static/films/%/hls: $(SRCDIR)/raw/films/%.mp4
+# Static pattern rule with explicit dependency mapping
+$(SRCDIR)/static/films/nowhere-to-hide/hls: $(SRCDIR)/raw/films/NowhereToHide.mp4
+$(SRCDIR)/static/films/the-room-without-walls/hls: $(SRCDIR)/raw/films/TheRoomWithoutWalls.mp4
+$(SRCDIR)/static/films/ton-poertefeuille/hls: $(SRCDIR)/raw/films/TonPoertefeuille.mp4
+$(SRCDIR)/static/films/you-loved-to-dance/hls: $(SRCDIR)/raw/films/YouLovedToDance.mp4
+$(SRCDIR)/static/films/deliver-your-love/hls: $(SRCDIR)/raw/films/DeliverYourLove.mp4
+
+# Shared command block for all the above rules
+$(SRCDIR)/static/films/%/hls: 
 	@echo "Creating output folder '$@' and converting $<..."
 	@mkdir -p $@
 	@# 1080p Rendition (Full HD, 1920x1080)
