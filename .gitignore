@@ -9,8 +9,8 @@ resources/
 static/
 /static
 
-# Generated files
-films/
+# Generated files in root directory
+/films/
 *.ts
 *.m3u8
 
