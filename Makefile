@@ -86,8 +86,8 @@ publish:
 	  echo "Error: S3_BUCKET is not defined. Please set S3_BUCKET to your target bucket."; \
 	  exit 1; \
 	fi
-	@echo "Building Hugo site..."
-	hugo
+	@echo "Building Hugo site for $(S3_BUCKET)..."
+	hugo --baseURL "https://$(S3_BUCKET)/"
 	@echo "Uploading public/ to $(S3_BUCKET)..."
 	aws s3 cp public/ s3://$(S3_BUCKET)/ --recursive
 
