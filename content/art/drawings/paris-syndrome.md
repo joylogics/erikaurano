@@ -1,11 +1,10 @@
 ---
 title: "Paris Syndrome"
 description: "Exploring the gap between expectation and reality"
-category: "drawings"
 year: "2024"
 medium: "Mixed media"
-image: "/art/drawings/paris_syndrome/"
-thumbnail: "/art/drawings/paris_syndrome/"
+image: "/art/drawings/paris_syndrome/full.JPG"
+thumbnail: "/art/drawings/paris_syndrome/thumb.jpeg"
 weight: 3
 ---
 

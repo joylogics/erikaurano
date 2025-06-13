@@ -1,11 +1,10 @@
 ---
 title: "Emotional Ball"
 description: "A kinetic study of feeling in motion"
-category: "animation"
 year: "2024"
 medium: "Digital animation"
-video: "/art/animation/emotional_ball.mov"
-thumbnail: "/art/animation/emotional_ball.mov"
+video: "/art/animation/emotional-ball/main.mp4"
+thumbnail: "/art/animation/emotional-ball/thumb.jpeg"
 weight: 3
 ---
 

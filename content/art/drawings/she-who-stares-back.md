@@ -1,11 +1,10 @@
 ---
 title: "She Who Stares Back"
 description: "A confrontation with the gaze of the other"
-category: "drawings"
 year: "2024"
 medium: "Charcoal and graphite"
-image: "/art/drawings/she_who_stares_back/"
-thumbnail: "/art/drawings/she_who_stares_back/"
+image: "/art/drawings/she_who_stares_back/full.jpeg"
+thumbnail: "/art/drawings/she_who_stares_back/thumb.jpeg"
 weight: 5
 ---
 

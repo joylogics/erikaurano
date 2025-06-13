@@ -1,11 +1,10 @@
 ---
 title: "Inner Cartography"
 description: "An introspective exploration of mental landscapes"
-category: "drawings"
 year: "2024"
 medium: "Mixed media"
-image: "/art/drawings/inner_cartography/IMG_5348.jpeg"
-thumbnail: "/art/drawings/inner_cartography/IMG_5348.jpeg"
+image: "/art/drawings/inner_cartography/full.jpeg"
+thumbnail: "/art/drawings/inner_cartography/thumb.jpeg"
 weight: 1
 ---
 

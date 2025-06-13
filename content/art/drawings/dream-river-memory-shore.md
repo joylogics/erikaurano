@@ -1,11 +1,10 @@
 ---
 title: "Dream River Memory Shore"
 description: "Navigating the fluid boundaries between past and present"
-category: "drawings"
 year: "2024"
 medium: "Watercolor and ink"
-image: "/art/drawings/dream_river_memory_shore/"
-thumbnail: "/art/drawings/dream_river_memory_shore/"
+image: "/art/drawings/dream_river_memory_shore/full.jpeg"
+thumbnail: "/art/drawings/dream_river_memory_shore/thumb.jpeg"
 weight: 4
 ---
 

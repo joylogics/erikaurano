@@ -668,3 +668,234 @@ body {
     grid-template-columns: repeat(3, 1fr);
   }
 }
+
+/* Art Section Styles */
+.art-section {
+  max-width: 1200px;
+  margin: 0 auto 4rem;
+  padding: 0 1rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #333;
+  font-weight: normal;
+}
+
+.art-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.art-card {
+  display: block;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.art-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  text-decoration: none;
+  color: inherit;
+}
+
+.art-preview {
+  position: relative;
+  padding-top: 75%; /* 4:3 aspect ratio */
+  background: #f5f5f5;
+  overflow: hidden;
+}
+
+.art-preview img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.art-card:hover .art-preview img {
+  transform: scale(1.05);
+}
+
+.art-info {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.art-info h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #333;
+  font-weight: normal;
+}
+
+/* Art Single Page Styles */
+.art-single {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.art-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.art-header h1 {
+  font-size: 2.5rem;
+  margin: 0 0 1rem 0;
+  color: #333;
+}
+
+.art-meta {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+}
+
+.art-year,
+.art-medium,
+.art-category {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.art-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.art-display {
+  text-align: center;
+}
+
+.art-image img,
+.art-video video {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.art-description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.art-navigation {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #eee;
+}
+
+.back-to-art {
+  color: #666;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+  margin-bottom: 1rem;
+  display: inline-block;
+}
+
+.back-to-art:hover {
+  color: #333;
+}
+
+.artwork-nav {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.nav-prev,
+.nav-next {
+  color: #666;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  flex: 1;
+  text-align: center;
+  max-width: 300px;
+}
+
+.nav-prev:hover,
+.nav-next:hover {
+  color: #333;
+  border-color: #333;
+  background: #f9f9f9;
+}
+
+/* Art Gallery Styles (for single artwork with multiple images) */
+.art-gallery {
+  margin-top: 3rem;
+}
+
+.art-gallery h2 {
+  text-align: center;
+  font-size: 1.5rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .art-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  
+  .section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .art-single {
+    padding: 1rem;
+  }
+  
+  .art-header h1 {
+    font-size: 2rem;
+  }
+  
+  .artwork-nav {
+    flex-direction: column;
+  }
+  
+  .nav-prev,
+  .nav-next {
+    max-width: none;
+  }
+}
+
+@media (min-width: 768px) {
+  .art-content {
+    grid-template-columns: 2fr 1fr;
+  }
+  
+  .art-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}

@@ -1,11 +1,10 @@
 ---
 title: "All Eyes Pose"
 description: "A study in perception and being perceived"
-category: "drawings"
 year: "2024"
 medium: "Digital drawing"
-image: "/art/drawings/all_eyes_pose/IMG_6264.jpeg"
-thumbnail: "/art/drawings/all_eyes_pose/IMG_6264.jpeg"
+image: "/art/drawings/all_eyes_pose/full.jpeg"
+thumbnail: "/art/drawings/all_eyes_pose/thumb.jpeg"
 weight: 2
 ---
 

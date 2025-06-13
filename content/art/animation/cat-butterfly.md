@@ -1,11 +1,10 @@
 ---
 title: "Cat Butterfly"
 description: "A whimsical exploration of transformation"
-category: "animation"
 year: "2024"
 medium: "Digital animation"
-video: "/art/animation/cat_butterfly.MOV"
-thumbnail: "/art/animation/cat_butterfly.MOV"
+video: "/art/animation/cat-butterfly/main.mov"
+thumbnail: "/art/animation/cat-butterfly/thumb.jpeg"
 weight: 1
 ---
 

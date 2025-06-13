@@ -1,11 +1,10 @@
 ---
 title: "Flipbook"
 description: "An homage to traditional animation techniques"
-category: "animation"
 year: "2024"
 medium: "Traditional animation / Digital capture"
-video: "/art/animation/flipbook.MP4"
-thumbnail: "/art/animation/flipbook.MP4"
+video: "/art/animation/flipbook/main.mp4"
+thumbnail: "/art/animation/flipbook/thumb.jpeg"
 weight: 2
 ---
 

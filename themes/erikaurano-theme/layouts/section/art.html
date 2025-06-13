@@ -1,127 +1,53 @@
 {{ define "main" }}
   <div id="body-content">
     {{ partial "section-subheader.html" . }}
-    
-    <div class="art-controls">
-      <div class="category-filters">
-        <button class="filter-btn active" data-category="all">All</button>
-        <button class="filter-btn" data-category="drawings">Drawings</button>
-        <button class="filter-btn" data-category="animation">Animation</button>
-      </div>
-    </div>
 
     <!-- Drawings Section -->
-    <div class="art-section" data-category="drawings">
+    {{ $drawingsSection := .Site.GetPage "/art/drawings" }}
+    {{ if $drawingsSection }}
+    <div class="art-section">
       <h2 class="section-title">Drawings</h2>
       <div class="art-grid">
-        {{ range (where .Pages "Params.category" "drawings").ByWeight }}
-          <div class="art-card" data-category="drawings">
+        {{ range $drawingsSection.Pages.ByWeight }}
+          <a href="{{ .Permalink }}" class="art-card">
             <div class="art-preview">
               {{ if .Params.thumbnail }}
                 <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy">
               {{ else if .Params.image }}
                 <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
               {{ end }}
-              <div class="art-overlay">
-                <a href="{{ .Permalink }}" class="art-overlay-link">
-                  <span class="view-details">View Details</span>
-                </a>
-              </div>
             </div>
-            <a href="{{ .Permalink }}" class="art-info-link">
-              <div class="art-info">
-                <h3>{{ .Title }}</h3>
-                <div class="art-meta">
-                  {{ if .Params.year }}
-                    <span class="art-year">{{ .Params.year }}</span>
-                  {{ end }}
-                  {{ if .Params.medium }}
-                    <span class="art-medium">{{ .Params.medium }}</span>
-                  {{ end }}
-                </div>
-                {{ if .Description }}
-                  <p class="art-description">{{ .Description }}</p>
-                {{ end }}
-              </div>
-            </a>
-          </div>
+            <div class="art-info">
+              <h3>{{ .Title }}</h3>
+            </div>
+          </a>
         {{ end }}
       </div>
     </div>
+    {{ end }}
 
     <!-- Animation Section -->
-    <div class="art-section" data-category="animation">
+    {{ $animationSection := .Site.GetPage "/art/animation" }}
+    {{ if $animationSection }}
+    <div class="art-section">
       <h2 class="section-title">Animation</h2>
       <div class="art-grid">
-        {{ range (where .Pages "Params.category" "animation").ByWeight }}
-          <div class="art-card" data-category="animation">
+        {{ range $animationSection.Pages.ByWeight }}
+          <a href="{{ .Permalink }}" class="art-card">
             <div class="art-preview">
-              {{ if .Params.video }}
-                <video poster="{{ .Params.thumbnail }}" controls muted loop>
-                  <source src="{{ .Params.video }}" type="video/mp4">
-                  <source src="{{ .Params.video }}" type="video/mov">
-                </video>
-              {{ else if .Params.thumbnail }}
+              {{ if .Params.thumbnail }}
                 <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy">
+              {{ else if .Params.image }}
+                <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
               {{ end }}
-              <div class="art-overlay">
-                <a href="{{ .Permalink }}" class="art-overlay-link">
-                  <span class="view-details">View Details</span>
-                </a>
-              </div>
             </div>
-            <a href="{{ .Permalink }}" class="art-info-link">
-              <div class="art-info">
-                <h3>{{ .Title }}</h3>
-                <div class="art-meta">
-                  {{ if .Params.year }}
-                    <span class="art-year">{{ .Params.year }}</span>
-                  {{ end }}
-                  {{ if .Params.medium }}
-                    <span class="art-medium">{{ .Params.medium }}</span>
-                  {{ end }}
-                </div>
-                {{ if .Description }}
-                  <p class="art-description">{{ .Description }}</p>
-                {{ end }}
-              </div>
-            </a>
-          </div>
+            <div class="art-info">
+              <h3>{{ .Title }}</h3>
+            </div>
+          </a>
         {{ end }}
       </div>
     </div>
+    {{ end }}
   </div>
-
-  <script>
-    // Category filtering functionality
-    document.addEventListener('DOMContentLoaded', function() {
-      const filterBtns = document.querySelectorAll('.filter-btn');
-      const artSections = document.querySelectorAll('.art-section');
-      const artCards = document.querySelectorAll('.art-card');
-
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-          const category = this.getAttribute('data-category');
-          
-          // Update active button
-          filterBtns.forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-          
-          // Show/hide sections and cards
-          if (category === 'all') {
-            artSections.forEach(section => section.style.display = 'block');
-            artCards.forEach(card => card.style.display = 'block');
-          } else {
-            artSections.forEach(section => {
-              if (section.getAttribute('data-category') === category) {
-                section.style.display = 'block';
-              } else {
-                section.style.display = 'none';
-              }
-            });
-          }
-        });
-      });
-    });
-  </script>
 {{ end }}

@@ -1,11 +1,10 @@
 ---
 title: "Tea with the Familiar"
 description: "An intimate moment with the known and unknown"
-category: "drawings"
 year: "2024"
 medium: "Watercolor and ink"
-image: "/art/drawings/tea_with_the_familiar/"
-thumbnail: "/art/drawings/tea_with_the_familiar/"
+image: "/art/drawings/tea_with_the_familiar/full.jpeg"
+thumbnail: "/art/drawings/tea_with_the_familiar/thumb.jpeg"
 weight: 6
 ---
 

@@ -10,30 +10,26 @@
           {{ if .Params.medium }}
             <span class="art-medium">{{ .Params.medium }}</span>
           {{ end }}
-          {{ if .Params.category }}
-            <span class="art-category">{{ .Params.category | title }}</span>
+          {{ $section := .Parent.Title }}
+          {{ if $section }}
+            <span class="art-category">{{ $section }}</span>
           {{ end }}
         </div>
       </div>
 
       <div class="art-content">
         <div class="art-display">
-          {{ if eq .Params.category "animation" }}
-            {{ if .Params.video }}
-              <div class="art-video">
-                <video controls muted loop poster="{{ .Params.thumbnail }}">
-                  <source src="{{ .Params.video }}" type="video/mp4">
-                  <source src="{{ .Params.video }}" type="video/mov">
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            {{ end }}
-          {{ else }}
-            {{ if .Params.image }}
-              <div class="art-image">
-                <img src="{{ .Params.image }}" alt="{{ .Title }}">
-              </div>
-            {{ end }}
+          {{ if .Params.video }}
+            <div class="art-video">
+              <video controls muted loop poster="{{ .Params.thumbnail }}">
+                <source src="{{ .Params.video }}" type="video/mp4">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          {{ else if .Params.image }}
+            <div class="art-image">
+              <img src="{{ .Params.image }}" alt="{{ .Title }}">
+            </div>
           {{ end }}
         </div>
 
@@ -43,7 +39,7 @@
       </div>
 
       <!-- Additional images gallery for drawings (if multiple images exist) -->
-      {{ if eq .Params.category "drawings" }}
+      {{ if eq .Parent.Title "Drawings" }}
         {{ $artPath := printf "/art/drawings/%s/" (.File.BaseFileName | urlize) }}
         {{ $artImages := slice }}
         {{ $artDir := printf "static/art/drawings/%s" (.File.BaseFileName | urlize) }}
@@ -91,8 +87,7 @@
         
         <!-- Previous/Next artwork navigation -->
         <div class="artwork-nav">
-          {{ $categoryPages := where .Site.Pages "Params.category" .Params.category }}
-          {{ $sorted := $categoryPages.ByWeight }}
+          {{ $sorted := .Parent.Pages.ByWeight }}
           {{ $currentIndex := 0 }}
           {{ range $index, $page := $sorted }}
             {{ if eq $page.File.BaseFileName $.File.BaseFileName }}
