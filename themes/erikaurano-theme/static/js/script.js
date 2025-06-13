@@ -116,5 +116,80 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 
+  // Lightbox functionality for location gallery
+  const lightbox = document.getElementById('lightbox');
+  if (lightbox) {
+    const lightboxImage = document.getElementById('lightbox-image');
+    const lightboxClose = document.querySelector('.lightbox-close');
+    const lightboxPrev = document.getElementById('lightbox-prev');
+    const lightboxNext = document.getElementById('lightbox-next');
+    const lightboxCurrent = document.getElementById('lightbox-current');
+    const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+    
+    let images = [];
+    let currentIndex = 0;
+
+    // Build images array from thumbnails
+    thumbnails.forEach(thumbnail => {
+      images.push(thumbnail.src);
+    });
+
+    function showImage(index) {
+      currentIndex = index;
+      lightboxImage.src = images[index];
+      lightboxCurrent.textContent = index + 1;
+      lightbox.style.display = 'flex';
+      document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    }
+
+    function hideImage() {
+      lightbox.style.display = 'none';
+      document.body.style.overflow = ''; // Restore scrolling
+    }
+
+    function showNext() {
+      currentIndex = (currentIndex + 1) % images.length;
+      showImage(currentIndex);
+    }
+
+    function showPrev() {
+      currentIndex = (currentIndex - 1 + images.length) % images.length;
+      showImage(currentIndex);
+    }
+
+    // Event listeners
+    thumbnails.forEach((thumbnail, index) => {
+      thumbnail.addEventListener('click', () => showImage(index));
+    });
+
+    if (lightboxClose) {
+      lightboxClose.addEventListener('click', hideImage);
+    }
+    
+    if (lightboxNext) {
+      lightboxNext.addEventListener('click', showNext);
+    }
+    
+    if (lightboxPrev) {
+      lightboxPrev.addEventListener('click', showPrev);
+    }
+
+    // Close on background click
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) {
+        hideImage();
+      }
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (lightbox.style.display === 'flex') {
+        if (e.key === 'Escape') hideImage();
+        if (e.key === 'ArrowRight') showNext();
+        if (e.key === 'ArrowLeft') showPrev();
+      }
+    });
+  }
+
 });
 

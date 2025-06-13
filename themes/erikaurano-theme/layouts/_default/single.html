@@ -76,11 +76,26 @@
         <div class="location-gallery">
           <h2>Location Photos</h2>
           <div class="gallery-grid">
-            {{ range $locationImages }}
+            {{ range $index, $image := $locationImages }}
               <div class="gallery-item">
-                <img src="{{ . }}" alt="Location photo" loading="lazy">
+                <img src="{{ $image }}" alt="Location photo" loading="lazy" class="gallery-thumbnail" data-index="{{ $index }}">
               </div>
             {{ end }}
+          </div>
+        </div>
+
+        <!-- Lightbox Modal -->
+        <div id="lightbox" class="lightbox">
+          <div class="lightbox-content">
+            <span class="lightbox-close">&times;</span>
+            <img id="lightbox-image" src="" alt="Location photo">
+            <div class="lightbox-nav">
+              <button id="lightbox-prev" class="lightbox-nav-btn">&#8249;</button>
+              <button id="lightbox-next" class="lightbox-nav-btn">&#8250;</button>
+            </div>
+            <div class="lightbox-counter">
+              <span id="lightbox-current">1</span> / <span id="lightbox-total">{{ len $locationImages }}</span>
+            </div>
           </div>
         </div>
       {{ end }}
