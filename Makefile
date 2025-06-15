@@ -72,13 +72,18 @@ $(SRCDIR)/static/films/%/hls:
 #
 # targets to publish the site
 #
+
+# CloudFront Distribution IDs
+NEXT_DISTRIBUTION_ID = E2KOLJP07MT1RF
+PROD_DISTRIBUTION_ID = E1ZSLK318ISTVD
+
 .PHONY: publish-next
 publish-next:
-	$(MAKE) publish S3_BUCKET=next.erikaurano.com
+	$(MAKE) publish S3_BUCKET=next.erikaurano.com DISTRIBUTION_ID=$(NEXT_DISTRIBUTION_ID)
 
 .PHONY: publish-prod
 publish-prod:
-	$(MAKE) publish S3_BUCKET=erikaurano.com
+	$(MAKE) publish S3_BUCKET=erikaurano.com DISTRIBUTION_ID=$(PROD_DISTRIBUTION_ID)
 
 .PHONY: publish
 publish:
@@ -88,8 +93,14 @@ publish:
 	fi
 	@echo "Building Hugo site for $(S3_BUCKET)..."
 	hugo --baseURL "https://$(S3_BUCKET)/"
-	@echo "Uploading public/ to $(S3_BUCKET)..."
-	aws s3 cp public/ s3://$(S3_BUCKET)/ --recursive
+	@echo "Syncing public/ to $(S3_BUCKET)..."
+	aws s3 sync public/ s3://$(S3_BUCKET)/ --delete
+	@if [ -n "$(DISTRIBUTION_ID)" ]; then \
+	  echo "Invalidating CloudFront distribution $(DISTRIBUTION_ID)..."; \
+	  aws cloudfront create-invalidation --distribution-id $(DISTRIBUTION_ID) --paths "/*"; \
+	else \
+	  echo "No CloudFront distribution ID provided, skipping invalidation."; \
+	fi
 
 #
 # targets to set up the static directory symlink
