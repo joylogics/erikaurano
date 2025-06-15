@@ -39,6 +39,7 @@
       </div>
 
       <!-- Additional images gallery for drawings (if multiple images exist) -->
+      {{/* DISABLED: Additional Views section
       {{ if eq .Parent.Title "Drawings" }}
         {{ $artPath := printf "/art/drawings/%s/" (.File.BaseFileName | urlize) }}
         {{ $artImages := slice }}
@@ -81,6 +82,7 @@
           </div>
         {{ end }}
       {{ end }}
+      */}}
 
       <div class="art-navigation">
         <a href="/art/" class="back-to-art">← Back to Art</a>
