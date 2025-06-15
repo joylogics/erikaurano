@@ -82,26 +82,49 @@ body:not(.home) .background-reel {
   text-align: center;
   margin: 20px auto;
   width: 100%;
-  padding: 20px 0;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(5px);
-  border-radius: 10px;
+  padding: 30px 0;
 }
-/*.header-title,*/
-.sub-header {
+.header-title {
   max-width: 80%;
   height: auto;
-  margin: 20px auto; /* Center each image */
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 28px;
-  color: #444;
-  text-align: center;
-  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+  margin: 20px auto;
+  padding: 25px 40px 35px 40px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.header-title:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
 }
 
 /* Navigation List Styles */
+#body-content {
+  text-align: center;
+}
+
 .nav-wrapper {
   text-align: center;
+  margin: 40px auto;
+  padding: 25px 30px;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(25px);
+  border-radius: 25px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.nav-wrapper:hover {
+  background: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.35);
 }
 
 .nav-list {
@@ -130,7 +153,7 @@ body:not(.home) .background-reel {
   margin-left: 5px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 32pt;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 .nav-image img {
@@ -475,8 +498,7 @@ body:not(.home) .background-reel {
 
 @media (max-width: 768px) {
   .films-grid {
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 1rem;
+    grid-template-columns: 1fr;
   }
   
   .role-filters {
@@ -486,6 +508,20 @@ body:not(.home) .background-reel {
   .filter-btn {
     padding: 0.4rem 1rem;
     font-size: 0.8rem;
+  }
+  
+  .header-title {
+    padding: 15px 20px;
+    margin: 15px auto;
+  }
+  
+  .nav-wrapper {
+    padding: 20px 25px;
+    margin: 30px auto;
+  }
+  
+  .nav-text {
+    font-size: 24pt;
   }
 }
 

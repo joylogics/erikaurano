@@ -1,48 +1,17 @@
 {{ define "main" }}
-<!-- Background Reel -->
+<!-- Background Video -->
 <div class="background-reel">
   <div class="reel-content">
-    <!-- Collect all film content for the reel -->
-    {{ $reelItems := slice }}
-    
-    <!-- Add video content from films -->
-    {{ range .Site.RegularPages }}
-      {{ if eq .Section "films" }}
-        <!-- Only include films with custom reel playlists -->
-        {{ if .Params.reel_playlist }}
-          {{ $reelItems = $reelItems | append (dict "type" "reel-video" "src" .Params.reel_playlist "poster" .Params.preview "title" .Title) }}
-        {{ end }}
-      {{ end }}
-    {{ end }}
-    
-    <!-- Render reel items -->
-    <!-- DEBUG: Total reel items: {{ len $reelItems }} -->
-    {{ range $index, $item := $reelItems }}
-      <!-- DEBUG: Item {{ $index }}: {{ $item.type }} - {{ $item.src }} from {{ $item.title }} -->
-      <div class="reel-item {{ if eq $index 0 }}active{{ end }}" data-index="{{ $index }}" data-type="{{ $item.type }}">
-        {{ if eq $item.type "reel-video" }}
-          <video 
-            data-playlist="{{ $item.src }}" 
-            {{ if $item.poster }}poster="{{ $item.poster }}"{{ end }}
-            muted 
-            loop 
-            preload="metadata"
-            playsinline>
-            <source src="{{ $item.src }}" type="application/vnd.apple.mpegurl">
-          </video>
-        {{ else if eq $item.type "video" }}
-          <video 
-            data-playlist="{{ $item.src }}" 
-            {{ if $item.poster }}poster="{{ $item.poster }}"{{ end }}
-            muted 
-            loop 
-            preload="metadata"
-            playsinline>
-            <source src="{{ $item.src }}" type="application/vnd.apple.mpegurl">
-          </video>
-        {{ end }}
-      </div>
-    {{ end }}
+    <div class="reel-item active">
+      <video 
+        src="{{ "films/reel.mp4" | relURL }}"
+        muted 
+        loop 
+        autoplay
+        preload="auto"
+        playsinline>
+      </video>
+    </div>
   </div>
   <div class="reel-overlay"></div>
 </div>

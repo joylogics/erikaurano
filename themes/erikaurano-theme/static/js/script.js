@@ -1,179 +1,33 @@
 document.addEventListener("DOMContentLoaded", function() {
 
-  // Background Reel functionality
-  initBackgroundReel();
+  // Background Video functionality
+  initBackgroundVideo();
   
-  function initBackgroundReel() {
-    const reelItems = document.querySelectorAll('.reel-item');
-    if (reelItems.length === 0) return;
+  function initBackgroundVideo() {
+    const video = document.querySelector('.background-reel video');
+    if (!video) return;
     
-    let currentIndex = 0;
-    const videoDuration = 10000; // 10 seconds per video segment
-    let currentTimeout;
+    // Ensure video is properly configured for autoplay
+    video.muted = true;
+    video.volume = 0;
+    video.loop = true;
     
-    function getCurrentDuration() {
-      return videoDuration; // All items are now videos
-    }
-    
-    function showNextItem() {
-      // Stop current video if playing
-      const currentItem = reelItems[currentIndex];
-      const currentVideo = currentItem.querySelector('video');
-      if (currentVideo) {
-        currentVideo.pause();
-        currentVideo.currentTime = 0;
-      }
-      
-      // Hide current item
-      currentItem.classList.remove('active');
-      
-      // Move to next item (loop back to 0 when reaching the end)
-      currentIndex = (currentIndex + 1) % reelItems.length;
-      
-      // Show new item
-      const nextItem = reelItems[currentIndex];
-      nextItem.classList.add('active');
-      
-      // Start video if it's a video item
-      const nextVideo = nextItem.querySelector('video');
-      if (nextVideo) {
-        console.log('Background reel: Switching to next video');
-        // Initialize HLS for background videos
-        initVideoForReel(nextVideo).then(() => {
-          console.log('Next video ready, attempting to play');
-          return nextVideo.play();
-        }).catch(e => {
-          console.log('Video autoplay blocked, falling back to poster:', e);
-          handleAutoplayFailure(nextVideo, nextItem);
-        });
-      }
-      
-      // Schedule next transition
-      currentTimeout = setTimeout(showNextItem, getCurrentDuration());
-    }
-    
-    function initVideoForReel(video) {
-      const playlist = video.getAttribute('data-playlist');
-      const src = video.getAttribute('src');
-      
-      // Ensure video is properly muted for autoplay
-      video.muted = true;
-      video.volume = 0;
-      
-      // Handle .ts files directly
-      if (src && src.endsWith('.ts')) {
-        // .ts files can be played directly
-        video.load();
-        return Promise.resolve();
-      }
-      
-      // Handle HLS playlists
-      if (playlist) {
-        return new Promise((resolve, reject) => {
-          if (typeof Hls !== 'undefined' && Hls.isSupported()) {
-            const hls = new Hls({
-              debug: false,
-              enableWorker: false, // Disable for background videos
-              lowLatencyMode: false
-            });
-            
-            hls.on(Hls.Events.MANIFEST_PARSED, function() {
-              console.log('HLS manifest parsed, video ready');
-              video.muted = true; // Ensure still muted after HLS init
-              resolve();
-            });
-            
-            hls.on(Hls.Events.ERROR, function(event, data) {
-              console.warn('HLS error in background reel:', data);
-              if (data.fatal) {
-                reject(data);
-              }
-            });
-            
-            hls.loadSource(playlist);
-            hls.attachMedia(video);
-          } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = playlist;
-            video.addEventListener('loadedmetadata', () => {
-              console.log('Native HLS loaded');
-              resolve();
-            });
-            video.addEventListener('error', reject);
-          } else {
-            reject(new Error('HLS not supported'));
-          }
-        });
-      }
-      
-      return Promise.resolve();
-    }
-    
-    // Initialize first video if it's a video
-    const firstItem = reelItems[0];
-    const firstVideo = firstItem.querySelector('video');
-    if (firstVideo) {
-              initVideoForReel(firstVideo).then(() => {
-          return firstVideo.play();
-        }).catch(e => {
-          console.log('Video autoplay blocked, falling back to poster:', e);
-          handleAutoplayFailure(firstVideo, firstItem);
-        });
-      }
-    
-    // Start the cycling if there are multiple items
-    if (reelItems.length > 1) {
-      currentTimeout = setTimeout(showNextItem, getCurrentDuration());
-    }
-    
-    // Handle autoplay failure by falling back to poster images
-    function handleAutoplayFailure(video, item) {
-      console.log('Falling back to static background for item');
-      video.style.display = 'none';
-      
-      // Create a fallback image element if poster exists
-      const poster = video.getAttribute('poster');
-      if (poster) {
-        let fallbackImg = item.querySelector('.fallback-image');
-        if (!fallbackImg) {
-          fallbackImg = document.createElement('img');
-          fallbackImg.className = 'fallback-image';
-          fallbackImg.src = poster;
-          fallbackImg.style.cssText = video.style.cssText;
-          item.appendChild(fallbackImg);
-        }
-        fallbackImg.style.display = 'block';
-      }
-    }
-    
-    // Add click handler to try enabling video playback after user interaction
-    document.addEventListener('click', function enableVideoAfterInteraction() {
-      console.log('User interaction detected, attempting to enable video playback');
-      reelItems.forEach(item => {
-        const video = item.querySelector('video');
-        const fallbackImg = item.querySelector('.fallback-image');
-        if (video && fallbackImg && fallbackImg.style.display === 'block') {
-          video.play().then(() => {
-            console.log('Video playback enabled after user interaction');
-            video.style.display = 'block';
-            fallbackImg.style.display = 'none';
-          }).catch(e => {
-            console.log('Video still blocked after user interaction');
-          });
-        }
-      });
-      // Remove this listener after first interaction
-      document.removeEventListener('click', enableVideoAfterInteraction);
-    }, { once: true });
-
-    // Preload video content
-    reelItems.forEach(item => {
-      const video = item.querySelector('video');
-      if (video) {
-        video.setAttribute('preload', 'metadata');
-        // Initialize videos for better performance
-        initVideoForReel(video);
-      }
+    // Try to play the video
+    video.play().catch(e => {
+      console.log('Video autoplay blocked:', e);
+      // Video will remain paused until user interaction
     });
+    
+    // Add click handler to enable video playback after user interaction
+    document.addEventListener('click', function enableVideoAfterInteraction() {
+      if (video.paused) {
+        video.play().then(() => {
+          console.log('Video playback enabled after user interaction');
+        }).catch(e => {
+          console.log('Video still blocked after user interaction');
+        });
+      }
+    }, { once: true });
   }
 
   // Replay-on-click for .webp images (except header and sub-header)
