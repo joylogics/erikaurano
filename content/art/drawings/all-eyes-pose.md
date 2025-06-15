@@ -1,15 +1,9 @@
 ---
 title: "All Eyes Pose"
-description: "A study in perception and being perceived"
-year: "2024"
-medium: "Digital drawing"
+year: "2021"
+medium: "acrylic marker on paper"
 image: "/art/drawings/all_eyes_pose/full.jpeg"
 thumbnail: "/art/drawings/all_eyes_pose/thumb.jpeg"
 weight: 2
 ---
-
-**All Eyes Pose** examines the weight of being observed and the complex relationship between the watcher and the watched. This piece captures a moment of acute awareness - the sensation of feeling all eyes upon you.
-
-The work explores themes of vulnerability, performance, and the ways we compose ourselves when we know we're being seen.
-
-*Materials: Digital drawing* 
+*Materials: acrylic marker on paper* 
