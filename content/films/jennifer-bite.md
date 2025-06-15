@@ -7,6 +7,6 @@ type: "music-video"
 link: "https://www.youtube.com/watch?v=PiyTWEY93DY"
 weight: 5
 ---
+Music video by Kate Phares for Berra. 
 
-Music video by Kate Phares for Berra. Production design by Erika Urano. 
- 
+Production design by Erika Urano. 

@@ -5,8 +5,8 @@ year: "2024"
 roles: ["Director"]
 playlist: "/films/you-loved-to-dance/hls/master.m3u8"
 preview: "/films/you-loved-to-dance/cover.jpg"
-weight: 4
+weight: 2
 ---
-Short film by Erika Urano.
+Short film by Erika Urano
 
-A celebration of movement and memory.
+Based on Michel Faber’s poem You Loved to Dance.

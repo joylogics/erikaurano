@@ -61,24 +61,24 @@
         </div>
       </div>
 
-      {{ $locationPath := printf "/films/%s/location/" .File.BaseFileName }}
-      {{ $locationImages := slice }}
-      {{ $locationDir := printf "static/films/%s/location" .File.BaseFileName }}
-      {{ if fileExists $locationDir }}
-        {{ range (readDir $locationDir) }}
+      {{ $stillsPath := printf "/films/%s/stills/" .File.BaseFileName }}
+      {{ $stillsImages := slice }}
+      {{ $stillsDir := printf "static/films/%s/stills" .File.BaseFileName }}
+      {{ if fileExists $stillsDir }}
+        {{ range (readDir $stillsDir) }}
           {{ if or (strings.HasSuffix .Name ".jpg") (strings.HasSuffix .Name ".jpeg") (strings.HasSuffix .Name ".png") (strings.HasSuffix .Name ".webp") }}
-            {{ $locationImages = $locationImages | append (printf "%s%s" $locationPath .Name) }}
+            {{ $stillsImages = $stillsImages | append (printf "%s%s" $stillsPath .Name) }}
           {{ end }}
         {{ end }}
       {{ end }}
 
-      {{ if $locationImages }}
+      {{ if $stillsImages }}
         <div class="location-gallery">
-          <h2>Location Photos</h2>
+          <h2>Stills</h2>
           <div class="gallery-grid">
-            {{ range $index, $image := $locationImages }}
+            {{ range $index, $image := $stillsImages }}
               <div class="gallery-item">
-                <img src="{{ $image }}" alt="Location photo" loading="lazy" class="gallery-thumbnail" data-index="{{ $index }}">
+                <img src="{{ $image }}" alt="Still from film" loading="lazy" class="gallery-thumbnail" data-index="{{ $index }}">
               </div>
             {{ end }}
           </div>
@@ -88,13 +88,13 @@
         <div id="lightbox" class="lightbox">
           <div class="lightbox-content">
             <span class="lightbox-close">&times;</span>
-            <img id="lightbox-image" src="" alt="Location photo">
+            <img id="lightbox-image" src="" alt="Still from film">
             <div class="lightbox-nav">
               <button id="lightbox-prev" class="lightbox-nav-btn">&#8249;</button>
               <button id="lightbox-next" class="lightbox-nav-btn">&#8250;</button>
             </div>
             <div class="lightbox-counter">
-              <span id="lightbox-current">1</span> / <span id="lightbox-total">{{ len $locationImages }}</span>
+              <span id="lightbox-current">1</span> / <span id="lightbox-total">{{ len $stillsImages }}</span>
             </div>
           </div>
         </div>

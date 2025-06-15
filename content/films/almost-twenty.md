@@ -8,5 +8,7 @@ status: "unreleased"
 weight: 13
 ---
 
-Short film by Charlotte Siegel. Production design by Erika Urano. 
+Short film by Charlotte Siegel. 
+
+Production design by Erika Urano. 
  

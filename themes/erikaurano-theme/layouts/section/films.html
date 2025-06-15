@@ -44,25 +44,48 @@
               <img src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
             {{ end }}
             <div class="film-overlay">
-              <a href="{{ .Permalink }}" class="film-overlay-link">
-                <span class="view-details">View Details</span>
-              </a>
+              {{ if or .Params.preview .Params.link }}
+                <a href="{{ .Permalink }}" class="film-overlay-link">
+                  <span class="view-details">View Details</span>
+                </a>
+              {{ else }}
+                <div class="film-overlay-link">
+                  <span class="view-details">Coming Soon</span>
+                </div>
+              {{ end }}
             </div>
           </div>
-          <a href="{{ .Permalink }}" class="film-info-link">
-            <div class="film-info">
-              <h3>{{ .Title }}</h3>
-              <div class="film-meta">
-                <span class="film-year">{{ .Params.year }}</span>
-                <div class="film-roles">
-                  {{ range .Params.roles }}
-                    <span class="role-badge">{{ . }}</span>
-                  {{ end }}
+          {{ if or .Params.preview .Params.link }}
+            <a href="{{ .Permalink }}" class="film-info-link">
+              <div class="film-info">
+                <h3>{{ .Title }}</h3>
+                <div class="film-meta">
+                  <span class="film-year">{{ .Params.year }}</span>
+                  <div class="film-roles">
+                    {{ range .Params.roles }}
+                      <span class="role-badge">{{ . }}</span>
+                    {{ end }}
+                  </div>
                 </div>
+                <p class="film-description">{{ .Description }}</p>
               </div>
-              <p class="film-description">{{ .Description }}</p>
+            </a>
+          {{ else }}
+            <div class="film-info-link">
+              <div class="film-info">
+                <h3>{{ .Title }}</h3>
+                <div class="film-meta">
+                  <span class="film-year">{{ .Params.year }}</span>
+                  <div class="film-roles">
+                    {{ range .Params.roles }}
+                      <span class="role-badge">{{ . }}</span>
+                    {{ end }}
+                  </div>
+                </div>
+                <p class="film-description">{{ .Description }}</p>
+              </div>
             </div>
-          </a>
+          {{ end }}
         </div>
       {{ end }}
     </div>
