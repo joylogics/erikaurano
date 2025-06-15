@@ -121,10 +121,10 @@ body:not(.home) .background-reel {
 .nav-wrapper {
   text-align: center;
   margin: 40px auto;
-  padding: 25px 30px;
+  padding: 40px 50px;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.08) 100%);
   backdrop-filter: blur(25px);
-  border-radius: 25px;
+  border-radius: 20px;
   border-top: 1px solid rgba(255, 255, 255, 0.4);
   border-left: 1px solid rgba(255, 255, 255, 0.4);
   border-right: 1px solid rgba(255, 255, 255, 0.15);
@@ -135,7 +135,8 @@ body:not(.home) .background-reel {
     inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   display: inline-block;
   transition: all 0.3s ease;
-  cursor: pointer;
+  min-width: 600px;
+  max-width: 800px;
 }
 
 .nav-wrapper:hover {
@@ -147,15 +148,37 @@ body:not(.home) .background-reel {
 }
 
 .nav-list {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   list-style: none;
   margin: 0;
   padding: 0;
+  gap: 15px;
+  align-items: center;
+}
+
+.nav-item-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  width: 100%;
 }
 
 .nav-item {
   display: flex;
   align-items: center;
+  padding: 15px 20px;
+  background: transparent;
+  border-radius: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  width: 300px;
+  justify-content: flex-start;
+}
+
+.nav-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
 }
 
 /* Adjust the following as needed */
@@ -172,7 +195,8 @@ body:not(.home) .background-reel {
   margin-left: 5px;
   font-family: 'Courier New', Courier, monospace;
   font-size: 32pt;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.9), 0 0 10px rgba(0, 0, 0, 0.5);
+  color: rgba(0, 0, 0, 1);
+  opacity: 1;
 }
 
 .nav-image img {
@@ -180,17 +204,42 @@ body:not(.home) .background-reel {
   height: auto;
 }
 
-.nav-text a {
-  text-decoration: none;
-  color: #333;
-  text-shadow: inherit;
-}
+
 
 /* Section Subheader */
 .section-subheader {
   max-width: 80%;
   text-align: center;
   margin: 0 auto 40px auto;
+}
+
+/* Navigation on non-home pages - completely transparent */
+.section-subheader .nav-wrapper {
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+}
+
+.section-subheader .nav-wrapper:hover {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* Header title on non-home pages - completely transparent */
+body:not(.home) .header-title {
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+}
+
+body:not(.home) .header-title:hover {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+  transform: translateY(-2px);
 }
 
 .films-players {
@@ -869,7 +918,7 @@ body:not(.home) .background-reel {
 
 /* Art Single Page Styles */
 .art-single {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
 }
@@ -881,42 +930,47 @@ body:not(.home) .background-reel {
 
 .art-header h1 {
   font-size: 2.5rem;
-  margin: 0 0 1rem 0;
+  margin: 0;
   color: #333;
 }
 
-.art-meta {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  flex-wrap: wrap;
-  margin-bottom: 1rem;
-}
-
-.art-year,
-.art-medium,
-.art-category {
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.art-content {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 2rem;
+.art-player {
+  width: 100%;
   margin-bottom: 2rem;
 }
 
-.art-display {
+.art-content {
+  max-width: 800px;
+  margin: 0 auto;
   text-align: center;
 }
 
-.art-image img,
+.art-content .art-meta {
+  margin-bottom: 1.5rem;
+}
+
+.art-content .art-year {
+  font-size: 1.2rem;
+  color: #666;
+  font-weight: bold;
+}
+
+.art-image {
+  text-align: center;
+}
+
+.art-image img {
+  max-width: 100%;
+  height: auto;
+}
+
+.art-video {
+  text-align: center;
+}
+
 .art-video video {
   max-width: 100%;
   height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .art-description {

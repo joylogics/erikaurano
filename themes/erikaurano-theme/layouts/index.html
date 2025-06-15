@@ -20,13 +20,17 @@
   <div class="nav-wrapper">
     <ul class="nav-list">
       {{ range .Site.Params.navItems }}
-      <li class="nav-item">
-        <div class="nav-image">
-          <img src="{{ .image | relURL }}" alt="{{ .name }}">
-        </div>
-        <div class="nav-text">
-          <a href="{{ .url }}">{{ .name }}</a>
-        </div>
+      <li>
+        <a href="{{ .url }}" class="nav-item-link">
+          <div class="nav-item">
+            <div class="nav-image">
+              <img src="{{ .image | relURL }}" alt="{{ .name }}">
+            </div>
+            <div class="nav-text">
+              {{ .name }}
+            </div>
+          </div>
+        </a>
       </li>
       {{ end }}
     </ul>

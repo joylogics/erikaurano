@@ -21,33 +21,27 @@
     <div class="art-single">
       <div class="art-header">
         <h1>{{ .Title }}</h1>
-        <div class="art-meta">
-          {{ if .Params.year }}
-            <span class="art-year">{{ .Params.year }}</span>
-          {{ end }}
-          {{ if .Params.medium }}
-            <span class="art-medium">{{ .Params.medium }}</span>
-          {{ end }}
-          {{ $section := .Parent.Title }}
-          {{ if $section }}
-            <span class="art-category">{{ $section }}</span>
-          {{ end }}
-        </div>
+      </div>
+
+      <div class="art-player">
+        {{ if .Params.video }}
+          <div class="art-video">
+            <video controls muted loop poster="{{ .Params.thumbnail }}">
+              <source src="{{ .Params.video }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        {{ else if .Params.image }}
+          <div class="art-image">
+            <img src="{{ .Params.image }}" alt="{{ .Title }}">
+          </div>
+        {{ end }}
       </div>
 
       <div class="art-content">
-        <div class="art-display">
-          {{ if .Params.video }}
-            <div class="art-video">
-              <video controls muted loop poster="{{ .Params.thumbnail }}">
-                <source src="{{ .Params.video }}" type="video/mp4">
-                Your browser does not support the video tag.
-              </video>
-            </div>
-          {{ else if .Params.image }}
-            <div class="art-image">
-              <img src="{{ .Params.image }}" alt="{{ .Title }}">
-            </div>
+        <div class="art-meta">
+          {{ if .Params.year }}
+            <span class="art-year">{{ .Params.year }}</span>
           {{ end }}
         </div>
 
@@ -55,52 +49,6 @@
           {{ .Content }}
         </div>
       </div>
-
-      <!-- Additional images gallery for drawings (if multiple images exist) -->
-      {{/* DISABLED: Additional Views section
-      {{ if eq .Parent.Title "Drawings" }}
-        {{ $artPath := printf "/art/drawings/%s/" (.File.BaseFileName | urlize) }}
-        {{ $artImages := slice }}
-        {{ $artDir := printf "static/art/drawings/%s" (.File.BaseFileName | urlize) }}
-        {{ if fileExists $artDir }}
-          {{ range (readDir $artDir) }}
-            {{ if or (strings.HasSuffix .Name ".jpg") (strings.HasSuffix .Name ".jpeg") (strings.HasSuffix .Name ".png") (strings.HasSuffix .Name ".webp") (strings.HasSuffix .Name ".JPG") }}
-              {{ $artImages = $artImages | append (printf "%s%s" $artPath .Name) }}
-            {{ end }}
-          {{ end }}
-        {{ end }}
-
-        {{ if gt (len $artImages) 1 }}
-          <div class="art-gallery">
-            <h2>Additional Views</h2>
-            <div class="gallery-grid">
-              {{ range $index, $image := $artImages }}
-                {{ if ne $image $.Params.image }}
-                  <div class="gallery-item">
-                    <img src="{{ $image }}" alt="{{ $.Title }} - view {{ add $index 1 }}" loading="lazy" class="gallery-thumbnail" data-index="{{ $index }}">
-                  </div>
-                {{ end }}
-              {{ end }}
-            </div>
-          </div>
-
-          <!-- Lightbox Modal -->
-          <div id="lightbox" class="lightbox">
-            <div class="lightbox-content">
-              <span class="lightbox-close">&times;</span>
-              <img id="lightbox-image" src="" alt="Art detail">
-              <div class="lightbox-nav">
-                <button id="lightbox-prev" class="lightbox-nav-btn">&#8249;</button>
-                <button id="lightbox-next" class="lightbox-nav-btn">&#8250;</button>
-              </div>
-              <div class="lightbox-counter">
-                <span id="lightbox-current">1</span> / <span id="lightbox-total">{{ len $artImages }}</span>
-              </div>
-            </div>
-          </div>
-        {{ end }}
-      {{ end }}
-      */}}
 
       <!-- Previous/Next artwork navigation -->
       <div class="artwork-nav">
@@ -124,81 +72,4 @@
       </div>
     </div>
   </div>
-
-  <script>
-    // Lightbox functionality for art galleries
-    document.addEventListener('DOMContentLoaded', function() {
-      const thumbnails = document.querySelectorAll('.gallery-thumbnail');
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImage = document.getElementById('lightbox-image');
-      const lightboxClose = document.querySelector('.lightbox-close');
-      const lightboxPrev = document.getElementById('lightbox-prev');
-      const lightboxNext = document.getElementById('lightbox-next');
-      const lightboxCurrent = document.getElementById('lightbox-current');
-      const lightboxTotal = document.getElementById('lightbox-total');
-      
-      let currentImageIndex = 0;
-      const imagesSrc = Array.from(thumbnails).map(thumb => thumb.src);
-      
-      thumbnails.forEach((thumbnail, index) => {
-        thumbnail.addEventListener('click', function() {
-          currentImageIndex = index;
-          showLightbox();
-        });
-      });
-      
-      function showLightbox() {
-        lightboxImage.src = imagesSrc[currentImageIndex];
-        lightboxCurrent.textContent = currentImageIndex + 1;
-        lightbox.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-      }
-      
-      function hideLightbox() {
-        lightbox.style.display = 'none';
-        document.body.style.overflow = 'auto';
-      }
-      
-      if (lightboxClose) {
-        lightboxClose.addEventListener('click', hideLightbox);
-      }
-      
-      if (lightboxPrev) {
-        lightboxPrev.addEventListener('click', function() {
-          currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : imagesSrc.length - 1;
-          showLightbox();
-        });
-      }
-      
-      if (lightboxNext) {
-        lightboxNext.addEventListener('click', function() {
-          currentImageIndex = currentImageIndex < imagesSrc.length - 1 ? currentImageIndex + 1 : 0;
-          showLightbox();
-        });
-      }
-      
-      if (lightbox) {
-        lightbox.addEventListener('click', function(e) {
-          if (e.target === lightbox) {
-            hideLightbox();
-          }
-        });
-      }
-      
-      // Keyboard navigation
-      document.addEventListener('keydown', function(e) {
-        if (lightbox && lightbox.style.display === 'flex') {
-          if (e.key === 'Escape') {
-            hideLightbox();
-          } else if (e.key === 'ArrowLeft') {
-            currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : imagesSrc.length - 1;
-            showLightbox();
-          } else if (e.key === 'ArrowRight') {
-            currentImageIndex = currentImageIndex < imagesSrc.length - 1 ? currentImageIndex + 1 : 0;
-            showLightbox();
-          }
-        }
-      });
-    });
-  </script>
 {{ end }} 
