@@ -17,9 +17,6 @@
                 <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
               {{ end }}
             </div>
-            <div class="art-info">
-              <h3>{{ .Title }}</h3>
-            </div>
           </a>
         {{ end }}
       </div>
@@ -40,9 +37,6 @@
               {{ else if .Params.image }}
                 <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
               {{ end }}
-            </div>
-            <div class="art-info">
-              <h3>{{ .Title }}</h3>
             </div>
           </a>
         {{ end }}
