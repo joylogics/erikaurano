@@ -135,6 +135,7 @@ body:not(.home) .background-reel {
     inset 0 -1px 0 rgba(0, 0, 0, 0.1);
   display: inline-block;
   transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .nav-wrapper:hover {
@@ -1159,4 +1160,15 @@ body:not(.home) .background-reel {
   .about-content p {
     font-size: 1rem;
   }
+}
+
+.nav-wrapper-link {
+  display: inline-block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.nav-wrapper-link:hover {
+  text-decoration: none;
+  color: inherit;
 }

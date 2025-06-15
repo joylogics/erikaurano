@@ -1,5 +1,23 @@
 {{ define "main" }}
   <div id="body-content">
+    <!-- Navigation Menu -->
+    <div class="section-subheader">
+      <a href="/art/" class="nav-wrapper-link">
+        <div class="nav-wrapper">
+          <div class="nav-list">
+            <div class="nav-item">
+              <div class="nav-image">
+                <img src="{{ "images/art.gif" | relURL }}" alt="Art">
+              </div>
+              <div class="nav-text">
+                Art
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
     <div class="art-single">
       <div class="art-header">
         <h1>{{ .Title }}</h1>
@@ -84,29 +102,25 @@
       {{ end }}
       */}}
 
-      <div class="art-navigation">
-        <a href="/art/" class="back-to-art">← Back to Art</a>
+      <!-- Previous/Next artwork navigation -->
+      <div class="artwork-nav">
+        {{ $sorted := .Parent.Pages.ByWeight }}
+        {{ $currentIndex := 0 }}
+        {{ range $index, $page := $sorted }}
+          {{ if eq $page.File.BaseFileName $.File.BaseFileName }}
+            {{ $currentIndex = $index }}
+          {{ end }}
+        {{ end }}
         
-        <!-- Previous/Next artwork navigation -->
-        <div class="artwork-nav">
-          {{ $sorted := .Parent.Pages.ByWeight }}
-          {{ $currentIndex := 0 }}
-          {{ range $index, $page := $sorted }}
-            {{ if eq $page.File.BaseFileName $.File.BaseFileName }}
-              {{ $currentIndex = $index }}
-            {{ end }}
-          {{ end }}
-          
-          {{ if gt $currentIndex 0 }}
-            {{ $prevPage := index $sorted (sub $currentIndex 1) }}
-            <a href="{{ $prevPage.Permalink }}" class="nav-prev">← {{ $prevPage.Title }}</a>
-          {{ end }}
-          
-          {{ if lt $currentIndex (sub (len $sorted) 1) }}
-            {{ $nextPage := index $sorted (add $currentIndex 1) }}
-            <a href="{{ $nextPage.Permalink }}" class="nav-next">{{ $nextPage.Title }} →</a>
-          {{ end }}
-        </div>
+        {{ if gt $currentIndex 0 }}
+          {{ $prevPage := index $sorted (sub $currentIndex 1) }}
+          <a href="{{ $prevPage.Permalink }}" class="nav-prev">← {{ $prevPage.Title }}</a>
+        {{ end }}
+        
+        {{ if lt $currentIndex (sub (len $sorted) 1) }}
+          {{ $nextPage := index $sorted (add $currentIndex 1) }}
+          <a href="{{ $nextPage.Permalink }}" class="nav-next">{{ $nextPage.Title }} →</a>
+        {{ end }}
       </div>
     </div>
   </div>

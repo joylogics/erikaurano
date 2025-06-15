@@ -1,5 +1,23 @@
 {{ define "main" }}
   <div id="body-content">
+    <!-- Navigation Menu -->
+    <div class="section-subheader">
+      <a href="/films/" class="nav-wrapper-link">
+        <div class="nav-wrapper">
+          <div class="nav-list">
+            <div class="nav-item">
+              <div class="nav-image">
+                <img src="{{ "images/director.gif" | relURL }}" alt="Films">
+              </div>
+              <div class="nav-text">
+                Films
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+
     <div class="film-single">
       <div class="film-header">
         <h1>{{ .Title }}</h1>
@@ -100,9 +118,7 @@
         </div>
       {{ end }}
 
-      <div class="film-navigation">
-        <a href="/films/" class="back-to-films">← Back to Films</a>
-      </div>
+
     </div>
   </div>
 {{ end }} 
