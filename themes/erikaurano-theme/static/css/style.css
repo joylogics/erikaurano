@@ -901,33 +901,27 @@ body {
 }
 
 /* About Page Styles */
+.about-hero {
+  max-width: 1000px;
+  margin: 0 auto 3rem auto;
+  padding: 0 2rem;
+}
+
+.hero-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
 .about-container {
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
 }
 
-.about-header {
-  display: flex;
-  gap: 3rem;
-  margin-bottom: 4rem;
-  align-items: flex-start;
-}
-
-.about-image {
-  flex: 0 0 400px;
-  margin-top: 3rem;
-}
-
-.portfolio-image {
-  width: 100%;
-  height: auto;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
 .about-content {
-  flex: 1;
+  margin-bottom: 4rem;
 }
 
 .about-content h2 {
@@ -938,7 +932,7 @@ body {
 }
 
 .about-content p {
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   line-height: 1.7;
   margin-bottom: 1.5rem;
   color: #555;
@@ -974,13 +968,13 @@ body {
 
 /* About Page Responsive design */
 @media (max-width: 768px) {
-  .about-header {
-    flex-direction: column;
-    gap: 2rem;
+  .about-hero {
+    margin-bottom: 2rem;
   }
   
-  .about-image {
-    flex: none;
+  .hero-image {
+    max-width: 100%;
+    border-radius: 8px;
   }
   
   .about-content h2 {

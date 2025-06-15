@@ -1,16 +1,15 @@
 {{ define "main" }}
   <div id="body-content">
     {{ partial "section-subheader.html" . }}
+    {{ if .Params.cover }}
+      <div class="about-hero">
+        <img src="{{ .Params.cover }}" alt="Erika Urano - Portfolio Photo" class="hero-image">
+      </div>
+    {{ end }}
+    
     <div class="about-container">
-      <div class="about-header">
-        <div class="about-image">
-          {{ if .Params.cover }}
-            <img src="{{ .Params.cover }}" alt="Erika Urano - Portfolio Photo" class="portfolio-image">
-          {{ end }}
-        </div>
-        <div class="about-content">
-          {{ .Content }}
-        </div>
+      <div class="about-content">
+        {{ .Content }}
       </div>
       
       <div class="about-gallery">

@@ -8,6 +8,6 @@ She explores storytelling through screenwriting, poetry, and production design.
 
 Raised in New Jersey just outside New York City, Erika grew up speaking English and Portuguese at home, with strong ties to both her Japanese and Brazilian heritage. She has spent the past two summers in Japan studying language and culture. Most recently, she spent a semester abroad at NYU’s London campus, further expanding her international perspective and artistic sensibility.
 
-Erika’s portfolio includes short films where she’s taken on roles as writer, director, and production designer. She’s currently interning at a film production studio, reviewing submitted screenplays and gaining firsthand insight into how stories evolve from page to production. Beyond film, Erika is also an fine artist — her website includes a collection of her drawings — and she brings a strong visual eye and design sensibility to every project she works on.
+Erika’s portfolio includes short films where she’s taken on roles as writer, director, and production designer. She’s currently interning at a film production studio, reviewing submitted screenplays and gaining firsthand insight into how stories evolve from page to production. Beyond film, Erika is also a fine artist — her website includes a collection of her drawings — and she brings a strong visual eye and design sensibility to every project she works on.
 
 She is currently seeking internships and part-time opportunities in film production, screenwriting, or other creative roles, including positions in art galleries or studios.
