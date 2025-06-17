@@ -199,6 +199,34 @@ body:not(.home) .background-reel {
   opacity: 1;
 }
 
+/* Home page specific styles for better visibility */
+body.home .nav-wrapper {
+  background: transparent;
+  backdrop-filter: none;
+  border: none;
+  box-shadow: none;
+}
+
+body.home .nav-wrapper:hover {
+  background: transparent;
+  backdrop-filter: none;
+  box-shadow: none;
+}
+
+body.home .nav-item {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+body.home .nav-item:hover {
+  background: rgba(0, 0, 0, 0.8);
+  transform: translateY(-2px);
+}
+
+body.home .nav-text {
+  color: white;
+}
+
 .nav-image img {
   max-width: 100px;
   height: auto;
