@@ -1,7 +1,27 @@
 <header class="site-header">
-  <img id="header-animation" 
-       src="{{ "images/erika_urano.webp" | relURL }}" 
-       alt="Erika Urano" 
-       class="header-title" 
-       {{ if .IsHome }} data-home="true" {{ end }}>
+  <a href="/" class="header-title">Erika Urano</a>
+  
+  <div class="nav-wrapper">
+    <ul class="nav-list">
+      {{ range .Site.Params.navItems }}
+      {{ $isActive := false }}
+      {{ if eq .name "Films" }}
+        {{ $isActive = or (eq $.Section "films") (and (eq $.Type "films") (not $.IsHome)) }}
+      {{ else if eq .name "Art" }}
+        {{ $isActive = or (eq $.Section "art") (and (eq $.Type "art") (not $.IsHome)) }}
+      {{ else if eq .name "About" }}
+        {{ $isActive = or (eq $.Section "about") (and (eq $.Type "about") (not $.IsHome)) }}
+      {{ end }}
+      <li>
+        <a href="{{ .url }}" class="nav-item-link">
+          <div class="nav-item{{ if $isActive }} active{{ end }}">
+            <div class="nav-text">
+              {{ .name }}
+            </div>
+          </div>
+        </a>
+      </li>
+      {{ end }}
+    </ul>
+  </div>
 </header>

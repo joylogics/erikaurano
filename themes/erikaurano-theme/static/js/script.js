@@ -50,54 +50,9 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 
-  // Only on the home page, enable header click to replay animation
-  var headerImg = document.getElementById("header-animation");
-  if (headerImg.getAttribute("data-home") === "true") {
-    // Home page: replay the animation on click.
-    if (!headerImg.getAttribute("data-original-src")) {
-      headerImg.setAttribute("data-original-src", headerImg.src);
-    }
-    headerImg.style.cursor = "pointer";
-    headerImg.addEventListener("click", function() {
-      var originalSrc = headerImg.getAttribute("data-original-src").split('?')[0];
-      headerImg.src = originalSrc + '?v=' + Date.now();
-    });
-  } else {
-    // Not on home: clicking header navigates to home.
-    headerImg.style.cursor = "pointer";
-    headerImg.addEventListener("click", function() {
-      window.location.href = "/";
-    });
-  }
+  // Header animation functionality is no longer needed since we're using text
 
-  if (headerImg.getAttribute("data-home") === "true") {
-    // Save original src if not already stored
-    if (!headerImg.getAttribute("data-original-src")) {
-      headerImg.setAttribute("data-original-src", headerImg.src);
-    }
-    headerImg.style.cursor = "pointer";
-    headerImg.addEventListener("click", function() {
-      var originalSrc = headerImg.getAttribute("data-original-src").split('?')[0];
-      headerImg.src = originalSrc + '?v=' + Date.now();
-    });
-  }
-
-  // Clicking on a nav image should navigate to the same link as its sibling hypertext.
-  var navImages = document.querySelectorAll('.nav-item .nav-image');
-  if (document.body.classList.contains("home")) {
-    navImages.forEach(function(navImage) {
-      navImage.style.cursor = "pointer";
-      navImage.addEventListener("click", function() {
-        var navItem = navImage.closest('.nav-item');
-        if (navItem) {
-          var anchor = navItem.querySelector('.nav-text a');
-          if (anchor && anchor.href) {
-            window.location.href = anchor.href;
-          }
-        }
-      });
-    });
-  }
+  // Navigation image functionality is no longer needed since images are hidden
 
   // Initialize HLS for film players
   var filmVideos = document.querySelectorAll('video[data-playlist]');
