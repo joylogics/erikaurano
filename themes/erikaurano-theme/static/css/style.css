@@ -573,6 +573,7 @@ body.home .nav-text:hover {
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 5;
 }
 
 .video-thumbnail img {
@@ -590,6 +591,7 @@ body.home .nav-text:hover {
   opacity: 0.9;
   transition: all 0.3s ease;
   pointer-events: none;
+  z-index: 10;
 }
 
 .lazy-video:hover .play-button {
@@ -635,6 +637,44 @@ body.home .nav-text:hover {
 .video-loading-indicator {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   transition: opacity 0.3s ease;
+}
+
+/* Lazy HLS video styles */
+.lazy-hls {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.film-preview .lazy-hls {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-container-single.lazy-hls {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* HLS play button styling */
+.hls-play-button {
+  transform: translate(-50%, -50%) scale(0.8);
+}
+
+.lazy-hls:hover .hls-play-button {
+  transform: translate(-50%, -50%) scale(0.9);
+}
+
+.video-container-single .hls-play-button {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.video-container-single.lazy-hls:hover .hls-play-button {
+  transform: translate(-50%, -50%) scale(1.3);
 }
 
 .film-card.has-embedded-video .film-overlay {

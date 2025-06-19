@@ -67,79 +67,101 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Navigation image functionality is no longer needed since images are hidden
 
-  // Initialize HLS for film players (async loading)
-  initializeHLSPlayersAsync();
-  
   // Initialize lazy video loading for YouTube/Vimeo
   initializeLazyVideos();
+  
+  // Initialize lazy HLS video loading  
+  initializeLazyHLS();
 
-  function initializeHLSPlayersAsync() {
-    var filmVideos = document.querySelectorAll('video[data-playlist]');
+  function initializeHLSPlayersAsync(videoArray, callback) {
+    var filmVideos = videoArray || document.querySelectorAll('video[data-playlist]');
     
     // No video players found, skip HLS.js loading
     if (filmVideos.length === 0) {
+      if (callback) callback();
       return;
     }
 
     console.log('Found', filmVideos.length, 'HLS video players, loading HLS.js...');
 
-    // Set loading state on video players
-    filmVideos.forEach(function(video) {
-      video.style.opacity = '0.6';
-      video.style.cursor = 'wait';
-      video.setAttribute('disabled', true);
-      
-      // Add loading indicator
-      var loadingDiv = document.createElement('div');
-      loadingDiv.className = 'hls-loading';
-      loadingDiv.style.position = 'absolute';
-      loadingDiv.style.top = '50%';
-      loadingDiv.style.left = '50%';
-      loadingDiv.style.transform = 'translate(-50%, -50%)';
-      loadingDiv.style.color = 'white';
-      loadingDiv.style.background = 'rgba(0,0,0,0.7)';
-      loadingDiv.style.padding = '8px 12px';
-      loadingDiv.style.borderRadius = '4px';
-      loadingDiv.style.fontSize = '14px';
-      loadingDiv.textContent = 'Loading player...';
-      loadingDiv.style.pointerEvents = 'none';
-      
-      // Insert loading indicator if parent has relative positioning
-      var container = video.parentNode;
-      if (getComputedStyle(container).position === 'static') {
-        container.style.position = 'relative';
-      }
-      container.appendChild(loadingDiv);
-    });
+    // Set loading state on video players (only for non-lazy videos)
+    if (!videoArray) {
+      filmVideos.forEach(function(video) {
+        video.style.opacity = '0.6';
+        video.style.cursor = 'wait';
+        video.setAttribute('disabled', true);
+        
+        // Add loading indicator
+        var loadingDiv = document.createElement('div');
+        loadingDiv.className = 'hls-loading';
+        loadingDiv.style.position = 'absolute';
+        loadingDiv.style.top = '50%';
+        loadingDiv.style.left = '50%';
+        loadingDiv.style.transform = 'translate(-50%, -50%)';
+        loadingDiv.style.color = 'white';
+        loadingDiv.style.background = 'rgba(0,0,0,0.7)';
+        loadingDiv.style.padding = '8px 12px';
+        loadingDiv.style.borderRadius = '4px';
+        loadingDiv.style.fontSize = '14px';
+        loadingDiv.textContent = 'Loading player...';
+        loadingDiv.style.pointerEvents = 'none';
+        
+        // Insert loading indicator if parent has relative positioning
+        var container = video.parentNode;
+        if (getComputedStyle(container).position === 'static') {
+          container.style.position = 'relative';
+        }
+        container.appendChild(loadingDiv);
+      });
+    }
+
+    // Check if HLS.js is already loaded
+    if (typeof Hls !== 'undefined') {
+      console.log('HLS.js already loaded, initializing players...');
+      initializeHLSPlayers(filmVideos, false, callback);
+      return;
+    }
 
     // Load HLS.js asynchronously
     var script = document.createElement('script');
     script.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
     script.onload = function() {
       console.log('HLS.js loaded, initializing players...');
-      initializeHLSPlayers(filmVideos);
+      initializeHLSPlayers(filmVideos, false, callback);
     };
     script.onerror = function() {
       console.error('Failed to load HLS.js');
       // Fallback: try native HLS support
-      initializeHLSPlayers(filmVideos, true);
+      initializeHLSPlayers(filmVideos, true, callback);
     };
     document.head.appendChild(script);
   }
 
-  function initializeHLSPlayers(filmVideos, fallbackOnly = false) {
+  function initializeHLSPlayers(filmVideos, fallbackOnly = false, callback) {
+    var completedVideos = 0;
+    var totalVideos = filmVideos.length;
+    
+    function videoReady() {
+      completedVideos++;
+      if (completedVideos === totalVideos && callback) {
+        callback();
+      }
+    }
+    
     filmVideos.forEach(function(video) {
       var playlist = video.getAttribute('data-playlist');
       
-      // Remove loading state
-      video.style.opacity = '1';
-      video.style.cursor = 'pointer';
-      video.removeAttribute('disabled');
-      
-      // Remove loading indicator
-      var loadingDiv = video.parentNode.querySelector('.hls-loading');
-      if (loadingDiv) {
-        loadingDiv.remove();
+      // Remove loading state (only for non-lazy videos)
+      if (!video.hasAttribute('autoplay')) {
+        video.style.opacity = '1';
+        video.style.cursor = 'pointer';
+        video.removeAttribute('disabled');
+        
+        // Remove loading indicator
+        var loadingDiv = video.parentNode.querySelector('.hls-loading');
+        if (loadingDiv) {
+          loadingDiv.remove();
+        }
       }
 
       if (!fallbackOnly && typeof Hls !== 'undefined' && Hls.isSupported()) {
@@ -148,6 +170,11 @@ document.addEventListener("DOMContentLoaded", function() {
           enableWorker: true,
           lowLatencyMode: true,
           backBufferLength: 90
+        });
+
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+          console.log('HLS manifest parsed for:', playlist);
+          videoReady();
         });
 
         hls.on(Hls.Events.ERROR, function(event, data) {
@@ -164,6 +191,7 @@ document.addEventListener("DOMContentLoaded", function() {
               default:
                 console.error("Fatal error:", data);
                 hls.destroy();
+                videoReady(); // Still call ready even on error
                 break;
             }
           }
@@ -174,13 +202,25 @@ document.addEventListener("DOMContentLoaded", function() {
       } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         // For Safari or other native HLS players
         video.src = playlist;
+        video.addEventListener('loadedmetadata', videoReady, { once: true });
       } else {
         console.error("HLS not supported in this browser.");
         // Show error state
         video.style.opacity = '0.5';
         video.setAttribute('title', 'Video playback not supported in this browser');
+        videoReady(); // Still call ready even on error
       }
     });
+    
+    // Fallback timeout in case some videos don't load
+    if (callback) {
+      setTimeout(function() {
+        if (completedVideos < totalVideos) {
+          console.log('Some videos did not load in time, proceeding anyway');
+          callback();
+        }
+      }, 5000);
+    }
   }
 
   function initializeLazyVideos() {
@@ -343,6 +383,153 @@ document.addEventListener("DOMContentLoaded", function() {
     });
     
     console.log('Initialized', lazyVideos.length, 'lazy video players with hover preloading');
+  }
+
+  function initializeLazyHLS() {
+    var lazyHLSVideos = document.querySelectorAll('.lazy-hls');
+    
+    console.log('Found', lazyHLSVideos.length, 'lazy HLS video containers');
+    
+    lazyHLSVideos.forEach(function(videoContainer, index) {
+      var playlist = videoContainer.getAttribute('data-playlist');
+      var poster = videoContainer.getAttribute('data-poster');
+      
+      console.log('Lazy HLS video', index + 1, ':', playlist);
+      
+      var thumbnail = videoContainer.querySelector('.video-thumbnail');
+      var thumbnailImg = thumbnail.querySelector('img');
+      var video = null;
+      var isPreloaded = false;
+      var hoverTimeout = null;
+      
+      // Check if thumbnail image loaded successfully
+      if (thumbnailImg) {
+        thumbnailImg.addEventListener('load', function() {
+          console.log('HLS thumbnail loaded successfully for:', playlist);
+        });
+        thumbnailImg.addEventListener('error', function() {
+          console.log('HLS thumbnail failed to load for:', playlist);
+        });
+      }
+      
+      // Hover to preload (Netflix-style)
+      videoContainer.addEventListener('mouseenter', function() {
+        if (isPreloaded || video) return;
+        
+        // Delay preload to avoid loading on accidental hover
+        hoverTimeout = setTimeout(function() {
+          console.log('Hover detected, starting HLS preload for:', playlist);
+          startHLSPreload();
+        }, 800); // Slightly longer for HLS videos
+      });
+      
+      videoContainer.addEventListener('mouseleave', function() {
+        if (hoverTimeout) {
+          clearTimeout(hoverTimeout);
+          hoverTimeout = null;
+        }
+      });
+      
+      function startHLSPreload() {
+        if (video || isPreloaded) return;
+        
+        console.log('Creating preload HLS video for:', playlist);
+        
+        // Add subtle loading indicator
+        var loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'video-loading-indicator';
+        loadingIndicator.style.position = 'absolute';
+        loadingIndicator.style.top = '8px';
+        loadingIndicator.style.right = '8px';
+        loadingIndicator.style.background = 'rgba(0,0,0,0.6)';
+        loadingIndicator.style.color = 'white';
+        loadingIndicator.style.padding = '2px 6px';
+        loadingIndicator.style.borderRadius = '3px';
+        loadingIndicator.style.fontSize = '10px';
+        loadingIndicator.style.zIndex = '10';
+        loadingIndicator.style.opacity = '0.8';
+        loadingIndicator.textContent = '⚡';
+        thumbnail.appendChild(loadingIndicator);
+        
+        // Create video element for preloading
+        video = document.createElement('video');
+        video.poster = poster;
+        video.setAttribute('data-playlist', playlist);
+        video.muted = true; // Important for preloading
+        video.preload = 'metadata';
+        video.style.position = 'absolute';
+        video.style.top = '0';
+        video.style.left = '0';
+        video.style.width = '100%';
+        video.style.height = '100%';
+        video.style.objectFit = 'contain';
+        video.style.opacity = '0';
+        video.style.pointerEvents = 'none';
+        video.style.transition = 'opacity 0.3s ease';
+        video.style.zIndex = '1'; // Keep video behind thumbnail
+        
+        // Add video behind thumbnail
+        videoContainer.appendChild(video);
+        
+        // Initialize HLS for preloading
+        initializeHLSPlayersAsync([video], function() {
+          isPreloaded = true;
+          loadingIndicator.style.opacity = '0';
+          setTimeout(function() {
+            if (loadingIndicator.parentNode) {
+              loadingIndicator.remove();
+            }
+          }, 300);
+          console.log('HLS video preloaded for:', playlist);
+        });
+      }
+      
+      // Click handler to load HLS video
+      videoContainer.addEventListener('click', function() {
+        console.log('Clicked HLS video:', playlist);
+        
+        if (!video) {
+          // If not preloaded, start immediate load
+          console.log('HLS video not preloaded, starting immediate load');
+          startHLSPreload();
+          
+          // Wait a moment for video to start loading
+          setTimeout(function() {
+            revealHLSVideo();
+          }, 200);
+        } else {
+          // Instant reveal of preloaded video
+          console.log('Revealing preloaded HLS video');
+          revealHLSVideo();
+        }
+      });
+      
+      function revealHLSVideo() {
+        if (!video) return;
+        
+        // Enable controls and autoplay for playback
+        video.controls = true;
+        video.muted = false;
+        
+        // Smooth transition from thumbnail to video
+        thumbnail.style.transition = 'opacity 0.3s ease';
+        thumbnail.style.opacity = '0';
+        
+        setTimeout(function() {
+          video.style.opacity = '1';
+          video.style.pointerEvents = 'auto';
+          videoContainer.classList.remove('lazy-hls');
+          videoContainer.classList.add('video-playing');
+          
+          // Start playing
+          video.play().catch(function(e) {
+            console.log('Video autoplay blocked:', e);
+          });
+        }, 300);
+      }
+    });
+    
+    console.log('Initialized', lazyHLSVideos.length, 'lazy HLS video players');
   }
 
   // Lightbox functionality for location gallery

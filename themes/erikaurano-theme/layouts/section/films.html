@@ -25,8 +25,16 @@
         <div class="film-card{{ if or .Params.playlist $videoEmbed }} has-embedded-video{{ end }}" data-roles="{{ delimit .Params.roles " " }}">
           <div class="film-preview">
             {{ if .Params.playlist }}
-              <div class="video-container">
-                <video poster="{{ .Params.preview }}" data-playlist="{{ .Params.playlist }}" controls></video>
+              <div class="video-container lazy-hls" data-playlist="{{ .Params.playlist }}" data-poster="{{ .Params.preview }}">
+                <div class="video-thumbnail">
+                  <img src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
+                  <div class="play-button hls-play-button">
+                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+                      <circle cx="40" cy="40" r="35" fill="rgba(255,255,255,0.9)" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
+                      <path d="M32 25 L55 40 L32 55 Z" fill="#333"/>
+                    </svg>
+                  </div>
+                </div>
               </div>
             {{ else if $videoEmbed }}
               <div class="video-container lazy-video" data-embed-url="{{ $videoEmbed }}">
