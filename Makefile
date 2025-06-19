@@ -92,7 +92,7 @@ publish:
 	  exit 1; \
 	fi
 	@echo "Building Hugo site for $(S3_BUCKET)..."
-	hugo --baseURL "https://$(S3_BUCKET)/"
+	hugo --baseURL "https://$(S3_BUCKET)/" --minify
 	@echo "Syncing public/ to $(S3_BUCKET)..."
 	aws s3 sync public/ s3://$(S3_BUCKET)/ --delete
 	@if [ -n "$(DISTRIBUTION_ID)" ]; then \
