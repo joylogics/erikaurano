@@ -13,9 +13,44 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background: url("/images/bg.jpg") no-repeat center center;
   background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
   z-index: -1;
+  
+  /* Modern browsers: WebP with mobile-first approach */
+  background-image: url("/images/bg-mobile.webp");
+}
+
+/* Medium screens: Use optimized version */
+@media (min-width: 768px) and (min-height: 600px) {
+  #background-image {
+    background-image: url("/images/bg-optimized.webp");
+  }
+}
+
+/* Large screens: Use full resolution */
+@media (min-width: 1440px) and (min-height: 900px) {
+  #background-image {
+    background-image: url("/images/bg.webp");
+  }
+}
+
+/* Fallback for browsers that don't support WebP */
+.no-webp #background-image {
+  background-image: url("/images/bg-mobile.jpg");
+}
+
+@media (min-width: 768px) and (min-height: 600px) {
+  .no-webp #background-image {
+    background-image: url("/images/bg-optimized.jpg");
+  }
+}
+
+@media (min-width: 1440px) and (min-height: 900px) {
+  .no-webp #background-image {
+    background-image: url("/images/bg.jpg");
+  }
 }
 
 /* Background Reel Styles */
