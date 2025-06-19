@@ -28,30 +28,11 @@
        url('./inter/inter-600.woff') format('woff');
 }
 
-/* Playfair Display Font Family */
+/* Playfair Display Variable Font */
 @font-face {
   font-family: 'Playfair Display';
   font-style: normal;
-  font-weight: 400;
+  font-weight: 400 700; /* Variable font supports range 400-700 */
   font-display: swap;
-  src: url('./playfair-display/playfair-display-400.woff2') format('woff2'),
-       url('./playfair-display/playfair-display-400.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url('./playfair-display/playfair-display-500.woff2') format('woff2'),
-       url('./playfair-display/playfair-display-500.woff') format('woff');
-}
-
-@font-face {
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 600;
-  font-display: swap;
-  src: url('./playfair-display/playfair-display-600.woff2') format('woff2'),
-       url('./playfair-display/playfair-display-600.woff') format('woff');
+  src: url('./playfair-display/playfair-display.woff2') format('woff2');
 } 

@@ -97,7 +97,7 @@ publish:
 	aws s3 sync public/ s3://$(S3_BUCKET)/ --delete
 	@if [ -n "$(DISTRIBUTION_ID)" ]; then \
 	  echo "Invalidating CloudFront distribution $(DISTRIBUTION_ID)..."; \
-	  aws cloudfront create-invalidation --distribution-id $(DISTRIBUTION_ID) --paths "/*"; \
+	  AWS_PAGER= aws cloudfront create-invalidation --distribution-id $(DISTRIBUTION_ID) --paths "/*"; \
 	else \
 	  echo "No CloudFront distribution ID provided, skipping invalidation."; \
 	fi

@@ -2,6 +2,9 @@ baseURL = "https://erikaurano.com/"
 title = "Erika Urano"
 theme = "erikaurano-theme"
 
+# SEO Settings
+description = "Erika Urano is a filmmaker and artist specializing in narrative films and production design. Explore her portfolio of films, art, and creative work."
+
 
 [mediaTypes]
   [mediaTypes."application/vnd.apple.mpegurl"]
