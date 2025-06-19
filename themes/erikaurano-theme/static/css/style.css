@@ -533,6 +533,14 @@ body.home .nav-text:hover {
   background: #000;
 }
 
+.video-container.lazy-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
 .video-container video,
 .video-container iframe {
   position: absolute;
@@ -541,6 +549,92 @@ body.home .nav-text:hover {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+/* Lazy video loading styles */
+.lazy-video {
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.film-preview .lazy-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.video-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0.9;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+.lazy-video:hover .play-button {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.1);
+}
+
+.lazy-video:hover .video-thumbnail img {
+  transform: scale(1.05);
+}
+
+.video-container-single.lazy-video {
+  cursor: pointer;
+}
+
+.video-container-single .video-thumbnail {
+  aspect-ratio: 16/9;
+}
+
+.video-container-single .play-button {
+  transform: translate(-50%, -50%) scale(1.5);
+}
+
+.video-container-single.lazy-video {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video-container-single .video-thumbnail {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.video-playing .video-thumbnail {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.video-loading-indicator {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  transition: opacity 0.3s ease;
 }
 
 .film-card.has-embedded-video .film-overlay {

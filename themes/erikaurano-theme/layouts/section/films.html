@@ -29,15 +29,27 @@
                 <video poster="{{ .Params.preview }}" data-playlist="{{ .Params.playlist }}" controls></video>
               </div>
             {{ else if $videoEmbed }}
-              <div class="video-container">
-                <iframe 
-                  src="{{ $videoEmbed }}" 
-                  frameborder="0" 
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowfullscreen
-                  loading="lazy"
-                  title="{{ .Title }}"
-                ></iframe>
+              <div class="video-container lazy-video" data-embed-url="{{ $videoEmbed }}">
+                <div class="video-thumbnail">
+                  {{ if .Params.preview }}
+                    <img src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
+                  {{ else }}
+                    <!-- Generate thumbnail from video ID -->
+                    {{ if findRE "youtube" $videoEmbed }}
+                      {{ $youtubeId := replaceRE "^https://www.youtube.com/embed/([^?]+).*" "$1" $videoEmbed }}
+                      <img src="https://img.youtube.com/vi/{{ $youtubeId }}/maxresdefault.jpg" alt="{{ .Title }}" loading="lazy">
+                    {{ else if findRE "vimeo" $videoEmbed }}
+                      {{ $vimeoId := replaceRE "^https://player.vimeo.com/video/([^?]+).*" "$1" $videoEmbed }}
+                      <img src="{{ .Params.preview | default (printf "https://vumbnail.com/%s.jpg" $vimeoId) }}" alt="{{ .Title }}" loading="lazy" onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22360%22 viewBox=%220 0 640 360%22%3E%3Crect width=%22640%22 height=%22360%22 fill=%22%23000%22/%3E%3Ctext x=%22320%22 y=%22180%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22 font-size=%2220%22%3EVideo Preview%3C/text%3E%3C/svg%3E'">
+                    {{ end }}
+                  {{ end }}
+                  <div class="play-button">
+                    <svg width="68" height="48" viewBox="0 0 68 48" fill="none">
+                      <path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path>
+                      <path d="M 45,24 27,14 27,34" fill="#fff"></path>
+                    </svg>
+                  </div>
+                </div>
               </div>
             {{ else if .Params.preview }}
               <img src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">

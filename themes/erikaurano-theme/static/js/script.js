@@ -69,6 +69,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Initialize HLS for film players (async loading)
   initializeHLSPlayersAsync();
+  
+  // Initialize lazy video loading for YouTube/Vimeo
+  initializeLazyVideos();
 
   function initializeHLSPlayersAsync() {
     var filmVideos = document.querySelectorAll('video[data-playlist]');
@@ -178,6 +181,168 @@ document.addEventListener("DOMContentLoaded", function() {
         video.setAttribute('title', 'Video playback not supported in this browser');
       }
     });
+  }
+
+  function initializeLazyVideos() {
+    var lazyVideos = document.querySelectorAll('.lazy-video');
+    
+    console.log('Found', lazyVideos.length, 'lazy video containers');
+    
+    lazyVideos.forEach(function(videoContainer, index) {
+      var embedUrl = videoContainer.getAttribute('data-embed-url');
+      console.log('Lazy video', index + 1, ':', embedUrl);
+      
+      var thumbnail = videoContainer.querySelector('.video-thumbnail');
+      var thumbnailImg = thumbnail.querySelector('img');
+      var iframe = null;
+      var isPreloaded = false;
+      var hoverTimeout = null;
+      
+      // Check if thumbnail image loaded successfully
+      if (thumbnailImg) {
+        thumbnailImg.addEventListener('load', function() {
+          console.log('Thumbnail loaded successfully for:', embedUrl);
+        });
+        thumbnailImg.addEventListener('error', function() {
+          console.log('Thumbnail failed to load for:', embedUrl);
+        });
+      }
+      
+      // Hover to preload (Netflix-style)
+      videoContainer.addEventListener('mouseenter', function() {
+        if (isPreloaded || iframe) return;
+        
+        // Delay preload to avoid loading on accidental hover
+        hoverTimeout = setTimeout(function() {
+          console.log('Hover detected, starting preload for:', embedUrl);
+          startPreload();
+        }, 500); // 500ms hover delay
+      });
+      
+      videoContainer.addEventListener('mouseleave', function() {
+        if (hoverTimeout) {
+          clearTimeout(hoverTimeout);
+          hoverTimeout = null;
+        }
+      });
+      
+      function startPreload() {
+        if (iframe || isPreloaded) return;
+        
+        console.log('Creating preload iframe for:', embedUrl);
+        
+        // Create iframe with autoplay (but muted) for real preloading
+        iframe = document.createElement('iframe');
+        var preloadUrl = embedUrl;
+        
+        // Add muted autoplay for real preloading
+        if (embedUrl.includes('youtube.com')) {
+          preloadUrl += '?autoplay=1&mute=1&rel=0&modestbranding=1';
+        } else if (embedUrl.includes('vimeo.com')) {
+          preloadUrl += '?autoplay=1&muted=1&title=0&byline=0&portrait=0';
+        }
+        
+        iframe.src = preloadUrl;
+        iframe.frameBorder = '0';
+        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+        iframe.allowFullscreen = true;
+        
+        var titleEl = videoContainer.closest('.film-card, .film-single');
+        if (titleEl) {
+          var title = titleEl.querySelector('h1, h3');
+          if (title) {
+            iframe.title = title.textContent;
+          }
+        }
+        
+        iframe.style.position = 'absolute';
+        iframe.style.top = '0';
+        iframe.style.left = '0';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        iframe.style.opacity = '0';
+        iframe.style.pointerEvents = 'none';
+        iframe.style.transition = 'opacity 0.3s ease';
+        
+        // Add iframe behind the thumbnail
+        videoContainer.appendChild(iframe);
+        
+        // Add subtle loading indicator
+        var loadingIndicator = document.createElement('div');
+        loadingIndicator.className = 'video-loading-indicator';
+        loadingIndicator.style.position = 'absolute';
+        loadingIndicator.style.top = '8px';
+        loadingIndicator.style.right = '8px';
+        loadingIndicator.style.background = 'rgba(0,0,0,0.6)';
+        loadingIndicator.style.color = 'white';
+        loadingIndicator.style.padding = '2px 6px';
+        loadingIndicator.style.borderRadius = '3px';
+        loadingIndicator.style.fontSize = '10px';
+        loadingIndicator.style.zIndex = '10';
+        loadingIndicator.style.opacity = '0.8';
+        loadingIndicator.textContent = '⚡';
+        thumbnail.appendChild(loadingIndicator);
+        
+        // Wait for video to start loading
+        setTimeout(function() {
+          isPreloaded = true;
+          loadingIndicator.style.opacity = '0';
+          setTimeout(function() {
+            if (loadingIndicator.parentNode) {
+              loadingIndicator.remove();
+            }
+          }, 300);
+          console.log('Video preloaded for:', embedUrl);
+        }, 2000);
+      }
+      
+      // Click handler for instant reveal
+      videoContainer.addEventListener('click', function() {
+        console.log('Clicked video:', embedUrl);
+        
+        if (!iframe) {
+          // If not preloaded, start immediate load
+          console.log('Video not preloaded, starting immediate load');
+          startPreload();
+          
+          // Wait a moment for iframe to start loading
+          setTimeout(function() {
+            revealVideo();
+          }, 100);
+        } else {
+          // Instant reveal of preloaded video
+          console.log('Revealing preloaded video');
+          revealVideo();
+        }
+      });
+      
+      function revealVideo() {
+        if (!iframe) return;
+        
+        // Unmute and ensure autoplay
+        var playUrl = embedUrl;
+        if (embedUrl.includes('youtube.com')) {
+          playUrl += '?autoplay=1&rel=0&modestbranding=1';
+        } else if (embedUrl.includes('vimeo.com')) {
+          playUrl += '?autoplay=1&title=0&byline=0&portrait=0';
+        }
+        
+        iframe.src = playUrl;
+        
+        // Smooth transition from thumbnail to video
+        thumbnail.style.transition = 'opacity 0.3s ease';
+        thumbnail.style.opacity = '0';
+        
+        setTimeout(function() {
+          iframe.style.opacity = '1';
+          iframe.style.pointerEvents = 'auto';
+          videoContainer.classList.remove('lazy-video');
+          videoContainer.classList.add('video-playing');
+        }, 300);
+      }
+    });
+    
+    console.log('Initialized', lazyVideos.length, 'lazy video players with hover preloading');
   }
 
   // Lightbox functionality for location gallery
