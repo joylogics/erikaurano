@@ -54,52 +54,118 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Navigation image functionality is no longer needed since images are hidden
 
-  // Initialize HLS for film players
-  var filmVideos = document.querySelectorAll('video[data-playlist]');
-  filmVideos.forEach(function(video) {
-    var playlist = video.getAttribute('data-playlist');
+  // Initialize HLS for film players (async loading)
+  initializeHLSPlayersAsync();
 
-    if (typeof Hls === 'undefined') {
-      console.error("HLS.js is not loaded!");
+  function initializeHLSPlayersAsync() {
+    var filmVideos = document.querySelectorAll('video[data-playlist]');
+    
+    // No video players found, skip HLS.js loading
+    if (filmVideos.length === 0) {
       return;
     }
 
-    if (Hls.isSupported()) {
-      var hls = new Hls({
-        debug: false,
-        enableWorker: true,
-        lowLatencyMode: true,
-        backBufferLength: 90
-      });
+    console.log('Found', filmVideos.length, 'HLS video players, loading HLS.js...');
 
-      hls.on(Hls.Events.ERROR, function(event, data) {
-        if (data.fatal) {
-          switch(data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              console.error("Network error:", data);
-              hls.startLoad();
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              console.error("Media error:", data);
-              hls.recoverMediaError();
-              break;
-            default:
-              console.error("Fatal error:", data);
-              hls.destroy();
-              break;
+    // Set loading state on video players
+    filmVideos.forEach(function(video) {
+      video.style.opacity = '0.6';
+      video.style.cursor = 'wait';
+      video.setAttribute('disabled', true);
+      
+      // Add loading indicator
+      var loadingDiv = document.createElement('div');
+      loadingDiv.className = 'hls-loading';
+      loadingDiv.style.position = 'absolute';
+      loadingDiv.style.top = '50%';
+      loadingDiv.style.left = '50%';
+      loadingDiv.style.transform = 'translate(-50%, -50%)';
+      loadingDiv.style.color = 'white';
+      loadingDiv.style.background = 'rgba(0,0,0,0.7)';
+      loadingDiv.style.padding = '8px 12px';
+      loadingDiv.style.borderRadius = '4px';
+      loadingDiv.style.fontSize = '14px';
+      loadingDiv.textContent = 'Loading player...';
+      loadingDiv.style.pointerEvents = 'none';
+      
+      // Insert loading indicator if parent has relative positioning
+      var container = video.parentNode;
+      if (getComputedStyle(container).position === 'static') {
+        container.style.position = 'relative';
+      }
+      container.appendChild(loadingDiv);
+    });
+
+    // Load HLS.js asynchronously
+    var script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/hls.js@latest';
+    script.onload = function() {
+      console.log('HLS.js loaded, initializing players...');
+      initializeHLSPlayers(filmVideos);
+    };
+    script.onerror = function() {
+      console.error('Failed to load HLS.js');
+      // Fallback: try native HLS support
+      initializeHLSPlayers(filmVideos, true);
+    };
+    document.head.appendChild(script);
+  }
+
+  function initializeHLSPlayers(filmVideos, fallbackOnly = false) {
+    filmVideos.forEach(function(video) {
+      var playlist = video.getAttribute('data-playlist');
+      
+      // Remove loading state
+      video.style.opacity = '1';
+      video.style.cursor = 'pointer';
+      video.removeAttribute('disabled');
+      
+      // Remove loading indicator
+      var loadingDiv = video.parentNode.querySelector('.hls-loading');
+      if (loadingDiv) {
+        loadingDiv.remove();
+      }
+
+      if (!fallbackOnly && typeof Hls !== 'undefined' && Hls.isSupported()) {
+        var hls = new Hls({
+          debug: false,
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 90
+        });
+
+        hls.on(Hls.Events.ERROR, function(event, data) {
+          if (data.fatal) {
+            switch(data.type) {
+              case Hls.ErrorTypes.NETWORK_ERROR:
+                console.error("Network error:", data);
+                hls.startLoad();
+                break;
+              case Hls.ErrorTypes.MEDIA_ERROR:
+                console.error("Media error:", data);
+                hls.recoverMediaError();
+                break;
+              default:
+                console.error("Fatal error:", data);
+                hls.destroy();
+                break;
+            }
           }
-        }
-      });
+        });
 
-      hls.loadSource(playlist);
-      hls.attachMedia(video);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-      // For Safari or other native HLS players
-      video.src = playlist;
-    } else {
-      console.error("HLS not supported in this browser.");
-    }
-  });
+        hls.loadSource(playlist);
+        hls.attachMedia(video);
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // For Safari or other native HLS players
+        video.src = playlist;
+      } else {
+        console.error("HLS not supported in this browser.");
+        // Show error state
+        video.style.opacity = '0.5';
+        video.setAttribute('title', 'Video playback not supported in this browser');
+      }
+    });
+  }
 
   // Lightbox functionality for location gallery
   const lightbox = document.getElementById('lightbox');
