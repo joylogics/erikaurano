@@ -45,19 +45,46 @@
     <!-- Critical CSS for films page -->
     {{ if eq .Section "films" }}
     <style>
-      .films-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2rem;max-width:1200px;margin:0 auto;padding:0 1rem}
-      .film-card{background:#fff;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)}
-      .film-preview{position:relative;padding-top:56.25%;background:#000;overflow:hidden}
-      .film-preview img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
-      .film-info{padding:1rem}
-      .film-info h3{margin:0 0 .5rem;font-size:1.2rem;color:#333}
+      /* Films page critical CSS to prevent FOUC */
+      body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #f8f9fa; }
+      #body-content { padding: 2rem 0; }
+      
+      .films-controls { max-width: 1200px; margin: 0 auto 2rem; padding: 0 1rem; }
+      .role-filters { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+      .filter-btn { 
+        padding: 0.5rem 1.5rem; border: 2px solid #333; background: transparent; color: #333;
+        border-radius: 25px; cursor: pointer; transition: all 0.3s ease; font-size: 0.9rem;
+      }
+      .filter-btn.loading { opacity: 0.5; pointer-events: none; cursor: not-allowed; }
+      .filter-btn.active { background: #333; color: white; }
+      
+      .films-grid {
+        display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 2rem; max-width: 1200px; margin: 0 auto; padding: 0 1rem;
+      }
+      .film-card { background: #fff; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,.1); }
+      .film-preview { position: relative; padding-top: 56.25%; background: #000; overflow: hidden; }
+      .film-preview img, .film-preview-image img { 
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;
+      }
+      .film-info { padding: 1rem; }
+      .film-info h3 { margin: 0 0 .5rem; font-size: 1.2rem; color: #333; }
+      .film-meta { margin-bottom: 0.5rem; }
+      .film-year { font-weight: 500; color: #666; margin-right: 1rem; }
+      .film-roles { display: inline-flex; gap: 0.5rem; flex-wrap: wrap; }
+      .role-badge { 
+        background: #e9ecef; color: #495057; padding: 0.25rem 0.5rem;
+        border-radius: 12px; font-size: 0.8rem; font-weight: 500;
+      }
+      .film-description { color: #666; font-size: 0.9rem; line-height: 1.5; margin: 0; }
       
       /* Mobile-specific optimizations */
       @media (max-width: 768px) {
-        .films-grid{grid-template-columns:1fr;gap:1.5rem;padding:0 0.5rem}
-        .film-card{margin-bottom:0}
-        .film-preview{padding-top:56.25%}
-        .film-preview img{will-change:auto;transform:translateZ(0)}
+        .films-grid { grid-template-columns: 1fr; gap: 1.5rem; padding: 0 0.5rem; }
+        .film-card { margin-bottom: 0; }
+        .film-preview { padding-top: 56.25%; }
+        .role-filters { gap: 0.5rem; }
+        .filter-btn { padding: 0.4rem 1rem; font-size: 0.85rem; }
       }
     </style>
     {{ end }}
@@ -92,13 +119,7 @@
       <link rel="dns-prefetch" href="//images.squarespace-cdn.com">
     {{ end }}
     
-    {{ if eq .Section "films" }}
-    <!-- Load main CSS asynchronously for films page to avoid blocking LCP -->
-    <link rel="preload" href="{{ "css/style.css" | relURL }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ "css/style.css" | relURL }}"></noscript>
-    {{ else }}
     <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
-    {{ end }}
   </head>
   <body class="{{ if .IsHome }}home{{ end }}">
     <div id="background-image"></div>
