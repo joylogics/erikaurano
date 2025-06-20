@@ -6,13 +6,13 @@
     <div class="art-section">
       <h2 class="section-title">Drawings</h2>
       <div class="art-grid">
-        {{ range $drawingsSection.Pages.ByWeight }}
+        {{ range $index, $page := $drawingsSection.Pages.ByWeight }}
           <a href="{{ .Permalink }}" class="art-card">
             <div class="art-preview">
               {{ if .Params.thumbnail }}
-                <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}" loading="lazy">
+                <img src="{{ .Params.thumbnail }}" alt="{{ .Title }}"{{ if eq $index 0 }} fetchpriority="high"{{ end }}>
               {{ else if .Params.image }}
-                <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+                <img src="{{ .Params.image }}" alt="{{ .Title }}"{{ if eq $index 0 }} fetchpriority="high"{{ end }}>
               {{ end }}
             </div>
           </a>
