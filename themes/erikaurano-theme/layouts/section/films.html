@@ -61,7 +61,12 @@
                 </div>
               </div>
             {{ else if $page.Params.preview }}
-              <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ end }}>
+              <div class="film-preview-image">
+                <picture>
+                  <source srcset="{{ $page.Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp">
+                  <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ end }}>
+                </picture>
+              </div>
             {{ end }}
             <div class="film-overlay">
               {{ if or $page.Params.preview $page.Params.link }}

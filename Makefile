@@ -9,6 +9,13 @@ SRC_BUCKET ?= enthusiate.com
 SRC_PREFIX ?= erika/website
 SRCDIR = $(MOUNT_POINT)/$(SRC_BUCKET)/$(SRC_PREFIX)
 
+# Define offset times for each film (in seconds, can use decimal like 2.5)
+OFFSET_nowhere-to-hide ?= 3.1
+OFFSET_the-room-without-walls ?= 5.3
+OFFSET_ton-poertefeuille ?= 3.4
+OFFSET_you-loved-to-dance ?= 4.8
+OFFSET_deliver-your-love ?= 4.0
+
 # Define the Film targets
 FILMS = nowhere-to-hide the-room-without-walls ton-poertefeuille you-loved-to-dance deliver-your-love
 FILM_TARGETS := $(addsuffix /hls,$(addprefix $(SRCDIR)/static/films/,$(FILMS)))
@@ -27,10 +34,10 @@ $(SRCDIR)/static/films/deliver-your-love/hls: $(SRCDIR)/raw/films/DeliverYourLov
 
 # Shared command block for all the above rules
 $(SRCDIR)/static/films/%/hls: 
-	@echo "Creating output folder '$@' and converting $<..."
+	@echo "Creating output folder '$@' and converting $< (skipping first $(OFFSET_$*) seconds)..."
 	@mkdir -p $@
 	@# 1080p Rendition (Full HD, 1920x1080)
-	ffmpeg -i $< \
+	ffmpeg -ss $(OFFSET_$*) -i $< \
 	  -vf "scale=w=1920:h=1080:force_original_aspect_ratio=decrease" \
 	  -c:a aac -ar 48000 -b:a 128k \
 	  -c:v h264 -profile:v main -crf 20 -g 48 -sc_threshold 0 \
@@ -39,7 +46,7 @@ $(SRCDIR)/static/films/%/hls:
 	  -hls_segment_filename "$@/1080p_%03d.ts" \
 	  $@/1080p.m3u8
 	@# 720p Rendition (1280x720)
-	ffmpeg -i $< \
+	ffmpeg -ss $(OFFSET_$*) -i $< \
 	  -vf "scale=w=1280:h=720:force_original_aspect_ratio=decrease" \
 	  -c:a aac -ar 48000 -b:a 128k \
 	  -c:v h264 -profile:v main -crf 22 -g 48 -sc_threshold 0 \
@@ -48,7 +55,7 @@ $(SRCDIR)/static/films/%/hls:
 	  -hls_segment_filename "$@/720p_%03d.ts" \
 	  $@/720p.m3u8
 	@# 480p Rendition (854x480) with pad to force even dimensions
-	ffmpeg -i $< \
+	ffmpeg -ss $(OFFSET_$*) -i $< \
 	  -vf "scale=w=854:h=480:force_original_aspect_ratio=decrease,pad=854:480:(854-iw)/2:(480-ih)/2" \
 	  -c:a aac -ar 48000 -b:a 128k \
 	  -c:v h264 -profile:v main -crf 24 -g 48 -sc_threshold 0 \

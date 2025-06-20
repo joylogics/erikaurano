@@ -23,8 +23,34 @@
     <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
     <meta name="theme-color" content="#2c3e50">
     
+    <!-- Preload critical fonts -->
+    <link rel="preload" href="{{ "fonts/inter/inter-400.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ "fonts/inter/inter-500.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
+    
     <!-- Self-hosted fonts for better performance -->
     <link rel="stylesheet" href="{{ "fonts/fonts.css" | relURL }}">
+    
+    <!-- Critical CSS for films page -->
+    {{ if eq .Section "films" }}
+    <style>
+      .films-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:2rem;max-width:1200px;margin:0 auto;padding:0 1rem}
+      .film-card{background:#fff;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.1)}
+      .film-preview{position:relative;padding-top:56.25%;background:#000;overflow:hidden}
+      .film-preview img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+      .film-info{padding:1rem}
+      .film-info h3{margin:0 0 .5rem;font-size:1.2rem;color:#333}
+    </style>
+    {{ end }}
+    
+    <!-- Preload critical images for films page -->
+    {{ if eq .Section "films" }}
+      {{ range first 3 .Pages.ByWeight }}
+        {{ if .Params.preview }}
+    <link rel="preload" as="image" href="{{ .Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp">
+    <link rel="preload" as="image" href="{{ .Params.preview }}" type="image/jpeg">
+        {{ end }}
+      {{ end }}
+    {{ end }}
     
     <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
   </head>
@@ -32,6 +58,6 @@
     <div id="background-image"></div>
     {{ partial "header.html" . }}
     {{ block "main" . }}{{ end }}
-    <script src="{{ "js/script.js" | relURL }}"></script>
+    <script src="{{ "js/script.js" | relURL }}" defer></script>
   </body>
 </html>

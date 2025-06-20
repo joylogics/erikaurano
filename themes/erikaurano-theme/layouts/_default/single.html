@@ -80,13 +80,40 @@
 
       {{ $stillsPath := printf "/films/%s/stills/" .File.BaseFileName }}
       {{ $stillsImages := slice }}
+      {{ $imageMap := dict }}
       {{ $stillsDir := printf "static/films/%s/stills" .File.BaseFileName }}
       {{ if fileExists $stillsDir }}
         {{ range (readDir $stillsDir) }}
           {{ if or (strings.HasSuffix .Name ".jpg") (strings.HasSuffix .Name ".jpeg") (strings.HasSuffix .Name ".png") (strings.HasSuffix .Name ".webp") }}
-            {{ $stillsImages = $stillsImages | append (printf "%s%s" $stillsPath .Name) }}
+            {{ $baseName := .Name | strings.TrimSuffix (path.Ext .Name) }}
+            {{ $extension := path.Ext .Name | strings.ToLower }}
+            {{ $fullPath := printf "%s%s" $stillsPath .Name }}
+            
+            {{ $currentEntry := index $imageMap $baseName }}
+            {{ if $currentEntry }}
+              <!-- Check if this is a better format (prefer webp > png > jpg/jpeg) -->
+              {{ $currentExt := index $currentEntry "ext" }}
+              {{ $shouldReplace := false }}
+              {{ if and (eq $extension ".webp") (ne $currentExt ".webp") }}
+                {{ $shouldReplace = true }}
+              {{ else if and (eq $extension ".png") (and (ne $currentExt ".webp") (ne $currentExt ".png")) }}
+                {{ $shouldReplace = true }}
+              {{ end }}
+              
+              {{ if $shouldReplace }}
+                {{ $imageMap = $imageMap | merge (dict $baseName (dict "path" $fullPath "ext" $extension)) }}
+              {{ end }}
+            {{ else }}
+              {{ $imageMap = $imageMap | merge (dict $baseName (dict "path" $fullPath "ext" $extension)) }}
+            {{ end }}
           {{ end }}
         {{ end }}
+        
+        <!-- Convert map to sorted slice -->
+        {{ range $baseName, $entry := $imageMap }}
+          {{ $stillsImages = $stillsImages | append (index $entry "path") }}
+        {{ end }}
+        {{ $stillsImages = sort $stillsImages }}
       {{ end }}
 
       {{ if $stillsImages }}

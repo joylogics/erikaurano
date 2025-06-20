@@ -1,7 +1,7 @@
 ---
 title: "About"
 date: 2025-03-14T00:00:00Z
-cover: "/about/images/onset1.JPG"
+cover: "/about/images/onset1.webp"
 ---
 Erika Urano is a senior at NYU Tisch School of the Arts studying Film & Television with a minor in Creative Writing.
 She explores storytelling through screenwriting, poetry, and production design. 

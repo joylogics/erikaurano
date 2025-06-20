@@ -610,6 +610,7 @@ document.addEventListener("DOMContentLoaded", function() {
   // Animated film filtering functionality with 3-stage animation
   const roleFilterBtns = document.querySelectorAll('.role-filters .filter-btn');
   const filmCards = document.querySelectorAll('.film-card');
+  const filmsGrid = document.querySelector('.films-grid');
 
   if (roleFilterBtns.length > 0 && filmCards.length > 0) {
     function getCardPositions() {
@@ -776,6 +777,18 @@ document.addEventListener("DOMContentLoaded", function() {
       card.style.opacity = '1';
       card.style.transform = '';
     });
+
+    // Enable grid transitions after a short delay to avoid render delay on page load
+    setTimeout(() => {
+      if (filmsGrid) {
+        filmsGrid.classList.add('ready');
+      }
+    }, 100);
+  } else if (filmsGrid) {
+    // Enable transitions even if no filtering functionality
+    setTimeout(() => {
+      filmsGrid.classList.add('ready');
+    }, 100);
   }
 
 });

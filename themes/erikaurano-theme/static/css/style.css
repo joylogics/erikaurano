@@ -436,6 +436,10 @@ body.home .nav-text:hover {
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
+}
+
+/* Add transition after page load to avoid render delay */
+.films-grid.ready {
   transition: all 0.3s ease;
 }
 
