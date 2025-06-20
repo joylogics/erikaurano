@@ -19,9 +19,25 @@
     <!-- Favicon -->
     <link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="32x32">
     <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
+    
+    <!-- Additional PNG favicons for better browser compatibility -->
+    <link rel="icon" type="image/png" sizes="16x16" href="{{ "favicon-16x16.png" | relURL }}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32x32.png" | relURL }}">
+    <link rel="icon" type="image/png" sizes="96x96" href="{{ "favicon-96x96.png" | relURL }}">
+    
+    <!-- Apple Touch Icons for iOS devices -->
     <link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}">
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ "apple-touch-icon-76x76.png" | relURL }}">
+    <link rel="apple-touch-icon" sizes="120x120" href="{{ "apple-touch-icon-120x120.png" | relURL }}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{{ "apple-touch-icon-152x152.png" | relURL }}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ "apple-touch-icon.png" | relURL }}">
+    
+    <!-- Web App Manifest -->
     <link rel="manifest" href="{{ "site.webmanifest" | relURL }}">
     <meta name="theme-color" content="#2c3e50">
+    <meta name="msapplication-TileColor" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
     <!-- Preload critical fonts -->
     <link rel="preload" href="{{ "fonts/inter/inter-400.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
