@@ -3,10 +3,10 @@
     <!-- Controls for filtering films -->
     <div class="films-controls">
       <div class="role-filters">
-        <button class="filter-btn active" data-role="all">All</button>
-        <button class="filter-btn" data-role="Director">Director</button>
-        <button class="filter-btn" data-role="Writer">Writer</button>
-        <button class="filter-btn" data-role="Production Designer">Production Designer</button>
+        <button class="filter-btn active loading" data-role="all">All</button>
+        <button class="filter-btn loading" data-role="Director">Director</button>
+        <button class="filter-btn loading" data-role="Writer">Writer</button>
+        <button class="filter-btn loading" data-role="Production Designer">Production Designer</button>
       </div>
     </div>
 
@@ -28,7 +28,7 @@
             {{ if $page.Params.playlist }}
               <div class="video-container lazy-hls" data-playlist="{{ $page.Params.playlist }}" data-poster="{{ $page.Params.preview }}">
                 <div class="video-thumbnail">
-                  <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ end }}>
+                  <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
                   <div class="play-button hls-play-button">
                     <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
                       <circle cx="40" cy="40" r="35" fill="rgba(255,255,255,0.9)" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
@@ -41,15 +41,15 @@
               <div class="video-container lazy-video" data-embed-url="{{ $videoEmbed }}">
                 <div class="video-thumbnail">
                   {{ if $page.Params.preview }}
-                    <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ end }}>
+                    <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
                   {{ else }}
                     <!-- Generate thumbnail from video ID -->
                     {{ if findRE "youtube" $videoEmbed }}
                       {{ $youtubeId := replaceRE "^https://www.youtube.com/embed/([^?]+).*" "$1" $videoEmbed }}
-                      <img src="https://img.youtube.com/vi/{{ $youtubeId }}/maxresdefault.jpg" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ end }}>
+                      <img src="https://img.youtube.com/vi/{{ $youtubeId }}/maxresdefault.jpg" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
                     {{ else if findRE "vimeo" $videoEmbed }}
                       {{ $vimeoId := replaceRE "^https://player.vimeo.com/video/([^?]+).*" "$1" $videoEmbed }}
-                      <img src="{{ $page.Params.preview | default (printf "https://vumbnail.com/%s.jpg" $vimeoId) }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ end }} onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22360%22 viewBox=%220 0 640 360%22%3E%3Crect width=%22640%22 height=%22360%22 fill=%22%23000%22/%3E%3Ctext x=%22320%22 y=%22180%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22 font-size=%2220%22%3EVideo Preview%3C/text%3E%3C/svg%3E'">
+                      <img src="{{ $page.Params.preview | default (printf "https://vumbnail.com/%s.jpg" $vimeoId) }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }} onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22360%22 viewBox=%220 0 640 360%22%3E%3Crect width=%22640%22 height=%22360%22 fill=%22%23000%22/%3E%3Ctext x=%22320%22 y=%22180%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22 font-size=%2220%22%3EVideo Preview%3C/text%3E%3C/svg%3E'">
                     {{ end }}
                   {{ end }}
                   <div class="play-button">
@@ -64,7 +64,7 @@
               <div class="film-preview-image">
                 <picture>
                   <source srcset="{{ $page.Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp">
-                  <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ end }}>
+                  <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
                 </picture>
               </div>
             {{ end }}

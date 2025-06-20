@@ -39,11 +39,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     
-    <!-- Preload critical fonts -->
-    <link rel="preload" href="{{ "fonts/inter/inter-400.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ "fonts/inter/inter-500.woff2" | relURL }}" as="font" type="font/woff2" crossorigin>
-    
-    <!-- Self-hosted fonts for better performance -->
+    <!-- Self-hosted fonts for better performance (non-blocking with swap) -->
     <link rel="stylesheet" href="{{ "fonts/fonts.css" | relURL }}">
     
     <!-- Critical CSS for films page -->
@@ -96,12 +92,37 @@
       <link rel="dns-prefetch" href="//images.squarespace-cdn.com">
     {{ end }}
     
+    {{ if eq .Section "films" }}
+    <!-- Load main CSS asynchronously for films page to avoid blocking LCP -->
+    <link rel="preload" href="{{ "css/style.css" | relURL }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ "css/style.css" | relURL }}"></noscript>
+    {{ else }}
     <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
+    {{ end }}
   </head>
   <body class="{{ if .IsHome }}home{{ end }}">
     <div id="background-image"></div>
     {{ partial "header.html" . }}
     {{ block "main" . }}{{ end }}
+    
+    <!-- Load JavaScript with defer but optimize for LCP -->
     <script src="{{ "js/script.js" | relURL }}" defer></script>
+    
+    <!-- Lazy load films filter functionality after LCP -->
+    {{ if eq .Section "films" }}
+    <script>
+      // Load films filtering after LCP to avoid blocking render
+      requestAnimationFrame(function() {
+        requestAnimationFrame(function() {
+          setTimeout(function() {
+            var filterScript = document.createElement('script');
+            filterScript.src = '{{ "js/films-filter.js" | relURL }}';
+            filterScript.async = true;
+            document.head.appendChild(filterScript);
+          }, 100);
+        });
+      });
+    </script>
+    {{ end }}
   </body>
 </html>

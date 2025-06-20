@@ -419,6 +419,12 @@ body.home .nav-text:hover {
   font-size: 0.9rem;
 }
 
+.filter-btn.loading {
+  opacity: 0.5;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
 .filter-btn:hover {
   background: #333;
   color: white;
@@ -427,6 +433,12 @@ body.home .nav-text:hover {
 .filter-btn.active {
   background: #333;
   color: white;
+}
+
+.filter-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
 }
 
 .films-grid {
@@ -1413,7 +1425,7 @@ body.home .nav-text:hover {
 
 .about-gallery {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 2rem;
   margin-top: 3rem;
 }
@@ -1425,7 +1437,7 @@ body.home .nav-text:hover {
 .about-gallery .gallery-image {
   width: 100%;
   height: auto;
-  max-height: 400px;
+  max-height: 300px;
   object-fit: cover;
   border-radius: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -1454,7 +1466,7 @@ body.home .nav-text:hover {
   
   .hero-image {
     border-radius: 0;
-    max-height: 400px;
+    max-height: 350px;
   }
   
   .about-container {
@@ -1475,7 +1487,7 @@ body.home .nav-text:hover {
   }
   
   .about-gallery .gallery-image {
-    max-height: 300px;
+    max-height: 250px;
     border-radius: 0;
   }
 }
@@ -1494,11 +1506,11 @@ body.home .nav-text:hover {
   }
   
   .hero-image {
-    max-height: 300px;
+    max-height: 250px;
   }
   
   .about-gallery .gallery-image {
-    max-height: 250px;
+    max-height: 200px;
   }
 }
 

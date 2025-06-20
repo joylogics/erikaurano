@@ -43,46 +43,56 @@ document.addEventListener("DOMContentLoaded", function() {
     }, { once: true });
   }
 
-  // Replay-on-click for .webp images (except header, sub-header, and film previews)
-  var webpImages = document.querySelectorAll('img[src$=".webp"]');
-  webpImages.forEach(function(img) {
-    // Skip header and sub-header images so they don't replay on refresh.
-    if (img.id === "header-animation" || img.id === "sub-header-animation") {
-      return;
-    }
-    
-    // Skip film preview images to avoid performance issues
-    if (img.closest('.film-preview') || img.closest('.film-card') || img.closest('.films-grid')) {
-      return;
-    }
-    
-    // Skip gallery and art images that don't need replay functionality
-    if (img.closest('.gallery-grid') || img.closest('.art-grid') || img.closest('.art-preview')) {
-      return;
-    }
-    
-    if (!img.getAttribute("data-original-src")) {
-      img.setAttribute("data-original-src", img.src);
-    }
-    function replayAnimation() {
-      var originalSrc = img.getAttribute("data-original-src").split('?')[0];
-      img.src = originalSrc + '?v=' + Date.now();
-    }
-    // No auto-replay on load; only replay on click.
-    img.addEventListener("click", function() {
-      replayAnimation();
+  // Defer WebP replay functionality to avoid blocking LCP
+  setTimeout(function() {
+    initWebPReplay();
+  }, 100);
+  
+  function initWebPReplay() {
+    // Replay-on-click for .webp images (except header, sub-header, and film previews)
+    var webpImages = document.querySelectorAll('img[src$=".webp"]');
+    webpImages.forEach(function(img) {
+      // Skip header and sub-header images so they don't replay on refresh.
+      if (img.id === "header-animation" || img.id === "sub-header-animation") {
+        return;
+      }
+      
+      // Skip film preview images to avoid performance issues
+      if (img.closest('.film-preview') || img.closest('.film-card') || img.closest('.films-grid')) {
+        return;
+      }
+      
+      // Skip gallery and art images that don't need replay functionality
+      if (img.closest('.gallery-grid') || img.closest('.art-grid') || img.closest('.art-preview')) {
+        return;
+      }
+      
+      if (!img.getAttribute("data-original-src")) {
+        img.setAttribute("data-original-src", img.src);
+      }
+      function replayAnimation() {
+        var originalSrc = img.getAttribute("data-original-src").split('?')[0];
+        img.src = originalSrc + '?v=' + Date.now();
+      }
+      // No auto-replay on load; only replay on click.
+      img.addEventListener("click", function() {
+        replayAnimation();
+      });
     });
-  });
+  }
 
   // Header animation functionality is no longer needed since we're using text
 
   // Navigation image functionality is no longer needed since images are hidden
 
-  // Initialize lazy video loading for YouTube/Vimeo
-  initializeLazyVideos();
-  
-  // Initialize lazy HLS video loading  
-  initializeLazyHLS();
+  // Defer lazy video loading to avoid blocking LCP
+  setTimeout(function() {
+    // Initialize lazy video loading for YouTube/Vimeo
+    initializeLazyVideos();
+    
+    // Initialize lazy HLS video loading  
+    initializeLazyHLS();
+  }, 150);
 
   function initializeHLSPlayersAsync(videoArray, callback) {
     var filmVideos = videoArray || document.querySelectorAll('video[data-playlist]');
@@ -618,189 +628,7 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   }
 
-  // Animated film filtering functionality with 3-stage animation
-  const roleFilterBtns = document.querySelectorAll('.role-filters .filter-btn');
-  const filmCards = document.querySelectorAll('.film-card');
-  const filmsGrid = document.querySelector('.films-grid');
-
-  if (roleFilterBtns.length > 0 && filmCards.length > 0) {
-    function getCardPositions() {
-      const positions = new Map();
-      filmCards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        positions.set(card, {
-          x: rect.left,
-          y: rect.top
-        });
-      });
-      return positions;
-    }
-
-    function animateFilter(selectedRole) {
-      // Determine which cards should be visible in the new state
-      const currentlyVisible = [];
-      const shouldBeVisible = [];
-      const toHide = [];
-      const toShow = [];
-      
-      filmCards.forEach(card => {
-        const isCurrentlyVisible = !card.classList.contains('hiding') && card.style.display !== 'none';
-        const shouldShow = selectedRole === 'all' || card.dataset.roles.includes(selectedRole);
-        
-        if (isCurrentlyVisible) currentlyVisible.push(card);
-        if (shouldShow) shouldBeVisible.push(card);
-        
-        if (isCurrentlyVisible && !shouldShow) toHide.push(card);
-        if (!isCurrentlyVisible && shouldShow) toShow.push(card);
-      });
-
-      const remainingCards = currentlyVisible.filter(card => !toHide.includes(card));
-
-      // Record INITIAL positions of all remaining cards BEFORE any changes
-      const initialPositions = new Map();
-      remainingCards.forEach(card => {
-        const rect = card.getBoundingClientRect();
-        initialPositions.set(card, {
-          x: rect.left,
-          y: rect.top
-        });
-      });
-
-      // STAGE 1: Shrink and remove cards that shouldn't be visible
-      if (toHide.length > 0) {
-        toHide.forEach(card => {
-          card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-          card.style.transform = 'scale(0.8)';
-          card.style.opacity = '0';
-        });
-
-        // Wait for shrink animation to complete
-        setTimeout(() => {
-          // Actually remove the cards from layout
-          toHide.forEach(card => {
-            card.style.display = 'none';
-          });
-          stage2();
-        }, 300);
-      } else {
-        stage2();
-      }
-
-      function stage2() {
-        // STAGE 2: Rearrange remaining cards using FLIP
-        if (remainingCards.length > 0 || toShow.length > 0) {
-          // Prepare spaces for new cards (but keep them invisible)
-          toShow.forEach(card => {
-            card.style.display = 'block';
-            card.style.opacity = '0';
-            card.style.transform = 'scale(0.8)';
-            card.style.transition = 'none';
-          });
-
-          // Force layout recalculation
-          document.body.offsetHeight;
-
-          // Record final positions of remaining cards
-          const finalPositions = new Map();
-          remainingCards.forEach(card => {
-            const rect = card.getBoundingClientRect();
-            finalPositions.set(card, {
-              x: rect.left,
-              y: rect.top
-            });
-          });
-
-          // Apply FLIP to remaining cards
-          remainingCards.forEach(card => {
-            const initial = initialPositions.get(card);
-            const final = finalPositions.get(card);
-            
-            if (initial && final) {
-              const deltaX = initial.x - final.x;
-              const deltaY = initial.y - final.y;
-              
-              // Only apply transform if there's actually movement
-              if (Math.abs(deltaX) > 2 || Math.abs(deltaY) > 2) {
-                card.style.transition = 'none';
-                card.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-              }
-            }
-          });
-
-          // Force layout
-          document.body.offsetHeight;
-
-          // Animate remaining cards to final positions
-          remainingCards.forEach(card => {
-            card.style.transition = 'all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)';
-            card.style.transform = '';
-          });
-
-          // Wait for rearrangement to complete
-          setTimeout(stage3, 600);
-        } else {
-          stage3();
-        }
-      }
-
-      function stage3() {
-        // STAGE 3: Grow in the new cards
-        if (toShow.length > 0) {
-          toShow.forEach(card => {
-            card.style.transition = 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)';
-            card.style.transform = 'scale(1)';
-            card.style.opacity = '1';
-          });
-        }
-
-        // Clean up all inline styles after animation completes
-        setTimeout(() => {
-          filmCards.forEach(card => {
-            if (selectedRole === 'all' || card.dataset.roles.includes(selectedRole)) {
-              card.style.display = 'block';
-              card.style.opacity = '1';
-              card.style.transform = '';
-              card.style.transition = '';
-            } else {
-              card.style.display = 'none';
-            }
-          });
-        }, 300);
-      }
-    }
-
-    roleFilterBtns.forEach(btn => {
-      btn.addEventListener('click', () => {
-        // Don't animate if already active
-        if (btn.classList.contains('active')) return;
-        
-        roleFilterBtns.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-
-        const selectedRole = btn.dataset.role;
-        animateFilter(selectedRole);
-      });
-    });
-
-    // Initialize all cards as visible
-    filmCards.forEach(card => {
-      card.style.display = 'block';
-      card.style.opacity = '1';
-      card.style.transform = '';
-    });
-
-    // Enable grid transitions after a short delay to avoid render delay on page load
-    setTimeout(() => {
-      if (filmsGrid) {
-        filmsGrid.classList.add('ready');
-      }
-    }, 100);
-  } else if (filmsGrid) {
-    // Enable transitions even if no filtering functionality
-    setTimeout(() => {
-      filmsGrid.classList.add('ready');
-    }, 100);
-  }
+  // Films filtering functionality moved to separate file for LCP optimization
 
 });
 
