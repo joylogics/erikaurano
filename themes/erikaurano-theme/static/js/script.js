@@ -43,13 +43,24 @@ document.addEventListener("DOMContentLoaded", function() {
     }, { once: true });
   }
 
-  // Replay-on-click for .webp images (except header and sub-header)
+  // Replay-on-click for .webp images (except header, sub-header, and film previews)
   var webpImages = document.querySelectorAll('img[src$=".webp"]');
   webpImages.forEach(function(img) {
     // Skip header and sub-header images so they don't replay on refresh.
     if (img.id === "header-animation" || img.id === "sub-header-animation") {
       return;
     }
+    
+    // Skip film preview images to avoid performance issues
+    if (img.closest('.film-preview') || img.closest('.film-card') || img.closest('.films-grid')) {
+      return;
+    }
+    
+    // Skip gallery and art images that don't need replay functionality
+    if (img.closest('.gallery-grid') || img.closest('.art-grid') || img.closest('.art-preview')) {
+      return;
+    }
+    
     if (!img.getAttribute("data-original-src")) {
       img.setAttribute("data-original-src", img.src);
     }

@@ -22,7 +22,7 @@
             {{ $videoEmbed = printf "https://player.vimeo.com/video/%s" $vimeoId }}
           {{ end }}
         {{ end }}
-        {{ $shouldLazyLoad := gt $index 5 }}
+        {{ $shouldLazyLoad := gt $index 2 }}
         <div class="film-card{{ if or $page.Params.playlist $videoEmbed }} has-embedded-video{{ end }}" data-roles="{{ delimit $page.Params.roles " " }}">
           <div class="film-preview">
             {{ if $page.Params.playlist }}

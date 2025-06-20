@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
     
     <!-- Meta Description -->
@@ -55,17 +55,37 @@
       .film-preview img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
       .film-info{padding:1rem}
       .film-info h3{margin:0 0 .5rem;font-size:1.2rem;color:#333}
+      
+      /* Mobile-specific optimizations */
+      @media (max-width: 768px) {
+        .films-grid{grid-template-columns:1fr;gap:1.5rem;padding:0 0.5rem}
+        .film-card{margin-bottom:0}
+        .film-preview{padding-top:56.25%}
+        .film-preview img{will-change:auto;transform:translateZ(0)}
+      }
     </style>
     {{ end }}
     
-    <!-- Preload critical images for films page -->
+    <!-- Preload critical images for films page with mobile optimization -->
     {{ if eq .Section "films" }}
-      {{ range first 3 .Pages.ByWeight }}
+      {{ range first 2 .Pages.ByWeight }}
         {{ if .Params.preview }}
-    <link rel="preload" as="image" href="{{ .Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp">
-    <link rel="preload" as="image" href="{{ .Params.preview }}" type="image/jpeg">
+    <!-- Preload WebP first (higher priority for modern browsers) -->
+    <link rel="preload" as="image" href="{{ .Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp" fetchpriority="high">
+    <!-- Fallback JPEG preload with lower priority -->
+    <link rel="preload" as="image" href="{{ .Params.preview }}" type="image/jpeg" fetchpriority="low">
         {{ end }}
       {{ end }}
+      
+      <!-- Preload the third image with lower priority to avoid blocking -->
+      {{ with index (.Pages.ByWeight) 2 }}
+        {{ if .Params.preview }}
+    <link rel="preload" as="image" href="{{ .Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp" fetchpriority="low">
+        {{ end }}
+      {{ end }}
+             
+       <!-- Mobile-specific performance hints -->
+       <link rel="dns-prefetch" href="//images.squarespace-cdn.com">
     {{ end }}
     
     <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
