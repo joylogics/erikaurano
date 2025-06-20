@@ -2,7 +2,12 @@
   <div id="body-content">
     {{ if .Params.cover }}
       <div class="about-hero">
-        <img src="{{ .Params.cover }}" alt="Erika Urano - Portfolio Photo" class="hero-image">
+        <picture>
+          <source media="(max-width: 768px)" srcset="/about/images/onset1-mobile.webp" type="image/webp">
+          <source media="(max-width: 768px)" srcset="{{ .Params.cover | strings.TrimSuffix ".webp" }}.JPG" type="image/jpeg">
+          <source srcset="{{ .Params.cover }}" type="image/webp">
+          <img src="{{ .Params.cover | strings.TrimSuffix ".webp" }}.JPG" alt="Erika Urano - Portfolio Photo" class="hero-image" loading="eager">
+        </picture>
       </div>
     {{ end }}
     
@@ -22,17 +27,29 @@
       
       <div class="about-gallery">
         <div class="gallery-item">
-          <img src="/about/images/beginning.jpeg" alt="Career beginnings" class="gallery-image">
+          <picture>
+            <source media="(max-width: 768px)" srcset="/about/images/beginning-mobile.webp" type="image/webp">
+            <source srcset="/about/images/beginning.webp" type="image/webp">
+            <img src="/about/images/beginning.jpeg" alt="Career beginnings" class="gallery-image" loading="lazy">
+          </picture>
           <p class="gallery-caption">Career beginnings: age two, Canon lens, and a very patient grandpa.</p>
         </div>
         
         <div class="gallery-item">
-          <img src="/about/images/onset2.JPG" alt="On set" class="gallery-image">
+          <picture>
+            <source media="(max-width: 768px)" srcset="/about/images/onset2-mobile.webp" type="image/webp">
+            <source srcset="/about/images/onset2.webp" type="image/webp">
+            <img src="/about/images/onset2.JPG" alt="On set" class="gallery-image" loading="lazy">
+          </picture>
           <p class="gallery-caption">Half filmmaker, half set gremlin. All in.</p>
         </div>
         
         <div class="gallery-item">
-          <img src="/about/images/shooting.jpeg" alt="During shooting" class="gallery-image">
+          <picture>
+            <source media="(max-width: 768px)" srcset="/about/images/shooting-mobile.webp" type="image/webp">
+            <source srcset="/about/images/shooting.webp" type="image/webp">
+            <img src="/about/images/shooting.jpeg" alt="During shooting" class="gallery-image" loading="lazy">
+          </picture>
           <p class="gallery-caption">Somewhere between golden hour and final cut.</p>
         </div>
       </div>

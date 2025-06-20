@@ -70,22 +70,30 @@
     {{ if eq .Section "films" }}
       {{ range first 2 .Pages.ByWeight }}
         {{ if .Params.preview }}
-    <!-- Preload WebP first (higher priority for modern browsers) -->
+          {{ if strings.HasSuffix .Params.preview ".webp" }}
+    <!-- Already WebP, preload as-is -->
+    <link rel="preload" as="image" href="{{ .Params.preview }}" type="image/webp" fetchpriority="high">
+          {{ else }}
+    <!-- Convert to WebP and preload original -->
     <link rel="preload" as="image" href="{{ .Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp" fetchpriority="high">
-    <!-- Fallback JPEG preload with lower priority -->
     <link rel="preload" as="image" href="{{ .Params.preview }}" type="image/jpeg" fetchpriority="low">
+          {{ end }}
         {{ end }}
       {{ end }}
       
       <!-- Preload the third image with lower priority to avoid blocking -->
       {{ with index (.Pages.ByWeight) 2 }}
         {{ if .Params.preview }}
+          {{ if strings.HasSuffix .Params.preview ".webp" }}
+    <link rel="preload" as="image" href="{{ .Params.preview }}" type="image/webp" fetchpriority="low">
+          {{ else }}
     <link rel="preload" as="image" href="{{ .Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp" fetchpriority="low">
+          {{ end }}
         {{ end }}
       {{ end }}
-             
-       <!-- Mobile-specific performance hints -->
-       <link rel="dns-prefetch" href="//images.squarespace-cdn.com">
+      
+      <!-- Mobile-specific performance hints -->
+      <link rel="dns-prefetch" href="//images.squarespace-cdn.com">
     {{ end }}
     
     <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
