@@ -6,7 +6,7 @@
           <source media="(max-width: 768px)" srcset="/about/images/onset1-mobile.webp" type="image/webp">
           <source media="(max-width: 768px)" srcset="{{ .Params.cover | strings.TrimSuffix ".webp" }}.JPG" type="image/jpeg">
           <source srcset="/about/images/onset1-desktop.webp" type="image/webp">
-          <img src="{{ .Params.cover | strings.TrimSuffix ".webp" }}.JPG" alt="Erika Urano - Portfolio Photo" class="hero-image" loading="eager">
+          <img src="{{ .Params.cover | strings.TrimSuffix ".webp" }}.JPG" alt="Erika Urano - Portfolio Photo" class="hero-image" loading="eager" width="600" height="800">
         </picture>
       </div>
     {{ end }}
@@ -30,7 +30,7 @@
           <picture>
             <source media="(max-width: 768px)" srcset="/about/images/beginning-mobile.webp" type="image/webp">
             <source srcset="/about/images/beginning-desktop.webp" type="image/webp">
-            <img src="/about/images/beginning.jpeg" alt="Career beginnings" class="gallery-image" loading="lazy">
+            <img src="/about/images/beginning.jpeg" alt="Career beginnings" class="gallery-image" loading="lazy" width="600" height="800">
           </picture>
           <p class="gallery-caption">Career beginnings: age two, Canon lens, and a very patient grandpa.</p>
         </div>
@@ -39,7 +39,7 @@
           <picture>
             <source media="(max-width: 768px)" srcset="/about/images/onset2-mobile.webp" type="image/webp">
             <source srcset="/about/images/onset2-desktop.webp" type="image/webp">
-            <img src="/about/images/onset2.JPG" alt="On set" class="gallery-image" loading="lazy">
+            <img src="/about/images/onset2.JPG" alt="On set" class="gallery-image" loading="lazy" width="600" height="800">
           </picture>
           <p class="gallery-caption">Half filmmaker, half set gremlin. All in.</p>
         </div>
@@ -48,7 +48,7 @@
           <picture>
             <source media="(max-width: 768px)" srcset="/about/images/shooting-mobile.webp" type="image/webp">
             <source srcset="/about/images/shooting-desktop.webp" type="image/webp">
-            <img src="/about/images/shooting.jpeg" alt="During shooting" class="gallery-image" loading="lazy">
+            <img src="/about/images/shooting.jpeg" alt="During shooting" class="gallery-image" loading="lazy" width="600" height="800">
           </picture>
           <p class="gallery-caption">Somewhere between golden hour and final cut.</p>
         </div>

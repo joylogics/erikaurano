@@ -1366,6 +1366,8 @@ body.home .nav-text:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   max-height: 600px;
   object-fit: cover;
+  /* Reserve space to prevent layout shift */
+  aspect-ratio: 3/4;
 }
 
 .about-container {
@@ -1437,12 +1439,14 @@ body.home .nav-text:hover {
 .about-gallery .gallery-image {
   width: 100%;
   height: auto;
-  max-height: 300px;
+  max-height: 400px;
   object-fit: cover;
   border-radius: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
   transition: transform 0.3s ease;
+  /* Use min-height to reserve space without forcing aspect ratio */
+  min-height: 200px;
 }
 
 .about-gallery .gallery-image:hover {
@@ -1467,6 +1471,8 @@ body.home .nav-text:hover {
   .hero-image {
     border-radius: 0;
     max-height: 350px;
+    /* Maintain aspect ratio on mobile */
+    aspect-ratio: 3/4;
   }
   
   .about-container {
@@ -1487,8 +1493,9 @@ body.home .nav-text:hover {
   }
   
   .about-gallery .gallery-image {
-    max-height: 250px;
     border-radius: 0;
+    /* Small min-height to prevent layout shifts without restricting proportions */
+    min-height: 100px;
   }
 }
 
@@ -1507,10 +1514,14 @@ body.home .nav-text:hover {
   
   .hero-image {
     max-height: 250px;
+    /* Maintain aspect ratio on small mobile */
+    aspect-ratio: 3/4;
   }
   
   .about-gallery .gallery-image {
-    max-height: 200px;
+    border-radius: 0;
+    /* Small min-height to prevent layout shifts without restricting proportions */
+    min-height: 100px;
   }
 }
 

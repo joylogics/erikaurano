@@ -119,6 +119,44 @@
       <link rel="dns-prefetch" href="//images.squarespace-cdn.com">
     {{ end }}
     
+    <!-- Preload critical images for about page -->
+    {{ if eq .Section "about" }}
+      <!-- Preload hero image for different screen sizes -->
+      <link rel="preload" as="image" href="/about/images/onset1-desktop.webp" type="image/webp" media="(min-width: 769px)" fetchpriority="high">
+      <link rel="preload" as="image" href="/about/images/onset1-mobile.webp" type="image/webp" media="(max-width: 768px)" fetchpriority="high">
+    {{ end }}
+    
+    <!-- Critical CSS for about page -->
+    {{ if eq .Section "about" }}
+    <style>
+      /* About page critical CSS to prevent layout shifts */
+      .about-hero { max-width: 800px; margin: 0 auto 3rem; padding: 0 1rem; }
+      .hero-image { 
+        width: 100%; height: auto; max-height: 600px; object-fit: cover;
+        aspect-ratio: 3/4; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+      }
+      .about-container { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem; }
+      .about-gallery { 
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 2rem; margin-top: 3rem;
+      }
+      .gallery-item { text-align: center; }
+              .about-gallery .gallery-image { 
+          width: 100%; height: auto; max-height: 400px; object-fit: cover;
+          min-height: 200px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+          margin-bottom: 1rem;
+        }
+      
+      @media (max-width: 768px) {
+        .about-hero { margin-bottom: 2rem; padding: 0 0.5rem; max-width: 100%; }
+        .hero-image { max-height: 350px; aspect-ratio: 3/4; }
+        .about-container { padding: 1rem 0.5rem; }
+        .about-gallery { grid-template-columns: 1fr; gap: 1.5rem; }
+        .about-gallery .gallery-image { border-radius: 0; min-height: 100px; }
+      }
+    </style>
+    {{ end }}
+    
     <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
   </head>
   <body class="{{ if .IsHome }}home{{ end }}">
