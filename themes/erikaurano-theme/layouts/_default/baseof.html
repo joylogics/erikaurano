@@ -157,12 +157,75 @@
     </style>
     {{ end }}
     
+    <!-- Critical CSS for home page -->
+    {{ if .IsHome }}
+    <style>
+      /* Home page critical CSS to prevent FOUC */
+      body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+      
+      /* Background video reel with immediate fallback */
+      .background-reel {
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        z-index: -1; overflow: hidden; background: #1a1a1a;
+      }
+      .reel-content { position: relative; width: 100%; height: 100%; }
+      .reel-item {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        opacity: 0; transition: opacity 1s ease-in-out;
+      }
+      .reel-item.active { opacity: 1; }
+      #background-fallback {
+        background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+      }
+      .reel-item video {
+        width: 100%; height: 100%; object-fit: cover; object-position: center;
+        filter: blur(16px); transform: scale(1.1); background: black;
+      }
+      .reel-overlay {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0, 0, 0, 0.6); pointer-events: none;
+      }
+      
+      /* Header and navigation */
+      .site-header {
+        text-align: center; margin: 40px auto 60px auto; width: 100%;
+        padding: 0; display: flex; flex-direction: column; align-items: center;
+      }
+      .header-title {
+        font-family: 'Playfair Display', serif; font-size: clamp(2.5rem, 5vw, 4rem);
+        font-weight: 500; letter-spacing: -0.02em; color: #1E1C1A;
+        text-decoration: none; display: block; margin: 0 0 30px 0; padding: 0;
+      }
+      #body-content { text-align: center; }
+      .nav-wrapper { text-align: center; margin: 0 auto; padding: 0; display: inline-block; }
+      .nav-list {
+        display: flex; flex-direction: row; list-style: none; margin: 0; padding: 0;
+        gap: 2rem; align-items: center; justify-content: center;
+      }
+      .nav-item { display: block; padding: 0; background: transparent; width: auto; }
+      .nav-item-link { text-decoration: none; color: inherit; display: block; width: auto; }
+      .nav-text {
+        font-family: 'Inter', sans-serif; font-size: clamp(1rem, 1.5vw, 1.25rem);
+        font-weight: 400; letter-spacing: 0.05em; color: #4A4A4A;
+        text-transform: lowercase; position: relative;
+      }
+      
+      @media (max-width: 768px) {
+        .site-header { margin: 20px auto 40px auto; }
+        .header-title { font-size: clamp(2rem, 6vw, 3rem); margin-bottom: 20px; }
+        .nav-list { gap: 1.5rem; flex-wrap: wrap; }
+        .nav-text { font-size: clamp(0.9rem, 1.2vw, 1.1rem); }
+      }
+    </style>
+    {{ end }}
+    
     <link rel="stylesheet" href="{{ "css/style.css" | relURL }}">
   </head>
   <body class="{{ if .IsHome }}home{{ end }}">
     <div id="background-image"></div>
     {{ partial "header.html" . }}
     {{ block "main" . }}{{ end }}
+    {{ partial "footer.html" . }}
     
     <!-- Load JavaScript with defer but optimize for LCP -->
     <script src="{{ "js/script.js" | relURL }}" defer></script>

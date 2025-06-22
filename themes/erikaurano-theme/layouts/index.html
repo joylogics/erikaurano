@@ -2,14 +2,16 @@
 <!-- Background Video -->
 <div class="background-reel">
   <div class="reel-content">
-    <div class="reel-item active">
+    <div class="reel-item active" id="background-fallback">
+      <!-- Solid background shows immediately -->
+    </div>
+    <div class="reel-item" id="background-video">
       <video 
-        src="{{ "films/reel.mp4" | relURL }}"
+        id="bg-video"
         muted 
         loop 
-        autoplay
-        preload="auto"
-        playsinline>
+        playsinline
+        preload="none">
       </video>
     </div>
   </div>
@@ -19,5 +21,45 @@
 <div id="body-content">
   <!-- Navigation is now in the header -->
 </div>
+
+<script>
+// Load background video asynchronously after critical content
+document.addEventListener('DOMContentLoaded', function() {
+  // Small delay to ensure LCP happens first
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      setTimeout(function() {
+        const video = document.getElementById('bg-video');
+        const fallback = document.getElementById('background-fallback');
+        const videoContainer = document.getElementById('background-video');
+        
+        if (video && fallback && videoContainer) {
+          // Start loading the video
+          video.src = '{{ "films/reel.mp4" | relURL }}';
+          video.preload = 'auto';
+          
+          // When video is ready to play, transition to it
+          video.addEventListener('canplay', function() {
+            video.play().then(function() {
+              // Smooth transition from fallback to video
+              videoContainer.classList.add('active');
+              setTimeout(function() {
+                fallback.classList.remove('active');
+              }, 500); // Half second overlap for smooth transition
+            }).catch(function(error) {
+              console.log('Video autoplay failed, keeping fallback background');
+            });
+          });
+          
+          // Fallback if video fails to load
+          video.addEventListener('error', function() {
+            console.log('Video failed to load, keeping fallback background');
+          });
+        }
+      }, 150); // 150ms delay after LCP
+    });
+  });
+});
+</script>
 {{ end }}
 

@@ -62,6 +62,7 @@ body {
   height: 100%;
   z-index: -1;
   overflow: hidden;
+  background: #1a1a1a; /* Fallback background color */
 }
 
 .reel-content {
@@ -77,11 +78,16 @@ body {
   width: 100%;
   height: 100%;
   opacity: 0;
-  transition: opacity 2s ease-in-out;
+  transition: opacity 1s ease-in-out;
 }
 
 .reel-item.active {
   opacity: 1;
+}
+
+/* Solid fallback background */
+#background-fallback {
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
 }
 
 .reel-item img,
@@ -1534,4 +1540,52 @@ body.home .nav-text:hover {
 .nav-wrapper-link:hover {
   text-decoration: none;
   color: inherit;
+}
+
+/* Footer Styles */
+.site-footer {
+  background: #f8f9fa;
+  border-top: 1px solid #e9ecef;
+  margin-top: 4rem;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.copyright p {
+  margin: 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.rights-notice {
+  font-size: 0.85rem !important;
+  font-style: italic;
+  color: #888 !important;
+}
+
+/* Home page footer adjustments */
+body.home .site-footer {
+  display: none; /* Hide footer on home page to maintain clean full-screen video aesthetic */
+}
+
+@media (max-width: 768px) {
+  .site-footer {
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+  }
+  
+  .copyright p {
+    font-size: 0.85rem;
+  }
+  
+  .rights-notice {
+    font-size: 0.8rem !important;
+  }
 }
