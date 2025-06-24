@@ -1,0 +1,15 @@
+{
+  "name": "erikaurano-portfolio",
+  "version": "1.0.0",
+  "description": "Erika Urano Portfolio Website",
+  "scripts": {
+    "social-images": "node scripts/generate-social-images.js",
+    "install-deps": "npm install"
+  },
+  "devDependencies": {
+    "puppeteer": "^21.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+} 

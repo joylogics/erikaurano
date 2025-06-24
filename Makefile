@@ -117,3 +117,75 @@ setup-static:
 	@echo "Setting up symbolic link to mounted static directory..."
 	@ln -s $(SRCDIR)/static static
 	@echo "Symbolic link created: static -> $(SRCDIR)/static"
+
+#
+# targets for social image generation
+#
+
+# Hugo server PID file for cleanup
+HUGO_PID_FILE := /tmp/hugo-social-server.pid
+
+.PHONY: setup-node
+setup-node:
+	@echo "Installing Node.js dependencies for social image generation..."
+	@npm install
+
+# Start Hugo server for screenshot generation
+.PHONY: start-hugo-server
+start-hugo-server:
+	@echo "Starting Hugo development server..."
+	@hugo server --port 1314 --bind 0.0.0.0 --disableFastRender &
+	@echo $$! > $(HUGO_PID_FILE)
+	@sleep 3
+	@if ! curl -s http://localhost:1314 > /dev/null; then \
+		echo "❌ Hugo server failed to start"; \
+		if [ -f $(HUGO_PID_FILE) ]; then kill `cat $(HUGO_PID_FILE)` 2>/dev/null || true; rm -f $(HUGO_PID_FILE); fi; \
+		exit 1; \
+	fi
+
+# Stop Hugo server
+.PHONY: stop-hugo-server
+stop-hugo-server:
+	@if [ -f $(HUGO_PID_FILE) ]; then \
+		echo "Stopping Hugo server..."; \
+		kill `cat $(HUGO_PID_FILE)` 2>/dev/null || true; \
+		rm -f $(HUGO_PID_FILE); \
+	fi
+
+.PHONY: social-home
+social-home:
+	@node scripts/generate-social-images.js "/" "home.jpg"
+
+.PHONY: social-films
+social-films:
+	@node scripts/generate-social-images.js "/films/" "films.jpg"
+
+.PHONY: social-art
+social-art: 
+	@node scripts/generate-social-images.js "/art/" "art.jpg"
+
+.PHONY: social-about
+social-about: 
+	@node scripts/generate-social-images.js "/about/" "about.jpg"
+
+# Generate all social images efficiently (single server start/stop)
+.PHONY: social-images
+social-images: setup-node start-hugo-server social-home social-films social-art social-about stop-hugo-server
+
+.PHONY: clean-social
+clean-social:
+	@echo "Cleaning up social images..."
+	@rm -rf static/images/social/
+	@echo "Social images cleaned"
+
+
+# Cleanup target to stop any orphaned Hugo servers
+.PHONY: cleanup-servers
+cleanup-servers:
+	@echo "Cleaning up any orphaned Hugo servers..."
+	@if [ -f $(HUGO_PID_FILE) ]; then \
+		kill `cat $(HUGO_PID_FILE)` 2>/dev/null || true; \
+		rm -f $(HUGO_PID_FILE); \
+	fi
+	@pkill -f "hugo server --port 1314" 2>/dev/null || true
+	@echo "Server cleanup complete"

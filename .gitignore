@@ -27,3 +27,24 @@ Thumbs.db
 .vscode/
 *.swp
 *.swo
+
+# Node.js dependencies and files
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+
+# Node.js runtime files
+.node_repl_history
+
+# Package-lock files (keep package.json but ignore lock files for this type of project)
+package-lock.json
+yarn.lock
+
+# Hugo server PID file for social image generation
+/tmp/hugo-social-server.pid
+
+# Generated social images (optional - remove this line if you want to commit them)
+# static/images/social/
