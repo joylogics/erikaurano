@@ -16,6 +16,97 @@
       <meta name="description" content="{{ .Site.Description }}">
     {{ end }}
     
+    <!-- Open Graph / Social Media Meta Tags -->
+    <meta property="og:type" content="{{ if .IsHome }}website{{ else }}article{{ end }}">
+    <meta property="og:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
+    {{ if .Description }}
+      <meta property="og:description" content="{{ .Description }}">
+    {{ else if .Summary }}
+      <meta property="og:description" content="{{ .Summary | truncate 160 }}">
+    {{ else if .IsHome }}
+      <meta property="og:description" content="{{ .Site.Description }}">
+    {{ else }}
+      <meta property="og:description" content="{{ .Site.Description }}">
+    {{ end }}
+    <meta property="og:url" content="{{ .Permalink }}">
+    <meta property="og:site_name" content="{{ .Site.Title }}">
+    
+    <!-- Open Graph Images -->
+    {{ if .IsHome }}
+      <meta property="og:image" content="{{ "images/social/home.jpg" | absURL }}">
+      <meta property="og:image:alt" content="Erika Urano - Filmmaker and Artist Portfolio">
+    {{ else if eq .Section "films" }}
+      <meta property="og:image" content="{{ "images/social/films.jpg" | absURL }}">
+      <meta property="og:image:alt" content="Erika Urano Films Portfolio">
+    {{ else if eq .Section "art" }}
+      <meta property="og:image" content="{{ "images/social/art.jpg" | absURL }}">
+      <meta property="og:image:alt" content="Erika Urano Art Portfolio">
+    {{ else if eq .Section "about" }}
+      <meta property="og:image" content="{{ "images/social/about.jpg" | absURL }}">
+      <meta property="og:image:alt" content="About Erika Urano - Filmmaker and Artist">
+    {{ else }}
+      <!-- Default to home social image for other pages -->
+      <meta property="og:image" content="{{ "images/social/home.jpg" | absURL }}">
+      <meta property="og:image:alt" content="Erika Urano - Filmmaker and Artist Portfolio">
+    {{ end }}
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
+    {{ if .Description }}
+      <meta name="twitter:description" content="{{ .Description }}">
+    {{ else if .Summary }}
+      <meta name="twitter:description" content="{{ .Summary | truncate 160 }}">
+    {{ else if .IsHome }}
+      <meta name="twitter:description" content="{{ .Site.Description }}">
+    {{ else }}
+      <meta name="twitter:description" content="{{ .Site.Description }}">
+    {{ end }}
+    
+    <!-- Twitter Images (reuse Open Graph images) -->
+    {{ if .IsHome }}
+      <meta name="twitter:image" content="{{ "images/social/home.jpg" | absURL }}">
+      <meta name="twitter:image:alt" content="Erika Urano - Filmmaker and Artist Portfolio">
+    {{ else if eq .Section "films" }}
+      <meta name="twitter:image" content="{{ "images/social/films.jpg" | absURL }}">
+      <meta name="twitter:image:alt" content="Erika Urano Films Portfolio">
+    {{ else if eq .Section "art" }}
+      <meta name="twitter:image" content="{{ "images/social/art.jpg" | absURL }}">
+      <meta name="twitter:image:alt" content="Erika Urano Art Portfolio">
+    {{ else if eq .Section "about" }}
+      <meta name="twitter:image" content="{{ "images/social/about.jpg" | absURL }}">
+      <meta name="twitter:image:alt" content="About Erika Urano - Filmmaker and Artist">
+    {{ else }}
+      <!-- Default to home social image for other pages -->
+      <meta name="twitter:image" content="{{ "images/social/home.jpg" | absURL }}">
+      <meta name="twitter:image:alt" content="Erika Urano - Filmmaker and Artist Portfolio">
+    {{ end }}
+    
+    <!-- Additional Schema.org structured data -->
+    <meta itemprop="name" content="{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}">
+    {{ if .Description }}
+      <meta itemprop="description" content="{{ .Description }}">
+    {{ else if .Summary }}
+      <meta itemprop="description" content="{{ .Summary | truncate 160 }}">
+    {{ else if .IsHome }}
+      <meta itemprop="description" content="{{ .Site.Description }}">
+    {{ else }}
+      <meta itemprop="description" content="{{ .Site.Description }}">
+    {{ end }}
+    {{ if .IsHome }}
+      <meta itemprop="image" content="{{ "images/social/home.jpg" | absURL }}">
+    {{ else if eq .Section "films" }}
+      <meta itemprop="image" content="{{ "images/social/films.jpg" | absURL }}">
+    {{ else if eq .Section "art" }}
+      <meta itemprop="image" content="{{ "images/social/art.jpg" | absURL }}">
+    {{ else if eq .Section "about" }}
+      <meta itemprop="image" content="{{ "images/social/about.jpg" | absURL }}">
+    {{ else }}
+      <meta itemprop="image" content="{{ "images/social/home.jpg" | absURL }}">
+    {{ end }}
+    
     <!-- Favicon -->
     <link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="32x32">
     <link rel="icon" href="{{ "favicon.svg" | relURL }}" type="image/svg+xml">
