@@ -1,0 +1,16 @@
+{{ define "main" }}
+  <div id="body-content">
+    <div class="production-design-stack">
+      {{ range .Pages.ByWeight }}
+        <a href="{{ .Permalink }}" class="production-design-item">
+          <div class="production-design-image-wrapper">
+            <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" loading="lazy">
+            <div class="production-design-overlay">
+              <h2 class="production-design-title">{{ .Title }}</h2>
+            </div>
+          </div>
+        </a>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}

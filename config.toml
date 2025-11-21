@@ -2,10 +2,6 @@ baseURL = "https://erikaurano.com/"
 title = "Erika Urano"
 theme = "erikaurano-theme"
 
-# SEO Settings
-description = "Erika Urano is a filmmaker and artist specializing in narrative films and production design. Explore her portfolio of films, art, and creative work."
-
-
 [mediaTypes]
   [mediaTypes."application/vnd.apple.mpegurl"]
     suffixes = ["m3u8"]
@@ -21,10 +17,17 @@ description = "Erika Urano is a filmmaker and artist specializing in narrative f
     notAlternative = true
 
 [params]
+  # SEO Settings
+  description = "Erika Urano is a filmmaker and artist specializing in narrative films and production design. Explore her portfolio of films, art, and creative work."
+
   [[params.navItems]]
     name = "Films"
     image = "images/director.gif"
     url = "/films/"
+
+  [[params.navItems]]
+    name = "Production Design"
+    url = "/production-design/"
 
   [[params.navItems]]
     name = "Art"

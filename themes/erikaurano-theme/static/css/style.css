@@ -1542,3 +1542,248 @@ body.home .site-footer {
     font-size: 0.8rem !important;
   }
 }
+
+/* Production Design Styles */
+.production-design-stack {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.production-design-item {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+  color: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.production-design-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.production-design-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.production-design-item:hover .production-design-image-wrapper img {
+  transform: scale(1.05);
+}
+
+.production-design-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
+  pointer-events: none;
+}
+
+.production-design-item:hover .production-design-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.production-design-title {
+  font-size: 3rem;
+  font-weight: 500;
+  color: #FFFFFF;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  margin: 0;
+}
+
+.production-design-item:hover .production-design-title {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Production Design Single Page */
+.production-design-single {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.production-design-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.production-design-header h1 {
+  font-size: 2.5rem;
+  margin: 0;
+  color: #FFFFFF;
+}
+
+.production-design-gallery {
+  margin-bottom: 3rem;
+}
+
+.gallery-main-viewer {
+  position: relative;
+  width: 100%;
+  max-height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  background: #000;
+}
+
+.gallery-main-image-container {
+  position: relative;
+  width: 100%;
+  height: 70vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-main-image {
+  position: absolute;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+
+.gallery-main-image.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.gallery-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: #FFFFFF;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.gallery-nav-btn:hover {
+  background: rgba(217, 114, 76, 0.9);
+  border-color: #D9724C;
+  transform: translateY(-50%) scale(1.1);
+}
+
+.gallery-nav-prev {
+  left: 1rem;
+}
+
+.gallery-nav-next {
+  right: 1rem;
+}
+
+.gallery-thumbnails {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scroll-behavior: smooth;
+}
+
+.gallery-thumbnails::-webkit-scrollbar {
+  height: 8px;
+}
+
+.gallery-thumbnails::-webkit-scrollbar-track {
+  background: #1A1A1A;
+}
+
+.gallery-thumbnails::-webkit-scrollbar-thumb {
+  background: #D9724C;
+  border-radius: 4px;
+}
+
+.gallery-thumbnail {
+  flex-shrink: 0;
+  width: 150px;
+  height: 100px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.gallery-thumbnail:hover {
+  border-color: rgba(217, 114, 76, 0.5);
+  transform: scale(1.05);
+}
+
+.gallery-thumbnail.active {
+  border-color: #D9724C;
+}
+
+.gallery-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.production-design-navigation {
+  text-align: center;
+  padding-top: 2rem;
+  border-top: 1px solid #333;
+}
+
+.back-to-production-design {
+  color: #B0B0B0;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
+}
+
+.back-to-production-design:hover {
+  color: #D9724C;
+}
+
+@media (max-width: 768px) {
+  .production-design-title {
+    font-size: 2rem;
+  }
+
+  .gallery-main-image-container {
+    height: 50vh;
+  }
+
+  .gallery-nav-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .gallery-thumbnail {
+    width: 100px;
+    height: 70px;
+  }
+
+  .production-design-single {
+    padding: 1rem;
+  }
+}

@@ -1,0 +1,104 @@
+{{ define "main" }}
+  <div class="production-design-single">
+    <div class="production-design-header">
+      <h1>{{ .Title }}</h1>
+    </div>
+
+    <div class="production-design-gallery">
+      <!-- Main image viewer -->
+      <div class="gallery-main-viewer">
+        <button class="gallery-nav-btn gallery-nav-prev" aria-label="Previous image">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M25 10 L15 20 L25 30" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <div class="gallery-main-image-container">
+          {{ range $index, $image := .Params.images }}
+            <img
+              src="{{ $image }}"
+              alt="{{ $.Title }} - Image {{ add $index 1 }}"
+              class="gallery-main-image{{ if eq $index 0 }} active{{ end }}"
+              data-index="{{ $index }}">
+          {{ end }}
+        </div>
+
+        <button class="gallery-nav-btn gallery-nav-next" aria-label="Next image">
+          <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+            <path d="M15 10 L25 20 L15 30" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Thumbnail strip -->
+      <div class="gallery-thumbnails">
+        {{ range $index, $image := .Params.images }}
+          <div class="gallery-thumbnail{{ if eq $index 0 }} active{{ end }}" data-index="{{ $index }}">
+            <img src="{{ $image }}" alt="{{ $.Title }} - Thumbnail {{ add $index 1 }}">
+          </div>
+        {{ end }}
+      </div>
+    </div>
+
+    <div class="production-design-navigation">
+      <a href="/production-design/" class="back-to-production-design">← Back to Production Design</a>
+    </div>
+  </div>
+
+  <script>
+    (function() {
+      const mainImages = document.querySelectorAll('.gallery-main-image');
+      const thumbnails = document.querySelectorAll('.gallery-thumbnail');
+      const prevBtn = document.querySelector('.gallery-nav-prev');
+      const nextBtn = document.querySelector('.gallery-nav-next');
+      let currentIndex = 0;
+
+      function showImage(index) {
+        // Wrap around
+        if (index < 0) index = mainImages.length - 1;
+        if (index >= mainImages.length) index = 0;
+
+        currentIndex = index;
+
+        // Update main images
+        mainImages.forEach((img, i) => {
+          img.classList.toggle('active', i === currentIndex);
+        });
+
+        // Update thumbnails
+        thumbnails.forEach((thumb, i) => {
+          thumb.classList.toggle('active', i === currentIndex);
+        });
+
+        // Scroll thumbnail into view
+        if (thumbnails[currentIndex]) {
+          thumbnails[currentIndex].scrollIntoView({
+            behavior: 'smooth',
+            block: 'nearest',
+            inline: 'center'
+          });
+        }
+      }
+
+      // Navigation buttons
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => showImage(currentIndex - 1));
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => showImage(currentIndex + 1));
+      }
+
+      // Thumbnail clicks
+      thumbnails.forEach((thumb, index) => {
+        thumb.addEventListener('click', () => showImage(index));
+      });
+
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') showImage(currentIndex - 1);
+        if (e.key === 'ArrowRight') showImage(currentIndex + 1);
+      });
+    })();
+  </script>
+{{ end }}

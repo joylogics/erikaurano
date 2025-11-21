@@ -7,6 +7,8 @@
       {{ $isActive := false }}
       {{ if eq .name "Films" }}
         {{ $isActive = or (eq $.Section "films") (and (eq $.Type "films") (not $.IsHome)) }}
+      {{ else if eq .name "Production Design" }}
+        {{ $isActive = or (eq $.Section "production-design") (and (eq $.Type "production-design") (not $.IsHome)) }}
       {{ else if eq .name "Art" }}
         {{ $isActive = or (eq $.Section "art") (and (eq $.Type "art") (not $.IsHome)) }}
       {{ else if eq .name "About" }}
