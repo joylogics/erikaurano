@@ -107,7 +107,7 @@ body:not(.home) .background-reel {
 }
 
 .header-title:hover {
-  color: #D9724C;
+  color: #FFFFFF;
   background: none;
   box-shadow: none;
   backdrop-filter: none;
@@ -188,7 +188,7 @@ body:not(.home) .background-reel {
 }
 
 .nav-text:hover {
-  color: #D9724C;
+  color: #FFFFFF;
 }
 
 .nav-text::after {
@@ -198,7 +198,7 @@ body:not(.home) .background-reel {
   left: 0;
   width: 0;
   height: 1px;
-  background-color: #D9724C;
+  background-color: #FFFFFF;
   transition: width 0.3s ease;
 }
 
@@ -208,13 +208,13 @@ body:not(.home) .background-reel {
 
 /* Active/Current section highlighting */
 .nav-item.active .nav-text {
-  color: #D9724C;
+  color: #FFFFFF;
   font-weight: 500;
 }
 
 .nav-item.active .nav-text::after {
   width: 100%;
-  background-color: #D9724C;
+  background-color: #FFFFFF;
 }
 
 /* Home page specific styles - now using consistent dark mode */
@@ -223,7 +223,7 @@ body.home .header-title {
 }
 
 body.home .header-title:hover {
-  color: #D9724C;
+  color: #FFFFFF;
 }
 
 body.home .nav-text {
@@ -231,7 +231,7 @@ body.home .nav-text {
 }
 
 body.home .nav-text:hover {
-  color: #D9724C;
+  color: #FFFFFF;
 }
 
 /* Alternative header layout for right-aligned navigation */
@@ -334,15 +334,16 @@ body.home .nav-text:hover {
 .prop-link {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: #D9724C;
-  color: white;
+  background-color: #FFFFFF;
+  color: #000000;
   text-decoration: none;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .prop-link:hover {
-  background-color: #E88A62;
+  background-color: #E0E0E0;
+  transform: translateY(-2px);
 }
 
 .unreleased {
@@ -369,9 +370,9 @@ body.home .nav-text:hover {
 
 .filter-btn {
   padding: 0.5rem 1.5rem;
-  border: 2px solid #D9724C;
+  border: 2px solid #FFFFFF;
   background: transparent;
-  color: #D9724C;
+  color: #FFFFFF;
   border-radius: 25px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -385,13 +386,13 @@ body.home .nav-text:hover {
 }
 
 .filter-btn:hover {
-  background: #D9724C;
-  color: white;
+  background: #FFFFFF;
+  color: #000000;
 }
 
 .filter-btn.active {
-  background: #D9724C;
-  color: white;
+  background: #FFFFFF;
+  color: #000000;
 }
 
 .filter-btn:disabled {
@@ -687,15 +688,16 @@ body.home .nav-text:hover {
 .watch-link {
   display: inline-block;
   padding: 1rem 2rem;
-  background: #D9724C;
-  color: white;
+  background: #FFFFFF;
+  color: #000000;
   text-decoration: none;
   border-radius: 4px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .watch-link:hover {
-  background: #E88A62;
+  background: #E0E0E0;
+  transform: translateY(-2px);
 }
 
 .unreleased-badge {
@@ -737,7 +739,7 @@ body.home .nav-text:hover {
 
 .role-badge {
   background: #2A2A2A;
-  color: #D9724C;
+  color: #FFFFFF;
   padding: 0.25rem 0.75rem;
   border-radius: 15px;
   font-size: 0.8rem;
@@ -895,16 +897,17 @@ body.home .nav-text:hover {
 .watch-link-single {
   display: inline-block;
   padding: 0.75rem 2rem;
-  background-color: #D9724C;
-  color: white;
+  background-color: #FFFFFF;
+  color: #000000;
   text-decoration: none;
   border-radius: 25px;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
   font-weight: bold;
 }
 
 .watch-link-single:hover {
-  background-color: #E88A62;
+  background-color: #E0E0E0;
+  transform: translateY(-2px);
 }
 
 .film-navigation {
@@ -921,7 +924,7 @@ body.home .nav-text:hover {
 }
 
 .back-to-films:hover {
-  color: #D9724C;
+  color: #FFFFFF;
 }
 
 @media (min-width: 768px) {
@@ -1222,7 +1225,7 @@ body.home .nav-text:hover {
 }
 
 .back-to-art:hover {
-  color: #D9724C;
+  color: #FFFFFF;
 }
 
 .artwork-nav {
@@ -1248,8 +1251,8 @@ body.home .nav-text:hover {
 
 .nav-prev:hover,
 .nav-next:hover {
-  color: #D9724C;
-  border-color: #D9724C;
+  color: #FFFFFF;
+  border-color: #FFFFFF;
   background: #1A1A1A;
 }
 
@@ -1363,21 +1366,21 @@ body.home .nav-text:hover {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  color: #D9724C;
+  color: #FFFFFF;
   text-decoration: none;
   font-size: 1.1rem;
   font-weight: 500;
   padding: 0.75rem 1.5rem;
-  border: 2px solid #D9724C;
+  border: 2px solid #FFFFFF;
   border-radius: 8px;
   transition: all 0.3s ease;
 }
 
 .linkedin-link:hover {
-  background-color: #D9724C;
-  color: white;
+  background-color: #FFFFFF;
+  color: #000000;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(217, 114, 76, 0.5);
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.5);
 }
 
 .linkedin-link svg {
@@ -1687,8 +1690,9 @@ body.home .site-footer {
 }
 
 .gallery-nav-btn:hover {
-  background: rgba(217, 114, 76, 0.9);
-  border-color: #D9724C;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #FFFFFF;
+  color: #000000;
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -1717,7 +1721,7 @@ body.home .site-footer {
 }
 
 .gallery-thumbnails::-webkit-scrollbar-thumb {
-  background: #D9724C;
+  background: #FFFFFF;
   border-radius: 4px;
 }
 
@@ -1732,12 +1736,12 @@ body.home .site-footer {
 }
 
 .gallery-thumbnail:hover {
-  border-color: rgba(217, 114, 76, 0.5);
+  border-color: rgba(255, 255, 255, 0.5);
   transform: scale(1.05);
 }
 
 .gallery-thumbnail.active {
-  border-color: #D9724C;
+  border-color: #FFFFFF;
 }
 
 .gallery-thumbnail img {
@@ -1761,7 +1765,7 @@ body.home .site-footer {
 }
 
 .back-to-production-design:hover {
-  color: #D9724C;
+  color: #FFFFFF;
 }
 
 @media (max-width: 768px) {
