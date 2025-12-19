@@ -4,7 +4,7 @@
     {{ $drawingsSection := .Site.GetPage "/art/drawings" }}
     {{ if $drawingsSection }}
     <div class="art-section">
-      <h2 class="section-title">Drawings</h2>
+      <h2 class="section-title">{{ $drawingsSection.Title }}</h2>
       <div class="art-grid">
         {{ range $index, $page := $drawingsSection.Pages.ByWeight }}
           <a href="{{ .Permalink }}" class="art-card">
@@ -25,7 +25,7 @@
     {{ $animationSection := .Site.GetPage "/art/animation" }}
     {{ if $animationSection }}
     <div class="art-section">
-      <h2 class="section-title">Animation</h2>
+      <h2 class="section-title">{{ $animationSection.Title }}</h2>
       <div class="art-grid">
         {{ range $animationSection.Pages.ByWeight }}
           <a href="{{ .Permalink }}" class="art-card">
