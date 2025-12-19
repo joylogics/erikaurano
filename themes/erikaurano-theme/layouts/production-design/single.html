@@ -5,6 +5,9 @@
     </div>
 
     <div class="production-design-gallery">
+      {{ $heroImage := .Params.hero_image }}
+      {{ $allImages := slice $heroImage }}
+      {{ $allImages = $allImages | append .Params.images }}
       <!-- Main image viewer -->
       <div class="gallery-main-viewer">
         <button class="gallery-nav-btn gallery-nav-prev" aria-label="Previous image">
@@ -14,7 +17,7 @@
         </button>
 
         <div class="gallery-main-image-container">
-          {{ range $index, $image := .Params.images }}
+          {{ range $index, $image := $allImages }}
             <img
               src="{{ $image }}"
               alt="{{ $.Title }} - Image {{ add $index 1 }}"
@@ -32,7 +35,7 @@
 
       <!-- Thumbnail strip -->
       <div class="gallery-thumbnails">
-        {{ range $index, $image := .Params.images }}
+        {{ range $index, $image := $allImages }}
           <div class="gallery-thumbnail{{ if eq $index 0 }} active{{ end }}" data-index="{{ $index }}">
             <img src="{{ $image }}" alt="{{ $.Title }} - Thumbnail {{ add $index 1 }}">
           </div>
