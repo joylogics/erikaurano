@@ -13,6 +13,7 @@
     <div class="films-grid">
       {{ range $index, $page := .Pages.ByWeight }}
         {{ $videoEmbed := "" }}
+        {{ $instagramReelId := "" }}
         {{ if $page.Params.link }}
           {{ if findRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+)" $page.Params.link }}
             {{ $youtubeId := replaceRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+).*" "$1" $page.Params.link }}
@@ -20,11 +21,14 @@
           {{ else if findRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+)" $page.Params.link }}
             {{ $vimeoId := replaceRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+).*" "$1" $page.Params.link }}
             {{ $videoEmbed = printf "https://player.vimeo.com/video/%s" $vimeoId }}
+          {{ else if findRE "^https?://(?:www\\.)?instagram\\.com/reel/([^/?]+)" $page.Params.link }}
+            {{ $instagramReelId = replaceRE "^https?://(?:www\\.)?instagram\\.com/reel/([^/?]+).*" "$1" $page.Params.link }}
+            {{ $videoEmbed = printf "https://www.instagram.com/reel/%s/embed/" $instagramReelId }}
           {{ end }}
         {{ end }}
         {{ $shouldLazyLoad := gt $index 2 }}
-        <div class="film-card{{ if or $page.Params.playlist $videoEmbed }} has-embedded-video{{ end }}" data-roles="{{ delimit $page.Params.roles " " }}">
-          <div class="film-preview">
+        <div class="film-card{{ if or $page.Params.playlist $videoEmbed $instagramReelId }} has-embedded-video{{ end }}" data-roles="{{ delimit $page.Params.roles " " }}">
+          <div class="film-preview{{ if findRE "instagram" $videoEmbed }} has-instagram{{ end }}">
             {{ if $page.Params.playlist }}
               <div class="video-container lazy-hls" data-playlist="{{ $page.Params.playlist }}" data-poster="{{ $page.Params.preview }}">
                 <div class="video-thumbnail">
@@ -36,6 +40,17 @@
                     </svg>
                   </div>
                 </div>
+              </div>
+            {{ else if findRE "instagram" $videoEmbed }}
+              <!-- Instagram embeds load immediately (no lazy loading) -->
+              <div class="video-container instagram-embed" data-embed-url="{{ $videoEmbed }}">
+                <iframe 
+                  src="{{ $videoEmbed }}?embed=true" 
+                  frameborder="0" 
+                  allow="autoplay; encrypted-media" 
+                  allowfullscreen="false"
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
+                </iframe>
               </div>
             {{ else if $videoEmbed }}
               <div class="video-container lazy-video" data-embed-url="{{ $videoEmbed }}">

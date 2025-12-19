@@ -491,6 +491,11 @@ body.home .nav-text:hover {
   overflow: hidden;
 }
 
+.film-preview.has-instagram {
+  padding-top: 56.25%; /* 16:9 aspect ratio to match other cards */
+  overflow: hidden; /* Keep container size fixed, let iframe handle scrolling */
+}
+
 .film-preview img {
   position: absolute;
   top: 0;
@@ -525,6 +530,29 @@ body.home .nav-text:hover {
   width: 100%;
   height: 100%;
   object-fit: contain;
+}
+
+.video-container.instagram-embed,
+.video-container[data-embed-url*="instagram.com"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  padding-top: 0;
+  overflow: visible; /* Let Instagram embed handle its own scrolling */
+}
+
+.video-container.instagram-embed iframe,
+.video-container[data-embed-url*="instagram.com"] iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  /* Let Instagram embed handle its own scrolling */
+  transition: transform 0.5s ease, height 0.5s ease;
 }
 
 /* Lazy video loading styles */
@@ -860,6 +888,28 @@ body.home .nav-text:hover {
   position: relative;
   padding-top: 56.25%; /* 16:9 aspect ratio */
   overflow: hidden;
+}
+
+.video-container-single.instagram-embed,
+.video-container-single[data-embed-url*="instagram.com"] {
+  padding-top: 56.25%; /* 16:9 aspect ratio to match other cards */
+  margin: 0 auto;
+  height: 0;
+  position: relative;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.video-container-single.instagram-embed iframe,
+.video-container-single[data-embed-url*="instagram.com"] iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  overflow: hidden; /* Remove iframe scrolling - container handles it */
+  transition: transform 0.5s ease, height 0.5s ease;
 }
 
 .video-container-single video,

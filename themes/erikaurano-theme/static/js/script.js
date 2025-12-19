@@ -92,6 +92,9 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Initialize lazy HLS video loading  
     initializeLazyHLS();
+    
+    // Initialize Instagram embeds (scroll to middle)
+    initializeInstagramEmbeds();
   }, 150);
 
   function initializeHLSPlayersAsync(videoArray, callback) {
@@ -299,14 +302,22 @@ document.addEventListener("DOMContentLoaded", function() {
         // Add muted autoplay for real preloading
         if (embedUrl.includes('youtube.com')) {
           preloadUrl += '?autoplay=1&mute=1&rel=0&modestbranding=1';
+          iframe.src = preloadUrl;
         } else if (embedUrl.includes('vimeo.com')) {
           preloadUrl += '?autoplay=1&muted=1&title=0&byline=0&portrait=0';
+          iframe.src = preloadUrl;
+        } else if (embedUrl.includes('instagram.com')) {
+          // Instagram embeds don't preload well when hidden, so we'll load on reveal
+          // Don't set src here - wait until reveal
         }
-        
-        iframe.src = preloadUrl;
         iframe.frameBorder = '0';
-        iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
-        iframe.allowFullscreen = true;
+        if (embedUrl.includes('instagram.com')) {
+          iframe.allow = 'autoplay; encrypted-media';
+          iframe.allowFullscreen = false;
+        } else {
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+        }
         
         var titleEl = videoContainer.closest('.film-card, .film-single');
         if (titleEl) {
@@ -316,14 +327,32 @@ document.addEventListener("DOMContentLoaded", function() {
           }
         }
         
-        iframe.style.position = 'absolute';
-        iframe.style.top = '0';
-        iframe.style.left = '0';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
-        iframe.style.opacity = '0';
-        iframe.style.pointerEvents = 'none';
-        iframe.style.transition = 'opacity 0.3s ease';
+        if (embedUrl.includes('instagram.com')) {
+          // Instagram iframes use absolute positioning to fit container
+          iframe.style.position = 'absolute';
+          iframe.style.top = '0';
+          iframe.style.left = '0';
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.opacity = '0';
+          iframe.style.pointerEvents = 'none';
+          iframe.style.transition = 'opacity 0.3s ease';
+          iframe.style.zIndex = '1';
+          // Add class to parent container for aspect ratio
+          var container = videoContainer.closest('.film-preview');
+          if (container) {
+            container.classList.add('has-instagram');
+          }
+        } else {
+          iframe.style.position = 'absolute';
+          iframe.style.top = '0';
+          iframe.style.left = '0';
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.opacity = '0';
+          iframe.style.pointerEvents = 'none';
+          iframe.style.transition = 'opacity 0.3s ease';
+        }
         
         // Add iframe behind the thumbnail
         videoContainer.appendChild(iframe);
@@ -380,15 +409,42 @@ document.addEventListener("DOMContentLoaded", function() {
       function revealVideo() {
         if (!iframe) return;
         
+        var isInstagram = embedUrl.includes('instagram.com');
+        
         // Unmute and ensure autoplay
         var playUrl = embedUrl;
         if (embedUrl.includes('youtube.com')) {
           playUrl += '?autoplay=1&rel=0&modestbranding=1';
         } else if (embedUrl.includes('vimeo.com')) {
           playUrl += '?autoplay=1&title=0&byline=0&portrait=0';
+        } else if (isInstagram) {
+          // Instagram embeds don't support autoplay - user must click play in Instagram player
+          playUrl += '?embed=true';
         }
         
-        iframe.src = playUrl;
+        // For Instagram, ensure iframe uses absolute positioning to fit container
+        if (isInstagram) {
+          iframe.style.position = 'absolute';
+          iframe.style.top = '0';
+          iframe.style.left = '0';
+          iframe.style.width = '100%';
+          iframe.style.height = '100%';
+          iframe.style.opacity = '0';
+          iframe.style.pointerEvents = 'none';
+          // Ensure container maintains aspect ratio
+          var container = videoContainer.closest('.film-preview, .film-player');
+          if (container) {
+            container.classList.add('has-instagram');
+            container.style.paddingTop = '177.78%'; // 9:16 for Instagram
+            container.style.position = 'relative';
+            container.style.height = '0';
+          }
+        }
+        
+        // Set src (or update if different)
+        if (iframe.src !== playUrl) {
+          iframe.src = playUrl;
+        }
         
         // Smooth transition from thumbnail to video
         thumbnail.style.transition = 'opacity 0.3s ease';
@@ -399,11 +455,59 @@ document.addEventListener("DOMContentLoaded", function() {
           iframe.style.pointerEvents = 'auto';
           videoContainer.classList.remove('lazy-video');
           videoContainer.classList.add('video-playing');
-        }, 300);
+          
+          // Note: Instagram embeds don't support autoplay
+          // Users must click the play button in the Instagram player itself
+          if (isInstagram) {
+            console.log('Instagram embed loaded - user must click play in Instagram player');
+          }
+        }, isInstagram ? 500 : 300);
       }
     });
     
     console.log('Initialized', lazyVideos.length, 'lazy video players with hover preloading');
+  }
+
+  function initializeInstagramEmbeds() {
+    var instagramContainers = document.querySelectorAll('.instagram-embed, [data-embed-url*="instagram.com"]');
+    
+    instagramContainers.forEach(function(container) {
+      var iframe = container.querySelector('iframe');
+      if (!iframe) return;
+      
+      function shiftTo30Percent() {
+        // Get the original container height
+        var container = iframe.closest('.video-container, .video-container-single');
+        var filmPreview = iframe.closest('.film-preview');
+        
+        if (container && filmPreview) {
+          // Get the computed height of the film-preview (which is based on padding-top)
+          var originalHeight = filmPreview.offsetHeight;
+          
+          // Make iframe taller - 200% of container height so there's extra content
+          var iframeHeight = originalHeight * 2;
+          iframe.style.height = iframeHeight + 'px';
+          
+          // Shift up by 40% of original height to show content 40% down
+          var shiftAmount = originalHeight * 0.4;
+          iframe.style.transform = 'translateY(-' + shiftAmount + 'px)';
+          
+          // Keep container at original size
+          // Instagram embed will handle its own scrolling internally
+          // Don't add our own scrolling to avoid double scrollbars
+        }
+      }
+      
+      // Apply transform after iframe loads
+      iframe.addEventListener('load', function() {
+        setTimeout(shiftTo30Percent, 500);
+      });
+      
+      // Also try after a delay in case load event doesn't fire
+      setTimeout(shiftTo30Percent, 2000);
+    });
+    
+    console.log('Initialized', instagramContainers.length, 'Instagram embeds');
   }
 
   function initializeLazyHLS() {
