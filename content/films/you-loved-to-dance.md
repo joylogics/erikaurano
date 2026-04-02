@@ -2,7 +2,7 @@
 title: "You Loved to Dance"
 description: "Short film by Erika Urano"
 year: "2024"
-roles: ["Director", "Production Designer"]
+roles: ["Director", "Production Designer", "Editor"]
 playlist: "/films/you-loved-to-dance/hls/master.m3u8"
 preview: "/films/you-loved-to-dance/cover.webp"
 weight: 2

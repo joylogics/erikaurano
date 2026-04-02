@@ -2,7 +2,7 @@
 title: "The Room without Walls"
 description: "Short film by Erika Urano"
 year: "2023"
-roles: ["Writer", "Director", "Production Designer"]
+roles: ["Writer", "Director", "Production Designer", "Editor"]
 playlist: "/films/the-room-without-walls/hls/master.m3u8"
 preview: "/films/the-room-without-walls/cover.webp"
 reel_playlist: "/films/the-room-without-walls/hls/reel-segments.m3u8"

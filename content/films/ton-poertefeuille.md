@@ -2,7 +2,7 @@
 title: "Ton Poertefeuille"
 description: "Short film by Erika Urano"
 year: "2023"
-roles: ["Writer", "Director"]
+roles: ["Writer", "Director", "Editor"]
 playlist: "/films/ton-poertefeuille/hls/master.m3u8"
 preview: "/films/ton-poertefeuille/cover.webp"
 weight: 4
