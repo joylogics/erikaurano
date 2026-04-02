@@ -29,7 +29,7 @@
         {{ end }}
         {{ $shouldLazyLoad := gt $index 2 }}
         {{ $isExternalLink := and $page.Params.link (not $videoEmbed) (not $instagramReelId) }}
-        <div class="film-card{{ if or $page.Params.playlist $videoEmbed $instagramReelId }} has-embedded-video{{ end }}" data-roles="{{ delimit $page.Params.roles " " }}">
+        <div class="film-card{{ if or $page.Params.playlist $videoEmbed $instagramReelId }} has-embedded-video{{ end }}" data-roles="{{ delimit $page.Params.roles " " }}" data-weight="{{ $page.Weight }}"{{ with $page.Params.role_weights }} data-role-weights='{{ jsonify . }}'{{ end }}>
           <div class="film-preview{{ if findRE "instagram" $videoEmbed }} has-instagram{{ end }}">
             {{ if $page.Params.playlist }}
               <div class="video-container lazy-hls" data-playlist="{{ $page.Params.playlist }}" data-poster="{{ $page.Params.preview }}">

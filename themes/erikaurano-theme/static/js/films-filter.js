@@ -21,20 +21,37 @@
       return positions;
     }
 
+    function getCardWeight(card, role) {
+      if (role && role !== 'all' && card.dataset.roleWeights) {
+        try {
+          const roleWeights = JSON.parse(card.dataset.roleWeights);
+          const key = role.toLowerCase();
+          if (roleWeights[key] !== undefined) return roleWeights[key];
+        } catch (e) {}
+      }
+      return parseInt(card.dataset.weight, 10) || 0;
+    }
+
+    function reorderCards(selectedRole) {
+      const cardsArray = Array.from(filmCards);
+      cardsArray.sort((a, b) => getCardWeight(a, selectedRole) - getCardWeight(b, selectedRole));
+      cardsArray.forEach(card => filmsGrid.appendChild(card));
+    }
+
     function animateFilter(selectedRole) {
       // Determine which cards should be visible in the new state
       const currentlyVisible = [];
       const shouldBeVisible = [];
       const toHide = [];
       const toShow = [];
-      
+
       filmCards.forEach(card => {
         const isCurrentlyVisible = !card.classList.contains('hiding') && card.style.display !== 'none';
         const shouldShow = selectedRole === 'all' || card.dataset.roles.includes(selectedRole);
-        
+
         if (isCurrentlyVisible) currentlyVisible.push(card);
         if (shouldShow) shouldBeVisible.push(card);
-        
+
         if (isCurrentlyVisible && !shouldShow) toHide.push(card);
         if (!isCurrentlyVisible && shouldShow) toShow.push(card);
       });
@@ -72,7 +89,9 @@
       }
 
       function stage2() {
-        // STAGE 2: Rearrange remaining cards using FLIP
+        // STAGE 2: Reorder and rearrange remaining cards using FLIP
+        reorderCards(selectedRole);
+
         if (remainingCards.length > 0 || toShow.length > 0) {
           // Prepare spaces for new cards (but keep them invisible)
           toShow.forEach(card => {

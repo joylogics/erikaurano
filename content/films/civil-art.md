@@ -6,6 +6,8 @@ roles: ["Editor"]
 link: "https://www.instagram.com/civilart.nyc/"
 preview: "/films/civil-art/cover.jpg"
 weight: 12
+role_weights:
+  Editor: 0
 ---
 
 Video editing for Civil Art NYC.
