@@ -8,4 +8,7 @@ weight: 1
 # Instagram disables embedding for this post (3-way collab on elioky_), so the
 # card links out to Instagram instead of playing inline.
 embeddable: false
+build:
+  render: never
+  list: always
 ---
