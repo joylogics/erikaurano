@@ -1,7 +1,7 @@
 ---
 title: "FOWL"
 hero_image: "/production-design/fowl/hero.webp"
-weight: 1
+weight: 2
 images:
   - "/production-design/fowl/01.webp"
   - "/production-design/fowl/02.webp"

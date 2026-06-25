@@ -1,7 +1,7 @@
 ---
 title: "Deliver Your Love"
 hero_image: "/production-design/deliver-your-love/hero.webp"
-weight: 4
+weight: 5
 images:
   - "/production-design/deliver-your-love/01.webp"
   - "/production-design/deliver-your-love/02.webp"

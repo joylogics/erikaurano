@@ -1,7 +1,7 @@
 ---
 title: "EYES EAT FIRST"
 hero_image: "/production-design/eyes-eat-first/hero.webp"
-weight: 9
+weight: 1
 images:
   - "/production-design/eyes-eat-first/01.webp"
   - "/production-design/eyes-eat-first/02.webp"
