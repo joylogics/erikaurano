@@ -1,0 +1,89 @@
+{{ define "main" }}
+  <div id="body-content">
+    <div class="sve-section">
+      <div class="sve-header">
+        <h1>{{ .Title }}</h1>
+        {{ with .Params.description }}<p class="sve-intro">{{ . }}</p>{{ end }}
+      </div>
+
+      <div class="sve-grid">
+        {{ range .Pages.ByWeight }}
+          {{ $shortcode := "" }}
+          {{ if .Params.link }}
+            {{ if findRE "^https?://(?:www\\.)?instagram\\.com/(?:reel|p)/([^/?]+)" .Params.link }}
+              {{ $shortcode = replaceRE "^https?://(?:www\\.)?instagram\\.com/(?:reel|p)/([^/?]+).*" "$1" .Params.link }}
+            {{ end }}
+          {{ end }}
+          {{ $embeddable := not (eq .Params.embeddable false) }}
+          {{ $playSvg := "<svg width=\"64\" height=\"64\" viewBox=\"0 0 80 80\" fill=\"none\"><circle cx=\"40\" cy=\"40\" r=\"35\" fill=\"rgba(255,255,255,0.92)\" stroke=\"rgba(0,0,0,0.2)\" stroke-width=\"2\"/><path d=\"M32 25 L57 40 L32 55 Z\" fill=\"#111\"/></svg>" }}
+          <div class="sve-card">
+            {{ if and $shortcode $embeddable }}
+              <div class="sve-video" data-embed-url="https://www.instagram.com/p/{{ $shortcode }}/embed/" role="button" tabindex="0" aria-label="Play {{ .Title }}">
+                <img class="sve-cover" src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
+                <span class="sve-play" aria-hidden="true">{{ $playSvg | safeHTML }}</span>
+              </div>
+            {{ else }}
+              <a class="sve-video sve-external" href="{{ .Params.link }}" target="_blank" rel="noopener noreferrer" aria-label="View {{ .Title }} on Instagram">
+                <img class="sve-cover" src="{{ .Params.preview }}" alt="{{ .Title }}" loading="lazy">
+                <span class="sve-play" aria-hidden="true">{{ $playSvg | safeHTML }}</span>
+                <span class="sve-ext-badge">View on Instagram &#8599;</span>
+              </a>
+            {{ end }}
+            <div class="sve-meta">
+              <h2 class="sve-title">{{ .Title }}</h2>
+              <p class="sve-credit">{{ with .Params.credit }}{{ . }}{{ else }}{{ with .Params.roles }}{{ delimit . ", " }}{{ end }}{{ with .Params.client }} · {{ . }}{{ end }}{{ end }}</p>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .sve-section { max-width: 1200px; margin: 0 auto; padding: 2rem 1rem 4rem; }
+    .sve-header { text-align: center; margin-bottom: 2.5rem; }
+    .sve-header h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); margin: 0 0 0.5rem; }
+    .sve-intro { max-width: 640px; margin: 0 auto; opacity: 0.7; line-height: 1.5; }
+    .sve-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 1.75rem; align-items: start; }
+    .sve-card { display: flex; flex-direction: column; }
+    .sve-video { position: relative; width: 100%; aspect-ratio: 9 / 16; background: #000; overflow: hidden; cursor: pointer; border-radius: 4px; }
+    .sve-cover { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+    .sve-video:hover .sve-cover { transform: scale(1.03); }
+    .sve-play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); transition: transform 0.2s ease; pointer-events: none; }
+    .sve-video:hover .sve-play { transform: translate(-50%, -50%) scale(1.08); }
+    .sve-video.loaded { cursor: default; }
+    .sve-video.loaded .sve-cover, .sve-video.loaded .sve-play { display: none; }
+    .sve-video iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; background: #000; }
+    .sve-external { display: block; }
+    .sve-ext-badge { position: absolute; bottom: 0.6rem; left: 50%; transform: translateX(-50%); white-space: nowrap; font-size: 0.72rem; letter-spacing: 0.02em; color: #fff; background: rgba(0,0,0,0.55); padding: 0.3rem 0.6rem; border-radius: 999px; opacity: 0; transition: opacity 0.2s ease; pointer-events: none; }
+    .sve-external:hover .sve-ext-badge { opacity: 1; }
+    .sve-meta { padding: 0.75rem 0.25rem 0; }
+    .sve-title { font-size: 1rem; margin: 0 0 0.2rem; font-weight: 600; line-height: 1.3; }
+    .sve-credit { font-size: 0.8rem; margin: 0; opacity: 0.6; }
+    @media (max-width: 520px) {
+      .sve-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    }
+  </style>
+
+  <script>
+    (function () {
+      function load(v) {
+        if (!v || v.classList.contains('loaded') || !v.dataset.embedUrl) return;
+        var iframe = document.createElement('iframe');
+        iframe.src = v.dataset.embedUrl;
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'autoplay; encrypted-media; fullscreen');
+        iframe.setAttribute('allowfullscreen', 'true');
+        iframe.setAttribute('scrolling', 'no');
+        v.classList.add('loaded');
+        v.appendChild(iframe);
+      }
+      document.querySelectorAll('.sve-video').forEach(function (v) {
+        v.addEventListener('click', function () { load(v); });
+        v.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); load(v); }
+        });
+      });
+    })();
+  </script>
+{{ end }}

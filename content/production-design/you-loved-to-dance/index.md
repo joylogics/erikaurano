@@ -1,7 +1,7 @@
 ---
 title: "You Loved to Dance"
 hero_image: "/production-design/you-loved-to-dance/hero.webp"
-weight: 8
+weight: 9
 images:
   - "/production-design/you-loved-to-dance/01.webp"
   - "/production-design/you-loved-to-dance/02.webp"

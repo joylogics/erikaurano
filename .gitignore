@@ -7,8 +7,10 @@ resources/
 # Temporary files
 .hugo_build.lock
 
-# All static content (stored in S3)
+# Source assets (stored in s3://erikaurano-assets, versioned). Large/binary, not in git.
+# Sync with `make pull-static` / `push-static` (and pull-raw / push-raw).
 /static
+/raw
 
 # Generated files in root directory
 /films/

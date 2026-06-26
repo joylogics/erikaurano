@@ -9,6 +9,12 @@ SRC_BUCKET ?= enthusiate.com
 SRC_PREFIX ?= erika/website
 SRCDIR = $(MOUNT_POINT)/$(SRC_BUCKET)/$(SRC_PREFIX)
 
+# Source-asset bucket (private, versioned) holding everything git ignores: the site's
+# static/ web assets and raw/ film masters. Sync with `make pull-static`/`push-static`
+# (and pull-raw/push-raw). Replaces the old FUSE-mount of the source bucket; the raw
+# film masters now live at s3://$(ASSET_BUCKET)/raw/ (migrated off enthusiate.com).
+ASSET_BUCKET ?= erikaurano-assets
+
 # Define offset times for each film (in seconds, can use decimal like 2.5)
 OFFSET_nowhere-to-hide ?= 3.1
 OFFSET_the-room-without-walls ?= 5.3
@@ -110,13 +116,35 @@ publish:
 	fi
 
 #
-# targets to set up the static directory symlink
+# targets to sync local assets with the source-asset bucket (s3://$(ASSET_BUCKET)).
+# Versioning is enabled on the bucket, so overwrites and deletes are recoverable.
 #
+
+# Fetch static/ web assets from the bucket (additive; never deletes local files).
+.PHONY: pull-static
+pull-static:
+	aws s3 sync s3://$(ASSET_BUCKET)/static/ static/
+
+# Push local static/ up to the bucket (additive). The bucket is versioned, so for a
+# clean mirror you can safely append --delete (deleted objects keep prior versions).
+.PHONY: push-static
+push-static:
+	aws s3 sync static/ s3://$(ASSET_BUCKET)/static/
+
+# Raw film masters (large .mov/.mp4 originals, ~7GB). Pulled on demand, not kept locally.
+.PHONY: pull-raw
+pull-raw:
+	aws s3 sync s3://$(ASSET_BUCKET)/raw/ raw/
+
+.PHONY: push-raw
+push-raw:
+	aws s3 sync raw/ s3://$(ASSET_BUCKET)/raw/
+
+# Deprecated: static/ used to be a symlink into a FUSE-mounted bucket. Use pull-static.
 .PHONY: setup-static
 setup-static:
-	@echo "Setting up symbolic link to mounted static directory..."
-	@ln -s $(SRCDIR)/static static
-	@echo "Symbolic link created: static -> $(SRCDIR)/static"
+	@echo "setup-static is deprecated. Run 'make pull-static' to fetch static assets from s3://$(ASSET_BUCKET)/static/."
+	@exit 1
 
 #
 # targets for social image generation
