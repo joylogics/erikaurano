@@ -2,6 +2,7 @@
 title: "The 1% Campaign"
 client: "Civil Art"
 roles: ["Editor"]
+credit: "Edited by Erika Urano"
 link: "https://www.instagram.com/p/DYnCehZR1Uu/"
 preview: "/social-video-editing/one-percent/cover.webp"
 weight: 1

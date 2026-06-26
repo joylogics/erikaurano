@@ -31,7 +31,7 @@
             {{ end }}
             <div class="sve-meta">
               <h2 class="sve-title">{{ .Title }}</h2>
-              <p class="sve-credit">{{ with .Params.roles }}{{ delimit . ", " }}{{ end }}{{ with .Params.client }} · {{ . }}{{ end }}</p>
+              <p class="sve-credit">{{ with .Params.credit }}{{ . }}{{ else }}{{ with .Params.roles }}{{ delimit . ", " }}{{ end }}{{ with .Params.client }} · {{ . }}{{ end }}{{ end }}</p>
             </div>
           </div>
         {{ end }}
