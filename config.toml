@@ -30,7 +30,7 @@ theme = "erikaurano-theme"
     url = "/production-design/"
 
   [[params.navItems]]
-    name = "Editing"
+    name = "Social Media"
     url = "/social-video-editing/"
 
   [[params.navItems]]
