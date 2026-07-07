@@ -126,30 +126,38 @@ body.home .header-title:hover { color: var(--ink); }
 /* --------------------------------------------------------------------------
    Home mosaic (masonry columns; intro text is one cell among the photos)
    -------------------------------------------------------------------------- */
-/* Columns masonry for the photos; the intro is a centered ~2-column-wide band
-   (column-span: all) with photos flowing above and below it. */
+/* True masonry (JS-positioned): the intro is a fixed 2-column-wide box and the
+   photos flow around it on every side. See the layout script in index.html. */
 .home-mosaic {
-  column-count: 4;
-  column-gap: 1.5rem;
+  position: relative;
   max-width: 1360px;
   margin: 0 auto;
   padding: 0 2rem 4rem;
   box-sizing: border-box;
 }
-.mosaic-item {
-  break-inside: avoid;
-  margin: 0 0 1.5rem;
+.home-mosaic .mosaic-item,
+.home-mosaic .mosaic-intro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
 }
+/* hide until the script has positioned everything, to avoid a stacked flash */
+.home-mosaic:not(.is-laid-out) .mosaic-item,
+.home-mosaic:not(.is-laid-out) .mosaic-intro {
+  visibility: hidden;
+}
+.mosaic-item { margin: 0; }
 .mosaic-item img {
   width: 100%;
   height: auto;
   display: block;
 }
 .mosaic-intro {
-  column-span: all;
-  max-width: 640px;   /* ~ two columns wide */
-  margin: 1.5rem auto 3rem;
-  padding: 0 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 1rem;
 }
 .mosaic-intro p {
   font-family: 'Inter', sans-serif;
@@ -360,16 +368,13 @@ body.home .header-title:hover { color: var(--ink); }
 /* --------------------------------------------------------------------------
    Responsive
    -------------------------------------------------------------------------- */
-@media (max-width: 1024px) {
-  .home-mosaic { column-count: 3; }
-}
 @media (max-width: 768px) {
   .site-header { padding: 1.25rem 1.25rem 1rem; flex-wrap: wrap; gap: 0.75rem 1.25rem; }
   .primary-nav { gap: 1.1rem; }
   .primary-nav .nav-list { gap: 1.1rem; }
   .sub-nav { padding: 0 1.25rem 1.25rem; gap: 1.1rem; }
   .section-page { padding: 0 1.25rem 3rem; }
-  .home-mosaic { column-count: 2; column-gap: 1rem; padding: 0 1.25rem 3rem; }
+  .home-mosaic { padding: 0 1.25rem 3rem; }
   .films-grid, .art-grid { column-count: 2; column-gap: 1rem; }
   .still-card { margin-bottom: 1rem; }
   /* touch devices: reveal captions without hover */

@@ -17,4 +17,64 @@
   <figure class="mosaic-item"><img src="/home/beneath-strange-gardens.webp" alt="Beneath Strange Gardens, painting by Erika Urano" style="aspect-ratio:1000/1341"></figure>
   <figure class="mosaic-item"><img src="/home/eyes-eat-first-08.webp" alt="Still from Eyes Eat First" style="aspect-ratio:1000/561"></figure>
 </section>
+
+<script>
+// Masonry: photos flow around a fixed 2-column-wide intro box. Items are absolutely
+// positioned; images carry an inline aspect-ratio so heights are known before load.
+(function () {
+  var grid = document.querySelector('.home-mosaic');
+  if (!grid) return;
+  var items = Array.prototype.slice.call(grid.children);
+
+  function columnCount() {
+    var w = window.innerWidth;
+    if (w <= 768) return 2;
+    if (w <= 1024) return 3;
+    return 4;
+  }
+
+  function layout() {
+    var cs = getComputedStyle(grid);
+    var innerW = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var n = columnCount();
+    var gap = window.innerWidth <= 768 ? 16 : 24;
+    var colW = (innerW - (n - 1) * gap) / n;
+    var colH = [];
+    for (var c = 0; c < n; c++) colH[c] = 0;
+
+    // pass 1: set widths so heights (text + aspect-ratio images) are final
+    items.forEach(function (item) {
+      var span = item.classList.contains('mosaic-intro') ? Math.min(2, n) : 1;
+      item.style.width = (colW * span + gap * (span - 1)) + 'px';
+    });
+
+    // pass 2: place each item in the shortest available slot
+    items.forEach(function (item) {
+      var span = item.classList.contains('mosaic-intro') ? Math.min(2, n) : 1;
+      var h = item.getBoundingClientRect().height;
+      var col = 0, best = Infinity;
+      for (var i = 0; i + span - 1 < n; i++) {
+        var top = 0;
+        for (var k = 0; k < span; k++) top = Math.max(top, colH[i + k]);
+        if (top < best) { best = top; col = i; }
+      }
+      item.style.transform = 'translate(' + (col * (colW + gap)) + 'px,' + best + 'px)';
+      for (var k = 0; k < span; k++) colH[col + k] = best + h + gap;
+    });
+
+    var maxH = 0;
+    for (var c = 0; c < n; c++) maxH = Math.max(maxH, colH[c]);
+    grid.style.height = maxH + 'px';
+    grid.classList.add('is-laid-out');
+  }
+
+  function schedule() { requestAnimationFrame(layout); }
+  schedule();
+  window.addEventListener('load', schedule);
+  window.addEventListener('resize', schedule);
+  Array.prototype.forEach.call(grid.querySelectorAll('img'), function (img) {
+    if (!img.complete) img.addEventListener('load', schedule);
+  });
+})();
+</script>
 {{ end }}
