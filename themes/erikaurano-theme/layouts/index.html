@@ -31,18 +31,20 @@
 
   function layout() {
     var cs = getComputedStyle(grid);
-    var innerW = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+    var padL = parseFloat(cs.paddingLeft), padR = parseFloat(cs.paddingRight);
+    var innerW = grid.clientWidth - padL - padR;
     var n = window.innerWidth >= 900 ? 4 : 2;
     var gap = window.innerWidth <= 768 ? 16 : 24;
     var colW = (innerW - (n - 1) * gap) / n;
-    var x = function (c) { return c * (colW + gap); };
+    // absolute children resolve left:0 to the padding edge, so add padL back in
+    var x = function (c) { return padL + c * (colW + gap); };
     var introStart = (n - 2) / 2;                 // n=4 -> 1, n=2 -> 0
 
     intro.style.width = (colW * 2 + gap) + 'px';
     imgs.forEach(function (it) { it.style.width = colW + 'px'; });
     var introH = intro.getBoundingClientRect().height;
 
-    // pre-pass: total height (images only) to place the box near vertical centre
+    // pre-pass: total image height, to choose when the box drops in vertically
     var pre = []; for (var c = 0; c < n; c++) pre[c] = 0;
     imgs.forEach(function (it) {
       var h = it.getBoundingClientRect().height, col = 0;
@@ -50,24 +52,28 @@
       pre[col] += h + gap;
     });
     var total = 0; for (var c = 0; c < n; c++) total = Math.max(total, pre[c]);
-    var introY = Math.max(0, Math.round(total * 0.42 - introH / 2));
-    var introBottom = introY + introH + gap;
-    var isIntroCol = function (c) { return c >= introStart && c < introStart + 2; };
+    var targetY = total * 0.4;
 
-    // real pass: greedy shortest-column fill that skips the reserved intro box
+    // real pass: greedy fill; drop the box flush onto the centre columns once they
+    // reach targetY (so there is no empty reserved gap above it)
     var colH = []; for (var c = 0; c < n; c++) colH[c] = 0;
+    var placed = false;
+    function placeIntro() {
+      var y = Math.max(colH[introStart], colH[introStart + 1]);
+      intro.style.transform = 'translate(' + x(introStart) + 'px,' + y + 'px)';
+      colH[introStart] = colH[introStart + 1] = y + introH + gap;
+      placed = true;
+    }
     imgs.forEach(function (it) {
+      if (!placed && colH[introStart] >= targetY && colH[introStart + 1] >= targetY) placeIntro();
       var h = it.getBoundingClientRect().height, col = 0;
       for (var c = 1; c < n; c++) if (colH[c] < colH[col]) col = c;
-      if (isIntroCol(col) && colH[col] + h > introY && colH[col] < introBottom) {
-        colH[col] = introBottom;                  // jump past the reserved box
-      }
       it.style.transform = 'translate(' + x(col) + 'px,' + colH[col] + 'px)';
       colH[col] += h + gap;
     });
-    intro.style.transform = 'translate(' + x(introStart) + 'px,' + introY + 'px)';
+    if (!placed) placeIntro();
 
-    var maxH = introBottom;
+    var maxH = 0;
     for (var c = 0; c < n; c++) maxH = Math.max(maxH, colH[c]);
     grid.style.height = maxH + 'px';
     grid.classList.add('is-laid-out');
