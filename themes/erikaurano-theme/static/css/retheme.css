@@ -126,6 +126,8 @@ body.home .header-title:hover { color: var(--ink); }
 /* --------------------------------------------------------------------------
    Home mosaic (masonry columns; intro text is one cell among the photos)
    -------------------------------------------------------------------------- */
+/* Columns masonry for the photos; the intro is a centered ~2-column-wide band
+   (column-span: all) with photos flowing above and below it. */
 .home-mosaic {
   column-count: 4;
   column-gap: 1.5rem;
@@ -144,14 +146,18 @@ body.home .header-title:hover { color: var(--ink); }
   display: block;
 }
 .mosaic-intro {
-  padding: 0.5rem 0.25rem 1rem;
+  column-span: all;
+  max-width: 640px;   /* ~ two columns wide */
+  margin: 1.5rem auto 3rem;
+  padding: 0 1rem;
 }
 .mosaic-intro p {
   font-family: 'Inter', sans-serif;
-  font-size: 1.02rem;
-  line-height: 1.6;
+  font-size: 1.05rem;
+  line-height: 1.65;
   color: var(--ink);
   margin: 0;
+  text-align: center;
 }
 .mosaic-intro a {
   color: var(--ink);
@@ -170,7 +176,15 @@ body.home .header-title:hover { color: var(--ink); }
 }
 .films-grid { column-count: 3; }
 .art-grid   { column-count: 3; }
-.pd-grid    { column-count: 3; }   /* "a bit smaller" than the old full-width stack */
+
+/* Production Design: one large tile per row, near full width with L/R breathing
+   room (a bit smaller than the old edge-to-edge stack). */
+.pd-grid {
+  column-count: 1;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.pd-grid .still-card { margin-bottom: 2rem; }
 
 .still-card {
   display: block;
@@ -356,13 +370,11 @@ body.home .header-title:hover { color: var(--ink); }
   .sub-nav { padding: 0 1.25rem 1.25rem; gap: 1.1rem; }
   .section-page { padding: 0 1.25rem 3rem; }
   .home-mosaic { column-count: 2; column-gap: 1rem; padding: 0 1.25rem 3rem; }
-  .mosaic-item { margin-bottom: 1rem; }
-  .films-grid, .art-grid, .pd-grid { column-count: 2; column-gap: 1rem; }
+  .films-grid, .art-grid { column-count: 2; column-gap: 1rem; }
   .still-card { margin-bottom: 1rem; }
   /* touch devices: reveal captions without hover */
   .still-overlay { opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%); }
 }
 @media (max-width: 460px) {
-  .home-mosaic { column-count: 1; }
   .social-grid { grid-template-columns: repeat(2, 1fr); }
 }
