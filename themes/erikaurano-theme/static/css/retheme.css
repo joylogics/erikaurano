@@ -1,0 +1,368 @@
+/* ==========================================================================
+   Matsuya-Fluid re-theme. Loaded after style.css so these rules win.
+   Two-bucket nav (Video/Art) + left sub-nav, mosaic home, hover-reveal grids.
+   ========================================================================== */
+
+:root {
+  --bg: #faf9f7;
+  --ink: #1e1c1a;
+  --muted: #6b6660;
+  --hairline: #e4e1db;
+}
+
+body,
+body.home {
+  background: var(--bg);
+  color: var(--ink);
+  margin: 0;
+}
+
+/* remove the old fixed background reel if any residual markup exists */
+.background-reel,
+.reel-overlay { display: none !important; }
+
+/* --------------------------------------------------------------------------
+   Header: name left, primary nav + LinkedIn right (Matsuya top bar)
+   -------------------------------------------------------------------------- */
+.site-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 1.75rem 2rem 1.25rem;
+  box-sizing: border-box;
+}
+.site-header .header-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: var(--ink);
+  text-decoration: none;
+  margin: 0;
+  white-space: nowrap;
+}
+/* home no longer has a dark background reel, so the name must be dark too */
+body.home .header-title { color: var(--ink); }
+body.home .header-title:hover { color: var(--ink); }
+
+.primary-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.75rem;
+}
+.primary-nav .nav-list {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.75rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.primary-nav .nav-item-link {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.primary-nav .nav-item-link:hover { color: var(--ink); }
+.primary-nav .nav-item-link.active {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+.header-linkedin {
+  display: inline-flex;
+  align-items: center;
+  color: var(--muted);
+  transition: color 0.2s ease;
+}
+.header-linkedin:hover { color: var(--ink); }
+
+/* --------------------------------------------------------------------------
+   Sub-navigation: left-aligned, below the name; current item underlined
+   -------------------------------------------------------------------------- */
+.sub-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0.25rem 2rem 1.75rem;
+  box-sizing: border-box;
+}
+.sub-nav-item {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-decoration: none;
+  padding-bottom: 2px;
+  border-bottom: 1px solid transparent;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+.sub-nav-item:hover { color: var(--ink); }
+.sub-nav-item.active {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+/* --------------------------------------------------------------------------
+   Section pages
+   -------------------------------------------------------------------------- */
+.section-page {
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   Home mosaic (masonry columns; intro text is one cell among the photos)
+   -------------------------------------------------------------------------- */
+.home-mosaic {
+  column-count: 4;
+  column-gap: 1.5rem;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 2rem 4rem;
+  box-sizing: border-box;
+}
+.mosaic-item {
+  break-inside: avoid;
+  margin: 0 0 1.5rem;
+}
+.mosaic-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+.mosaic-intro {
+  padding: 0.5rem 0.25rem 1rem;
+}
+.mosaic-intro p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.02rem;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0;
+}
+.mosaic-intro a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Shared stills grids with hover-reveal title/credit
+   -------------------------------------------------------------------------- */
+.films-grid,
+.art-grid,
+.pd-grid {
+  display: block;            /* override films-page critical CSS (display:grid) */
+  column-gap: 1.5rem;
+}
+.films-grid { column-count: 3; }
+.art-grid   { column-count: 3; }
+.pd-grid    { column-count: 3; }   /* "a bit smaller" than the old full-width stack */
+
+.still-card {
+  display: block;
+  position: relative;
+  break-inside: avoid;
+  margin: 0 0 1.5rem;
+  text-decoration: none;
+  color: inherit;
+}
+.still-media {
+  position: relative;
+  overflow: hidden;
+  background: #ece9e4;
+}
+.still-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  transition: transform 0.5s ease;
+}
+.still-card:hover .still-media img { transform: scale(1.03); }
+
+.still-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.15rem;
+  padding: 1rem;
+  color: #fff;
+  background: linear-gradient(to top, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0.1) 55%, rgba(0,0,0,0) 100%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.still-card:hover .still-overlay,
+.still-card:focus-visible .still-overlay { opacity: 1; }
+.still-title {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.25;
+}
+.still-credit {
+  font-size: 0.82rem;
+  font-weight: 400;
+  margin: 0;
+  opacity: 0.9;
+}
+.still-ext {
+  font-size: 0.75rem;
+  margin-top: 0.35rem;
+  opacity: 0.85;
+}
+
+/* Social: uniform 9:16 tiles that link out to Instagram */
+.social-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1.25rem;
+}
+.social-card { margin: 0; }
+.still-media.portrait { aspect-ratio: 9 / 16; }
+.still-media.portrait img { height: 100%; object-fit: cover; }
+
+/* Production Design single: bio under the gallery */
+.production-design-bio {
+  max-width: 720px;
+  margin: 2rem auto 0;
+  padding: 0 1rem;
+  text-align: center;
+}
+.production-design-bio p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* Single-page + gallery headings were white for the old dark backgrounds;
+   they must be dark on the new off-white pages. */
+.film-header h1,
+.art-header h1,
+.production-design-header h1,
+.location-gallery h2,
+.art-gallery h2,
+.about-content h2 { color: var(--ink); }
+
+/* About page: readable body text, palette-matched links, visible LinkedIn link */
+.about-content,
+.about-content p { color: #3d3a36; }
+.about-content a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.about-social .linkedin-link { color: var(--ink); }
+
+/* --------------------------------------------------------------------------
+   Contact
+   -------------------------------------------------------------------------- */
+.contact-page { max-width: 640px; }
+.contact-inner { padding-top: 1rem; }
+.contact-heading {
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  margin: 0 0 0.5rem;
+}
+.contact-lead {
+  color: var(--muted);
+  margin: 0 0 2rem;
+  line-height: 1.6;
+}
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+.contact-field input,
+.contact-field textarea {
+  font-family: 'Inter', sans-serif;
+  font-size: 1rem;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+  padding: 0.7rem 0.8rem;
+  box-sizing: border-box;
+  width: 100%;
+}
+.contact-field input:focus,
+.contact-field textarea:focus {
+  outline: none;
+  border-color: var(--ink);
+}
+.contact-submit {
+  align-self: flex-start;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  color: #fff;
+  background: var(--ink);
+  border: none;
+  border-radius: 4px;
+  padding: 0.7rem 1.8rem;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.contact-submit:hover { opacity: 0.85; }
+.contact-alt {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+.contact-alt a {
+  color: var(--ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive
+   -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .home-mosaic { column-count: 3; }
+}
+@media (max-width: 768px) {
+  .site-header { padding: 1.25rem 1.25rem 1rem; flex-wrap: wrap; gap: 0.75rem 1.25rem; }
+  .primary-nav { gap: 1.1rem; }
+  .primary-nav .nav-list { gap: 1.1rem; }
+  .sub-nav { padding: 0 1.25rem 1.25rem; gap: 1.1rem; }
+  .section-page { padding: 0 1.25rem 3rem; }
+  .home-mosaic { column-count: 2; column-gap: 1rem; padding: 0 1.25rem 3rem; }
+  .mosaic-item { margin-bottom: 1rem; }
+  .films-grid, .art-grid, .pd-grid { column-count: 2; column-gap: 1rem; }
+  .still-card { margin-bottom: 1rem; }
+  /* touch devices: reveal captions without hover */
+  .still-overlay { opacity: 1; background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0) 60%); }
+}
+@media (max-width: 460px) {
+  .home-mosaic { column-count: 1; }
+  .social-grid { grid-template-columns: repeat(2, 1fr); }
+}

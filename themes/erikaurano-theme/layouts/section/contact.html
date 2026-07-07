@@ -1,0 +1,30 @@
+{{ define "main" }}
+  <div id="body-content" class="section-page contact-page">
+    <div class="contact-inner">
+      <h1 class="contact-heading">Let's talk</h1>
+      <p class="contact-lead">Working on a film, a brand, or a feed? Tell me a little about what you're making.</p>
+
+      <form class="contact-form" action="{{ .Site.Params.formspree }}" method="POST">
+        <label class="contact-field">
+          <span>Name</span>
+          <input type="text" name="name" required>
+        </label>
+        <label class="contact-field">
+          <span>Email</span>
+          <input type="email" name="email" required>
+        </label>
+        <label class="contact-field">
+          <span>Message</span>
+          <textarea name="message" rows="6" required></textarea>
+        </label>
+        <button type="submit" class="contact-submit">Send</button>
+      </form>
+
+      <div class="contact-alt">
+        <span>Or reach me directly:</span>
+        <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
+        <a href="{{ .Site.Params.linkedin }}" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+{{ end }}

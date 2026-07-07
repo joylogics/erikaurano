@@ -1,65 +1,20 @@
 {{ define "main" }}
-<!-- Background Video -->
-<div class="background-reel">
-  <div class="reel-content">
-    <div class="reel-item active" id="background-fallback">
-      <!-- Solid background shows immediately -->
-    </div>
-    <div class="reel-item" id="background-video">
-      <video 
-        id="bg-video"
-        muted 
-        loop 
-        playsinline
-        preload="none">
-      </video>
-    </div>
+<section class="home-mosaic">
+  <figure class="mosaic-item"><img src="/home/eyes-eat-first-hero.webp" alt="Still from Eyes Eat First" fetchpriority="high"></figure>
+  <figure class="mosaic-item"><img src="/home/herculean.webp" alt="Herculean Dinner social video" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/wild-remains.webp" alt="Wild Remains, painting by Erika Urano" loading="lazy"></figure>
+
+  <div class="mosaic-item mosaic-intro">
+    <p>I'm Erika Urano. I'm a filmmaker, artist, and I help artists and small businesses tell their story online through short form video and social media. My priority is making sure that creative people get seen. If you're making something, or trying to get it noticed, <a href="/contact/">let's talk</a>.</p>
   </div>
-  <div class="reel-overlay"></div>
-</div>
 
-<div id="body-content">
-  <!-- Navigation is now in the header -->
-</div>
-
-<script>
-// Load background video asynchronously after critical content
-document.addEventListener('DOMContentLoaded', function() {
-  // Small delay to ensure LCP happens first
-  requestAnimationFrame(function() {
-    requestAnimationFrame(function() {
-      setTimeout(function() {
-        const video = document.getElementById('bg-video');
-        const fallback = document.getElementById('background-fallback');
-        const videoContainer = document.getElementById('background-video');
-        
-        if (video && fallback && videoContainer) {
-          // Start loading the video
-          video.src = '{{ "films/reel.mp4" | relURL }}';
-          video.preload = 'auto';
-          
-          // When video is ready to play, transition to it
-          video.addEventListener('canplay', function() {
-            video.play().then(function() {
-              // Smooth transition from fallback to video
-              videoContainer.classList.add('active');
-              setTimeout(function() {
-                fallback.classList.remove('active');
-              }, 500); // Half second overlap for smooth transition
-            }).catch(function(error) {
-              console.log('Video autoplay failed, keeping fallback background');
-            });
-          });
-          
-          // Fallback if video fails to load
-          video.addEventListener('error', function() {
-            console.log('Video failed to load, keeping fallback background');
-          });
-        }
-      }, 150); // 150ms delay after LCP
-    });
-  });
-});
-</script>
+  <figure class="mosaic-item"><img src="/home/fowl-hero.webp" alt="Still from Fowl" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/willow.webp" alt="Willow, painting by Erika Urano" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/room-without-walls-hero.webp" alt="Still from The Room Without Walls" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/dream-river.webp" alt="Dream River, painting by Erika Urano" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/room-without-walls-03.webp" alt="Still from The Room Without Walls" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/beneath-strange-gardens.webp" alt="Beneath Strange Gardens, painting by Erika Urano" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/since-when.webp" alt="Still from Since When" loading="lazy"></figure>
+  <figure class="mosaic-item"><img src="/home/eyes-eat-first-08.webp" alt="Still from Eyes Eat First" loading="lazy"></figure>
+</section>
 {{ end }}
-

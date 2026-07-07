@@ -1,156 +1,20 @@
 {{ define "main" }}
-  <div id="body-content">
-    <!-- Controls for filtering films -->
-    <div class="films-controls">
-      <div class="role-filters">
-        <button class="filter-btn active loading" data-role="all">All</button>
-        <button class="filter-btn loading" data-role="Director">Director</button>
-        <button class="filter-btn loading" data-role="Writer">Writer</button>
-        <button class="filter-btn loading" data-role="Production Designer">Production Designer</button>
-        <button class="filter-btn loading" data-role="Editor">Editor</button>
-      </div>
-    </div>
-
-    <div class="films-grid">
-      {{ range $index, $page := .Pages.ByWeight }}
-        {{ $videoEmbed := "" }}
-        {{ $instagramReelId := "" }}
-        {{ if $page.Params.link }}
-          {{ if findRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+)" $page.Params.link }}
-            {{ $youtubeId := replaceRE "^https?://(?:www\\.)?(?:youtube\\.com/watch\\?v=|youtu\\.be/)([^&?/]+).*" "$1" $page.Params.link }}
-            {{ $videoEmbed = printf "https://www.youtube.com/embed/%s" $youtubeId }}
-          {{ else if findRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+)" $page.Params.link }}
-            {{ $vimeoId := replaceRE "^https?://(?:www\\.)?vimeo\\.com/([0-9]+).*" "$1" $page.Params.link }}
-            {{ $videoEmbed = printf "https://player.vimeo.com/video/%s" $vimeoId }}
-          {{ else if findRE "^https?://(?:www\\.)?instagram\\.com/reel/([^/?]+)" $page.Params.link }}
-            {{ $instagramReelId = replaceRE "^https?://(?:www\\.)?instagram\\.com/reel/([^/?]+).*" "$1" $page.Params.link }}
-            {{ $videoEmbed = printf "https://www.instagram.com/reel/%s/embed/" $instagramReelId }}
-          {{ end }}
-        {{ end }}
-        {{ $shouldLazyLoad := gt $index 2 }}
-        {{ $isExternalLink := and $page.Params.link (not $videoEmbed) (not $instagramReelId) }}
-        <div class="film-card{{ if or $page.Params.playlist $videoEmbed $instagramReelId }} has-embedded-video{{ end }}" data-roles="{{ delimit $page.Params.roles " " }}" data-weight="{{ $page.Weight }}"{{ with $page.Params.role_weights }} data-role-weights='{{ jsonify . }}'{{ end }}>
-          <div class="film-preview{{ if findRE "instagram" $videoEmbed }} has-instagram{{ end }}">
-            {{ if $page.Params.playlist }}
-              <div class="video-container lazy-hls" data-playlist="{{ $page.Params.playlist }}" data-poster="{{ $page.Params.preview }}">
-                <div class="video-thumbnail">
-                  <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
-                  <div class="play-button hls-play-button">
-                    <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
-                      <circle cx="40" cy="40" r="35" fill="rgba(255,255,255,0.9)" stroke="rgba(0,0,0,0.2)" stroke-width="2"/>
-                      <path d="M32 25 L55 40 L32 55 Z" fill="#333"/>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            {{ else if findRE "instagram" $videoEmbed }}
-              <!-- Instagram embeds load immediately (no lazy loading) -->
-              <div class="video-container instagram-embed" data-embed-url="{{ $videoEmbed }}">
-                <iframe 
-                  src="{{ $videoEmbed }}?embed=true" 
-                  frameborder="0" 
-                  allow="autoplay; encrypted-media" 
-                  allowfullscreen="false"
-                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none;">
-                </iframe>
-              </div>
-            {{ else if $videoEmbed }}
-              <div class="video-container lazy-video" data-embed-url="{{ $videoEmbed }}">
-                <div class="video-thumbnail">
-                  {{ if $page.Params.preview }}
-                    <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
-                  {{ else }}
-                    <!-- Generate thumbnail from video ID -->
-                    {{ if findRE "youtube" $videoEmbed }}
-                      {{ $youtubeId := replaceRE "^https://www.youtube.com/embed/([^?]+).*" "$1" $videoEmbed }}
-                      <img src="https://img.youtube.com/vi/{{ $youtubeId }}/maxresdefault.jpg" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
-                    {{ else if findRE "vimeo" $videoEmbed }}
-                      {{ $vimeoId := replaceRE "^https://player.vimeo.com/video/([^?]+).*" "$1" $videoEmbed }}
-                      <img src="{{ $page.Params.preview | default (printf "https://vumbnail.com/%s.jpg" $vimeoId) }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }} onerror="this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%22640%22 height=%22360%22 viewBox=%220 0 640 360%22%3E%3Crect width=%22640%22 height=%22360%22 fill=%22%23000%22/%3E%3Ctext x=%22320%22 y=%22180%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%23fff%22 font-size=%2220%22%3EVideo Preview%3C/text%3E%3C/svg%3E'">
-                    {{ end }}
-                  {{ end }}
-                  <div class="play-button">
-                    <svg width="68" height="48" viewBox="0 0 68 48" fill="none">
-                      <path d="M66.52,7.74c-0.78-2.93-2.49-5.41-5.42-6.19C55.79,.13,34,0,34,0S12.21,.13,6.9,1.55 C3.97,2.33,2.27,4.81,1.48,7.74C0.06,13.05,0,24,0,24s0.06,10.95,1.48,16.26c0.78,2.93,2.49,5.41,5.42,6.19 C12.21,47.87,34,48,34,48s21.79-0.13,27.1-1.55c2.93-0.78,4.64-3.26,5.42-6.19C67.94,34.95,68,24,68,24S67.94,13.05,66.52,7.74z" fill="#f00"></path>
-                      <path d="M 45,24 27,14 27,34" fill="#fff"></path>
-                    </svg>
-                  </div>
-                </div>
-              </div>
-            {{ else if $page.Params.preview }}
-              <div class="film-preview-image">
-                <picture>
-                  <source srcset="{{ $page.Params.preview | strings.TrimSuffix ".jpg" }}.webp" type="image/webp">
-                  <img src="{{ $page.Params.preview }}" alt="{{ $page.Title }}"{{ if $shouldLazyLoad }} loading="lazy"{{ else if eq $index 0 }} fetchpriority="high"{{ end }}>
-                </picture>
-              </div>
+  <div id="body-content" class="section-page">
+    {{ partial "sub-nav.html" . }}
+    <div class="stills-grid films-grid">
+      {{ range $i, $p := (where .Pages.ByWeight "Params.roles" "intersect" (slice "Director" "Writer")) }}
+        <a class="still-card" href="{{ $p.Permalink }}">
+          <div class="still-media">
+            {{ with $p.Params.preview }}
+              <img src="{{ . }}" alt="{{ $p.Title }}" loading="{{ cond (lt $i 3) "eager" "lazy" }}">
             {{ end }}
-            <div class="film-overlay">
-              {{ if $isExternalLink }}
-                <a href="{{ $page.Params.link }}" class="film-overlay-link" target="_blank" rel="noopener noreferrer">
-                  <span class="view-details">View on Instagram</span>
-                </a>
-              {{ else if or $page.Params.preview $page.Params.link }}
-                <a href="{{ $page.Permalink }}" class="film-overlay-link">
-                  <span class="view-details">View Details</span>
-                </a>
-              {{ else }}
-                <div class="film-overlay-link">
-                  <span class="view-details">Coming Soon</span>
-                </div>
-              {{ end }}
+            <div class="still-overlay">
+              <h3 class="still-title">{{ $p.Title }}</h3>
+              {{ with $p.Description }}<p class="still-credit">{{ . }}</p>{{ end }}
             </div>
           </div>
-          {{ if $isExternalLink }}
-            <a href="{{ $page.Params.link }}" class="film-info-link" target="_blank" rel="noopener noreferrer">
-              <div class="film-info">
-                <h3>{{ $page.Title }}</h3>
-                <div class="film-meta">
-                  <span class="film-year">{{ $page.Params.year }}</span>
-                  <div class="film-roles">
-                    {{ range $page.Params.roles }}
-                      <span class="role-badge">{{ . }}</span>
-                    {{ end }}
-                  </div>
-                </div>
-                <p class="film-description">{{ $page.Description }}</p>
-              </div>
-            </a>
-          {{ else if or $page.Params.preview $page.Params.link }}
-            <a href="{{ $page.Permalink }}" class="film-info-link">
-              <div class="film-info">
-                <h3>{{ $page.Title }}</h3>
-                <div class="film-meta">
-                  <span class="film-year">{{ $page.Params.year }}</span>
-                  <div class="film-roles">
-                    {{ range $page.Params.roles }}
-                      <span class="role-badge">{{ . }}</span>
-                    {{ end }}
-                  </div>
-                </div>
-                <p class="film-description">{{ $page.Description }}</p>
-              </div>
-            </a>
-          {{ else }}
-            <div class="film-info-link">
-              <div class="film-info">
-                <h3>{{ $page.Title }}</h3>
-                <div class="film-meta">
-                  <span class="film-year">{{ $page.Params.year }}</span>
-                  <div class="film-roles">
-                    {{ range $page.Params.roles }}
-                      <span class="role-badge">{{ . }}</span>
-                    {{ end }}
-                  </div>
-                </div>
-                <p class="film-description">{{ $page.Description }}</p>
-              </div>
-            </div>
-          {{ end }}
-        </div>
+        </a>
       {{ end }}
     </div>
   </div>
-
-
 {{ end }}

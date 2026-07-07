@@ -1,10 +1,9 @@
 {{ define "main" }}
-  {{/* Paintings page (/art/). Animation lives on its own page at /art/animation/. */}}
+  {{/* Animation page (/art/animation/). Same grid treatment as Paintings. */}}
   <div id="body-content" class="section-page">
     {{ partial "sub-nav.html" . }}
-    {{ $paintings := .Site.GetPage "/art/drawings" }}
     <div class="stills-grid art-grid">
-      {{ range $i, $p := $paintings.Pages.ByWeight }}
+      {{ range $i, $p := .Pages.ByWeight }}
         <a class="still-card" href="{{ $p.Permalink }}">
           <div class="still-media">
             <img src="{{ with $p.Params.thumbnail }}{{ . }}{{ else }}{{ $p.Params.image }}{{ end }}" alt="{{ $p.Title }}" loading="{{ cond (lt $i 4) "eager" "lazy" }}">

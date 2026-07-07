@@ -1,5 +1,6 @@
 ---
 title: "EYES EAT FIRST"
+credit: "Short film by Forrest Wheeler. Production design by Erika Urano."
 hero_image: "/production-design/eyes-eat-first/hero.webp"
 weight: 1
 images:
