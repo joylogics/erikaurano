@@ -6,11 +6,12 @@ human before PROD.
 
 ## Feedback round 1 (applied, redeployed to NEXT)
 
-- **Home intro** is now a centered band ~2 columns wide (`column-span: all`) with
-  photos flowing above and below it. Note: true masonry + a 2-col intro with photos
-  on *both sides* of it isn't achievable with CSS columns, and CSS Grid masonry left
-  ugly gaps — so the intro sits between the photos rather than with images beside it.
-  If Erika wants images literally flanking the text box, that needs a JS masonry lib.
+- **Home intro** is a fixed 2-column-wide box with photos flowing around it on all
+  sides, via a small custom JS masonry (no third-party dependency; items absolutely
+  positioned, images carry inline `aspect-ratio` so heights are known before load).
+  Responsive column counts 4/3/2; on 2-col mobile the intro is full width with photos
+  above/below. (Iterated here: CSS columns couldn't flank the box and CSS-Grid masonry
+  left gaps, so a JS masonry was the right call — Shinichi confirmed.)
 - **Production Design** reverted to near-full-width single-column tiles (max-width
   1100, centered) with L/R margin, instead of the 3-col grid.
 - **About** added back to the primary nav (Video / Art / About / Contact).
