@@ -19,50 +19,55 @@
 </section>
 
 <script>
-// Masonry: photos flow around a fixed 2-column-wide intro box. Items are absolutely
-// positioned; images carry an inline aspect-ratio so heights are known before load.
+// Masonry: the intro is a fixed box locked to the centre columns (always centred
+// horizontally); photos flow around it via a reserved-hole fill. Absolute positions
+// recomputed on resize/font-load; images carry inline aspect-ratio so heights are
+// known before pixels load. Column tiers are even (4 / 2) so the 2-wide box centres.
 (function () {
   var grid = document.querySelector('.home-mosaic');
   if (!grid) return;
-  var items = Array.prototype.slice.call(grid.children);
-
-  function columnCount() {
-    var w = window.innerWidth;
-    if (w <= 768) return 2;
-    if (w <= 1024) return 3;
-    return 4;
-  }
+  var intro = grid.querySelector('.mosaic-intro');
+  var imgs = Array.prototype.slice.call(grid.querySelectorAll('.mosaic-item'));
 
   function layout() {
     var cs = getComputedStyle(grid);
     var innerW = grid.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
-    var n = columnCount();
+    var n = window.innerWidth >= 900 ? 4 : 2;
     var gap = window.innerWidth <= 768 ? 16 : 24;
     var colW = (innerW - (n - 1) * gap) / n;
-    var colH = [];
-    for (var c = 0; c < n; c++) colH[c] = 0;
+    var x = function (c) { return c * (colW + gap); };
+    var introStart = (n - 2) / 2;                 // n=4 -> 1, n=2 -> 0
 
-    // pass 1: set widths so heights (text + aspect-ratio images) are final
-    items.forEach(function (item) {
-      var span = item.classList.contains('mosaic-intro') ? Math.min(2, n) : 1;
-      item.style.width = (colW * span + gap * (span - 1)) + 'px';
+    intro.style.width = (colW * 2 + gap) + 'px';
+    imgs.forEach(function (it) { it.style.width = colW + 'px'; });
+    var introH = intro.getBoundingClientRect().height;
+
+    // pre-pass: total height (images only) to place the box near vertical centre
+    var pre = []; for (var c = 0; c < n; c++) pre[c] = 0;
+    imgs.forEach(function (it) {
+      var h = it.getBoundingClientRect().height, col = 0;
+      for (var c = 1; c < n; c++) if (pre[c] < pre[col]) col = c;
+      pre[col] += h + gap;
     });
+    var total = 0; for (var c = 0; c < n; c++) total = Math.max(total, pre[c]);
+    var introY = Math.max(0, Math.round(total * 0.42 - introH / 2));
+    var introBottom = introY + introH + gap;
+    var isIntroCol = function (c) { return c >= introStart && c < introStart + 2; };
 
-    // pass 2: place each item in the shortest available slot
-    items.forEach(function (item) {
-      var span = item.classList.contains('mosaic-intro') ? Math.min(2, n) : 1;
-      var h = item.getBoundingClientRect().height;
-      var col = 0, best = Infinity;
-      for (var i = 0; i + span - 1 < n; i++) {
-        var top = 0;
-        for (var k = 0; k < span; k++) top = Math.max(top, colH[i + k]);
-        if (top < best) { best = top; col = i; }
+    // real pass: greedy shortest-column fill that skips the reserved intro box
+    var colH = []; for (var c = 0; c < n; c++) colH[c] = 0;
+    imgs.forEach(function (it) {
+      var h = it.getBoundingClientRect().height, col = 0;
+      for (var c = 1; c < n; c++) if (colH[c] < colH[col]) col = c;
+      if (isIntroCol(col) && colH[col] + h > introY && colH[col] < introBottom) {
+        colH[col] = introBottom;                  // jump past the reserved box
       }
-      item.style.transform = 'translate(' + (col * (colW + gap)) + 'px,' + best + 'px)';
-      for (var k = 0; k < span; k++) colH[col + k] = best + h + gap;
+      it.style.transform = 'translate(' + x(col) + 'px,' + colH[col] + 'px)';
+      colH[col] += h + gap;
     });
+    intro.style.transform = 'translate(' + x(introStart) + 'px,' + introY + 'px)';
 
-    var maxH = 0;
+    var maxH = introBottom;
     for (var c = 0; c < n; c++) maxH = Math.max(maxH, colH[c]);
     grid.style.height = maxH + 'px';
     grid.classList.add('is-laid-out');
@@ -72,6 +77,7 @@
   schedule();
   window.addEventListener('load', schedule);
   window.addEventListener('resize', schedule);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
   Array.prototype.forEach.call(grid.querySelectorAll('img'), function (img) {
     if (!img.complete) img.addEventListener('load', schedule);
   });
