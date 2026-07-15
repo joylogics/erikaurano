@@ -39,10 +39,6 @@ theme = "erikaurano-theme"
     url = "/art/"
 
   [[params.navItems]]
-    name = "About"
-    url = "/about/"
-
-  [[params.navItems]]
     name = "Contact"
     url = "/contact/"
 

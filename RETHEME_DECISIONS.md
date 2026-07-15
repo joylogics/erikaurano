@@ -4,6 +4,22 @@ Branch `matsuya-fluid-retheme`. Built and deployed to NEXT for review. This logs
 every judgment call made while running autonomously, plus the things that need a
 human before PROD.
 
+## Feedback round 3 (applied, redeployed to NEXT)
+
+- **Films sub-nav sat lower than other pages** — caused by dead films-page critical CSS
+  in `baseof.html` (`#body-content { padding: 2rem 0 }`, an ID selector overriding
+  `.section-page` only on films). Removed the whole legacy films critical-CSS block and
+  the dead `films-filter.js` loader.
+- **Dropped the About page** — removed from nav + deleted `content/about/`. (Orphan
+  static images under `static/about/images/` remain in the asset bucket; harmless.)
+- **Home masonry now vertically justifies** — images are assigned to columns
+  shortest-first, then each column's images are spread to fill to the same bottom line
+  (like text justification, but vertical), so the tiles read as evenly spread instead of
+  pooling whitespace at the bottom. Also applied Erika's reorder (images 3 & 4 moved
+  after image 6). **Note:** gap size depends on column balance — if one column gets the
+  tallest images its neighbours stretch more; can auto-balance (assign tallest to
+  shortest column) for tighter even gaps if she prefers over hand-tuning the order.
+
 ## Feedback round 2 (applied, redeployed to NEXT)
 
 - **Fonts** now match the Matsuya example: **Abel** (light narrow sans) for the name +

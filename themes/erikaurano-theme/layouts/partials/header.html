@@ -10,8 +10,6 @@
           {{ $active = in (slice "films" "production-design" "social-video-editing") $sec }}
         {{ else if eq .name "Art" }}
           {{ $active = eq $sec "art" }}
-        {{ else if eq .name "About" }}
-          {{ $active = eq $sec "about" }}
         {{ else if eq .name "Contact" }}
           {{ $active = eq $sec "contact" }}
         {{ end }}

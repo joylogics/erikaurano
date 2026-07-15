@@ -2,10 +2,10 @@
 <section class="home-mosaic">
   <figure class="mosaic-item"><img src="/home/eyes-eat-first-hero.webp" alt="Still from Eyes Eat First" style="aspect-ratio:1000/558" fetchpriority="high"></figure>
   <figure class="mosaic-item"><img src="/home/herculean.webp" alt="Herculean Dinner social video" style="aspect-ratio:1000/1775"></figure>
-  <figure class="mosaic-item"><img src="/home/wild-remains.webp" alt="Wild Remains, painting by Erika Urano" style="aspect-ratio:1000/763"></figure>
-  <figure class="mosaic-item"><img src="/home/apple-and-pear.webp" alt="Apple and Pear, painting by Erika Urano" style="aspect-ratio:1000/846"></figure>
   <figure class="mosaic-item"><img src="/home/room-without-walls-hero.webp" alt="Still from The Room Without Walls" style="aspect-ratio:1000/553"></figure>
   <figure class="mosaic-item"><img src="/home/all-eyes-pose.webp" alt="All Eyes Pose, painting by Erika Urano" style="aspect-ratio:1000/1334"></figure>
+  <figure class="mosaic-item"><img src="/home/wild-remains.webp" alt="Wild Remains, painting by Erika Urano" style="aspect-ratio:1000/763"></figure>
+  <figure class="mosaic-item"><img src="/home/apple-and-pear.webp" alt="Apple and Pear, painting by Erika Urano" style="aspect-ratio:1000/846"></figure>
   <figure class="mosaic-item"><img src="/home/dream-river.webp" alt="Dream River, painting by Erika Urano" style="aspect-ratio:1000/1341"></figure>
   <figure class="mosaic-item"><img src="/home/since-when.webp" alt="Still from Since When" style="aspect-ratio:1000/515"></figure>
 
@@ -23,10 +23,11 @@
 </section>
 
 <script>
-// Masonry: the intro is a fixed box locked to the centre columns (always centred
-// horizontally); photos flow around it via a reserved-hole fill. Absolute positions
-// recomputed on resize/font-load; images carry inline aspect-ratio so heights are
-// known before pixels load. Column tiers are even (4 / 2) so the 2-wide box centres.
+// Masonry with vertical justification: images are assigned to columns (shortest-first),
+// then each column's images are spread so every column fills to the same bottom line -
+// like text justification, but vertical - so the tiles look evenly spread with no big
+// white gap pooling at the bottom. The intro is a fixed box locked to the centre
+// columns; the photos fill above and below it. Recomputed on resize/font-load.
 (function () {
   var grid = document.querySelector('.home-mosaic');
   if (!grid) return;
@@ -40,46 +41,76 @@
     var n = window.innerWidth >= 900 ? 4 : 2;
     var gap = window.innerWidth <= 768 ? 12 : 18;
     var colW = (innerW - (n - 1) * gap) / n;
-    // absolute children resolve left:0 to the padding edge, so add padL back in
-    var x = function (c) { return padL + c * (colW + gap); };
-    var introStart = (n - 2) / 2;                 // n=4 -> 1, n=2 -> 0
+    var x = function (c) { return padL + c * (colW + gap); }; // left:0 == padding edge
+    var introStart = (n - 2) / 2;                             // n=4 -> 1, n=2 -> 0
 
     intro.style.width = (colW * 2 + gap) + 'px';
     imgs.forEach(function (it) { it.style.width = colW + 'px'; });
     var introH = intro.getBoundingClientRect().height;
+    var H = imgs.map(function (it) { return it.getBoundingClientRect().height; });
 
-    // pre-pass: total image height, to choose when the box drops in vertically
+    // pre-pass: total column height (images only), to pick the intro drop point
     var pre = []; for (var c = 0; c < n; c++) pre[c] = 0;
-    imgs.forEach(function (it) {
-      var h = it.getBoundingClientRect().height, col = 0;
-      for (var c = 1; c < n; c++) if (pre[c] < pre[col]) col = c;
-      pre[col] += h + gap;
+    imgs.forEach(function (it, i) {
+      var col = 0; for (var c = 1; c < n; c++) if (pre[c] < pre[col]) col = c;
+      pre[col] += H[i] + gap;
     });
     var total = 0; for (var c = 0; c < n; c++) total = Math.max(total, pre[c]);
     var targetY = total * 0.4;
 
-    // real pass: greedy fill; drop the box flush onto the centre columns once they
-    // reach targetY (so there is no empty reserved gap above it)
-    var colH = []; for (var c = 0; c < n; c++) colH[c] = 0;
-    var placed = false;
+    // assign images to columns (record each column's ordered list), drop the intro
+    // flush onto the centre columns once they reach targetY
+    var colH = []; var colItems = [];
+    for (var c = 0; c < n; c++) { colH[c] = 0; colItems[c] = []; }
+    var placed = false, introY = 0;
     function placeIntro() {
-      var y = Math.max(colH[introStart], colH[introStart + 1]);
-      intro.style.transform = 'translate(' + x(introStart) + 'px,' + y + 'px)';
-      colH[introStart] = colH[introStart + 1] = y + introH + gap;
+      introY = Math.max(colH[introStart], colH[introStart + 1]);
+      colH[introStart] = colH[introStart + 1] = introY + introH + gap;
       placed = true;
     }
-    imgs.forEach(function (it) {
+    imgs.forEach(function (it, i) {
       if (!placed && colH[introStart] >= targetY && colH[introStart + 1] >= targetY) placeIntro();
-      var h = it.getBoundingClientRect().height, col = 0;
-      for (var c = 1; c < n; c++) if (colH[c] < colH[col]) col = c;
-      it.style.transform = 'translate(' + x(col) + 'px,' + colH[col] + 'px)';
-      colH[col] += h + gap;
+      var col = 0; for (var c = 1; c < n; c++) if (colH[c] < colH[col]) col = c;
+      colItems[col].push({ el: it, h: H[i], y: colH[col], col: col });
+      colH[col] += H[i] + gap;
     });
     if (!placed) placeIntro();
+    var introBottom = introY + introH + gap;
 
-    var maxH = 0;
-    for (var c = 0; c < n; c++) maxH = Math.max(maxH, colH[c]);
-    grid.style.height = maxH + 'px';
+    // target bottom line = tallest column's natural bottom
+    var Htarget = 0; for (var c = 0; c < n; c++) Htarget = Math.max(Htarget, colH[c] - gap);
+
+    // spread a list of items evenly to fill [top, bottom]
+    function justify(items, top, bottom) {
+      if (!items.length) return;
+      var sumH = 0; items.forEach(function (o) { sumH += o.h; });
+      if (items.length === 1) {
+        var y1 = top + Math.max(0, (bottom - top - sumH) / 2);
+        items[0].el.style.transform = 'translate(' + x(items[0].col) + 'px,' + y1 + 'px)';
+        return;
+      }
+      var g = (bottom - top - sumH) / (items.length - 1);
+      if (g < 0) g = 0;
+      var y = top;
+      items.forEach(function (o) {
+        o.el.style.transform = 'translate(' + x(o.col) + 'px,' + y + 'px)';
+        y += o.h + g;
+      });
+    }
+
+    for (var c = 0; c < n; c++) {
+      if (c >= introStart && c < introStart + 2) {
+        var above = colItems[c].filter(function (o) { return o.y < introY; });
+        var below = colItems[c].filter(function (o) { return o.y >= introY; });
+        justify(above, 0, introY - gap);
+        justify(below, introBottom, Htarget);
+      } else {
+        justify(colItems[c], 0, Htarget);
+      }
+    }
+    intro.style.transform = 'translate(' + x(introStart) + 'px,' + introY + 'px)';
+
+    grid.style.height = Htarget + 'px';
     grid.classList.add('is-laid-out');
   }
 
