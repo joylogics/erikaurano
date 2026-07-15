@@ -4,6 +4,21 @@ Branch `matsuya-fluid-retheme`. Built and deployed to NEXT for review. This logs
 every judgment call made while running autonomously, plus the things that need a
 human before PROD.
 
+## Feedback round 5 (applied, redeployed to NEXT)
+
+- **Intro card centred in the viewport + parallax** — the card now sits in the
+  middle of the window (not near the top) and, on scroll, moves at half the mosaic's
+  speed (`SPEED = 0.5` in the `index.html` script — 1 = moves with the page, 0 =
+  pinned). Reduced-motion users get a static card near the top instead.
+- **Evened out the mosaic columns** — pure CSS `column-count` can't balance columns
+  when image heights vary this much (that was the trailing-whitespace complaint), so a
+  small script now distributes tiles into flex columns using the LPT heuristic (assign
+  tallest-first into the shortest column), then renders each column in original order.
+  Column bottoms now land within ~75px of each other (was 250px+). No-JS fallback is
+  still the CSS-column masonry. This is *not* the round-3 vertical justification —
+  images keep natural spacing; only which column they land in changed. Trade-off:
+  strict top-to-bottom reading order gives way to balance-driven placement.
+
 ## Feedback round 4 (applied, redeployed to NEXT)
 
 - **Reverted the home mosaic to plain CSS-column masonry** — dropped the JS

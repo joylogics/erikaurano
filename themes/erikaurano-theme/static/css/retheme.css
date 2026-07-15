@@ -127,12 +127,13 @@ body.home .header-title:hover { color: var(--ink); }
 }
 
 /* --------------------------------------------------------------------------
-   Home mosaic (masonry columns; intro text is one cell among the photos)
+   Home mosaic
    -------------------------------------------------------------------------- */
-/* True masonry (JS-positioned): the intro is a fixed 2-column-wide box and the
-   photos flow around it on every side. See the layout script in index.html. */
-/* the mosaic is a plain CSS-column masonry (same mechanism as .art-grid); the
-   intro is a floating glass panel centred over it (see .mosaic-intro). */
+/* No-JS fallback is a plain CSS-column masonry (like .art-grid). When JS runs it
+   adds .is-masonry and re-distributes the tiles into flex columns, placing each
+   into the shortest column so the columns end at roughly the same height. The
+   intro is a separate glass card centred in the viewport (see .mosaic-intro and
+   the parallax script in index.html). */
 .home { position: relative; }
 .home-mosaic {
   column-count: 4;
@@ -142,21 +143,37 @@ body.home .header-title:hover { color: var(--ink); }
   padding: 0 2rem 4rem;
   box-sizing: border-box;
 }
+/* JS masonry: flex row of equal-width columns, tiles stacked within each */
+.home-mosaic.is-masonry {
+  column-count: initial;
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+}
+.home-mosaic.is-masonry .mosaic-col {
+  flex: 1 1 0;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
 .mosaic-item {
   break-inside: avoid;
   margin: 0 0 1.5rem;
 }
+.home-mosaic.is-masonry .mosaic-item { margin: 0; }
 .mosaic-item img {
   width: 100%;
   height: auto;
   display: block;
 }
-/* frosted, semi-transparent intro card floating over the top of the mosaic */
+/* frosted intro card, centred in the viewport; a script parallaxes it on scroll
+   (moves slower than the mosaic). No-JS/reduced-motion fallback is fixed-centred. */
 .mosaic-intro {
-  position: absolute;
-  top: clamp(1.5rem, 7vh, 5rem);
+  position: fixed;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 5;
   width: min(90%, 620px);
   box-sizing: border-box;
@@ -394,6 +411,8 @@ body.home .header-title:hover { color: var(--ink); }
   .sub-nav { padding: 0 1.25rem 1.25rem; gap: 1.1rem; }
   .section-page { padding: 0 1.25rem 3rem; }
   .home-mosaic { column-count: 2; column-gap: 1rem; padding: 0 1.25rem 3rem; }
+  .home-mosaic.is-masonry { gap: 1rem; }
+  .home-mosaic.is-masonry .mosaic-col { gap: 1rem; }
   .films-grid, .art-grid { column-count: 2; column-gap: 1rem; }
   .still-card { margin-bottom: 1rem; }
   /* touch devices: reveal captions without hover */

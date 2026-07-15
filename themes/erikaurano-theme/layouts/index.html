@@ -22,4 +22,82 @@
     <p>I'm Erika Urano. I'm a filmmaker, artist, and I help artists and small businesses tell their story online through short form video and social media. My priority is making sure that creative people get seen. If you're making something, or trying to get it noticed, <a href="/contact/">let's talk</a>.</p>
   </div>
 </div>
+
+<script>
+(function () {
+  var grid = document.querySelector('.home-mosaic');
+  var intro = document.querySelector('.mosaic-intro');
+
+  /* --- balanced-column masonry: each tile goes into the shortest column so the
+         columns end at roughly the same height (no vertical stretching) --- */
+  if (grid) {
+    var items = Array.prototype.slice.call(grid.querySelectorAll('.mosaic-item'));
+    var ratio = items.map(function (it) {
+      var img = it.querySelector('img');
+      var m = (img && img.getAttribute('style') || '').match(/aspect-ratio:\s*(\d+)\s*\/\s*(\d+)/);
+      return m ? parseFloat(m[2]) / parseFloat(m[1]) : 1; /* height per unit width */
+    });
+    var cur = 0;
+    function nCols() {
+      var w = window.innerWidth;
+      return w <= 460 ? 1 : w <= 768 ? 2 : w <= 1024 ? 3 : 4;
+    }
+    function build() {
+      var n = nCols();
+      grid.classList.add('is-masonry');
+      while (grid.firstChild) grid.removeChild(grid.firstChild);
+      var cols = [], h = [], bucket = [];
+      for (var c = 0; c < n; c++) {
+        var d = document.createElement('div');
+        d.className = 'mosaic-col';
+        grid.appendChild(d); cols.push(d); h.push(0); bucket.push([]);
+      }
+      // assign tallest-first (LPT) into the shortest column so columns end even...
+      var order = items.map(function (_, i) { return i; })
+                       .sort(function (a, b) { return ratio[b] - ratio[a]; });
+      order.forEach(function (i) {
+        var col = 0;
+        for (var c = 1; c < n; c++) if (h[c] < h[col]) col = c;
+        bucket[col].push(i); h[col] += ratio[i];
+      });
+      // ...but render each column in the original document order
+      bucket.forEach(function (idxs, c) {
+        idxs.sort(function (a, b) { return a - b; })
+            .forEach(function (i) { cols[c].appendChild(items[i]); });
+      });
+      cur = n;
+    }
+    build();
+    var rt;
+    window.addEventListener('resize', function () {
+      if (nCols() === cur) return;
+      clearTimeout(rt); rt = setTimeout(build, 150);
+    });
+  }
+
+  /* --- intro card: centred in the viewport, parallaxed on scroll (moves slower
+         than the mosaic behind it). Reduced-motion: static card near the top. --- */
+  if (intro) {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      intro.style.position = 'absolute';
+      intro.style.top = 'clamp(1.5rem, 7vh, 5rem)';
+      intro.style.transform = 'translateX(-50%)';
+    } else {
+      var SPEED = 0.5; /* 1 = moves with the mosaic, 0 = pinned; 0.5 = half speed */
+      var ticking = false;
+      intro.style.top = '0';
+      function place() {
+        var y = (window.innerHeight - intro.offsetHeight) / 2 - window.scrollY * (1 - SPEED);
+        intro.style.transform = 'translateX(-50%) translateY(' + y + 'px)';
+        ticking = false;
+      }
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(place); } }
+      place();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', place);
+    }
+  }
+})();
+</script>
 {{ end }}
