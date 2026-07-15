@@ -4,6 +4,22 @@ Branch `matsuya-fluid-retheme`. Built and deployed to NEXT for review. This logs
 every judgment call made while running autonomously, plus the things that need a
 human before PROD.
 
+## Feedback round 4 (applied, redeployed to NEXT)
+
+- **Reverted the home mosaic to plain CSS-column masonry** — dropped the JS
+  vertical-justification layout from round 3 and went back to the original
+  `column-count` masonry (4 cols desktop / 3 @1024 / 2 @768 / 1 @460), the same
+  mechanism as the Art grid. Removed the whole positioning `<script>` from
+  `index.html` and the absolute-position / `is-laid-out` CSS. Trade-off Erika
+  accepted: the last column can end short (inherent to CSS columns), same as Art.
+- **Intro text is now a floating glass card, not a mosaic cell** — pulled the
+  "I'm Erika Urano..." block out of the image flow into a `.mosaic-intro` overlay:
+  absolutely positioned, horizontally centred, anchored near the top so it floats
+  over the first rows and scrolls with the page. Frosted look via
+  `background: rgba(250,249,247,0.78)` + `backdrop-filter: blur(12px)`, rounded,
+  subtle border + shadow. Blur/opacity tuned so the ink text stays fully legible
+  over any image behind it.
+
 ## Feedback round 3 (applied, redeployed to NEXT)
 
 - **Films sub-nav sat lower than other pages** — caused by dead films-page critical CSS
