@@ -34,7 +34,8 @@
     var items = Array.prototype.slice.call(grid.querySelectorAll('.mosaic-item'));
     var ratio = items.map(function (it) {
       var img = it.querySelector('img');
-      var m = (img && img.getAttribute('style') || '').match(/aspect-ratio:\s*(\d+)\s*\/\s*(\d+)/);
+      /* tokens are float-aware: the HTML minifier rewrites 1000 as 1e3 */
+      var m = (img && img.getAttribute('style') || '').match(/aspect-ratio:\s*([\d.eE+-]+)\s*\/\s*([\d.eE+-]+)/);
       return m ? parseFloat(m[2]) / parseFloat(m[1]) : 1; /* height per unit width */
     });
     var cur = 0;
