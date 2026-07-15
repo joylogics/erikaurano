@@ -76,14 +76,29 @@
     });
   }
 
-  /* --- intro card: centred in the viewport, parallaxed on scroll (moves slower
-         than the mosaic behind it). Reduced-motion: static card near the top. --- */
+  /* --- intro card: centred in the viewport, sized to span two mosaic columns,
+         parallaxed on scroll (moves slower than the mosaic). Reduced-motion:
+         static card near the top. --- */
   if (intro) {
+    /* width = the span of the first two columns (2 cols + the gap between them),
+       capped so it never exceeds the viewport on narrow screens */
+    function sizeIntro() {
+      if (!grid) return;
+      var colEls = grid.querySelectorAll('.mosaic-col');
+      if (!colEls.length) return;
+      var w = colEls.length >= 2
+        ? colEls[1].getBoundingClientRect().right - colEls[0].getBoundingClientRect().left
+        : colEls[0].getBoundingClientRect().width;
+      intro.style.width = Math.min(w, window.innerWidth * 0.92) + 'px';
+    }
+
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
       intro.style.position = 'absolute';
       intro.style.top = 'clamp(1.5rem, 7vh, 5rem)';
       intro.style.transform = 'translateX(-50%)';
+      sizeIntro();
+      window.addEventListener('resize', sizeIntro);
     } else {
       var SPEED = 0.5; /* 1 = moves with the mosaic, 0 = pinned; 0.5 = half speed */
       var ticking = false;
@@ -94,9 +109,10 @@
         ticking = false;
       }
       function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(place); } }
+      sizeIntro();
       place();
       window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', place);
+      window.addEventListener('resize', function () { sizeIntro(); place(); });
     }
   }
 })();

@@ -175,7 +175,7 @@ body.home .header-title:hover { color: var(--ink); }
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
-  width: min(90%, 620px);
+  width: min(92%, 640px); /* no-JS fallback; JS resizes to span two columns */
   box-sizing: border-box;
   padding: 1.75rem 2rem;
   border-radius: 8px;
