@@ -1,7 +1,7 @@
 {{ define "main" }}
   <div id="body-content" class="section-page">
     {{ partial "sub-nav.html" . }}
-    <div class="stills-grid films-grid">
+    <div class="stills-grid pd-grid">
       {{ range $i, $p := (where .Pages.ByWeight "Params.roles" "intersect" (slice "Director" "Writer")) }}
         <a class="still-card" href="{{ $p.Permalink }}">
           <div class="still-media">

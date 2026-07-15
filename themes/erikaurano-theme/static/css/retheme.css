@@ -36,7 +36,7 @@ body.home {
   box-sizing: border-box;
 }
 .site-header .header-title {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Abel', serif;
   font-size: clamp(1.4rem, 2.2vw, 1.9rem);
   font-weight: 500;
   letter-spacing: 0.01em;
@@ -64,7 +64,7 @@ body.home .header-title:hover { color: var(--ink); }
   padding: 0;
 }
 .primary-nav .nav-item-link {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Code Pro', sans-serif;
   font-size: 0.95rem;
   letter-spacing: 0.01em;
   color: var(--muted);
@@ -92,25 +92,28 @@ body.home .header-title:hover { color: var(--ink); }
 .sub-nav {
   display: flex;
   flex-wrap: wrap;
-  gap: 1.5rem;
+  justify-content: center;          /* centred under the name */
+  align-items: center;
+  gap: 0.75rem 1rem;
   max-width: 1360px;
   margin: 0 auto;
   padding: 0.25rem 2rem 1.75rem;
   box-sizing: border-box;
 }
 .sub-nav-item {
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
+  font-family: 'Source Code Pro', sans-serif;
+  font-size: 1.05rem;               /* a little bigger */
   color: var(--muted);
   text-decoration: none;
-  padding-bottom: 2px;
-  border-bottom: 1px solid transparent;
+  padding: 0.35em 1em;
+  border: 1.5px solid transparent;
+  border-radius: 999px;             /* circle/pill around the current item */
   transition: color 0.2s ease, border-color 0.2s ease;
 }
 .sub-nav-item:hover { color: var(--ink); }
 .sub-nav-item.active {
   color: var(--ink);
-  border-bottom-color: var(--ink);
+  border-color: var(--ink);
 }
 
 /* --------------------------------------------------------------------------
@@ -160,7 +163,7 @@ body.home .header-title:hover { color: var(--ink); }
   padding: 1.25rem 1rem;
 }
 .mosaic-intro p {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Code Pro', sans-serif;
   font-size: 1.05rem;
   line-height: 1.65;
   color: var(--ink);
@@ -231,7 +234,7 @@ body.home .header-title:hover { color: var(--ink); }
 .still-card:hover .still-overlay,
 .still-card:focus-visible .still-overlay { opacity: 1; }
 .still-title {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Code Pro', sans-serif;
   font-size: 1rem;
   font-weight: 600;
   margin: 0;
@@ -282,6 +285,13 @@ body.home .header-title:hover { color: var(--ink); }
 .art-gallery h2,
 .about-content h2 { color: var(--ink); }
 
+/* headings use Abel (display) to match the template */
+.header-title,
+.film-header h1,
+.art-header h1,
+.production-design-header h1,
+.contact-heading { font-family: 'Abel', sans-serif; }
+
 /* About page: readable body text, palette-matched links, visible LinkedIn link */
 .about-content,
 .about-content p { color: #3d3a36; }
@@ -298,7 +308,7 @@ body.home .header-title:hover { color: var(--ink); }
 .contact-page { max-width: 640px; }
 .contact-inner { padding-top: 1rem; }
 .contact-heading {
-  font-family: 'Playfair Display', serif;
+  font-family: 'Abel', serif;
   font-weight: 500;
   font-size: clamp(1.8rem, 4vw, 2.6rem);
   margin: 0 0 0.5rem;
@@ -322,7 +332,7 @@ body.home .header-title:hover { color: var(--ink); }
 }
 .contact-field input,
 .contact-field textarea {
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Code Pro', sans-serif;
   font-size: 1rem;
   color: var(--ink);
   background: #fff;
@@ -339,7 +349,7 @@ body.home .header-title:hover { color: var(--ink); }
 }
 .contact-submit {
   align-self: flex-start;
-  font-family: 'Inter', sans-serif;
+  font-family: 'Source Code Pro', sans-serif;
   font-size: 0.95rem;
   color: #fff;
   background: var(--ink);

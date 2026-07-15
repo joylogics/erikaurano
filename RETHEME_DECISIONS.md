@@ -4,6 +4,23 @@ Branch `matsuya-fluid-retheme`. Built and deployed to NEXT for review. This logs
 every judgment call made while running autonomously, plus the things that need a
 human before PROD.
 
+## Feedback round 2 (applied, redeployed to NEXT)
+
+- **Fonts** now match the Matsuya example: **Abel** (light narrow sans) for the name +
+  page headings, **Source Code Pro** (mono) for nav / sub-nav / body. Both self-hosted
+  (`themes/.../static/fonts/abel`, `.../source-code-pro`), matching the existing
+  self-hosted pattern. Erika guessed "Celdum thin" — the actual example font is Abel.
+  **Flag for review:** the whole body is now monospace (incl. the About bio), which is
+  faithful to the template but a strong look; easy to keep mono only for nav/labels and
+  use a softer face for long-form if she prefers.
+- **Sub-nav** (second-level menu): centre-aligned, larger (1.05rem), and the current
+  item gets a pill/circle outline instead of an underline. Primary nav still underlines.
+- **Home:** added 4 images (cat-butterfly, all-eyes-pose, apple-and-pear,
+  ton-poertefeuille) → 15 total; tightened the masonry gap (24→18 desktop, 16→12 mobile)
+  to reduce whitespace.
+- **Films page** now uses the Production Design layout (single-column, near-full-width
+  tiles) instead of the masonry grid.
+
 ## Feedback round 1 (applied, redeployed to NEXT)
 
 - **Home intro** is a fixed 2-column-wide box with photos flowing around it on all
