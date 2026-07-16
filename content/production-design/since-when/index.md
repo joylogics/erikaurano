@@ -1,5 +1,6 @@
 ---
 title: "Since When"
+credit: "Music video by Ava Sexton for Nat Brennan. Production design by Erika Urano."
 hero_image: "/production-design/since-when/hero.webp"
 weight: 8
 images:

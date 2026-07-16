@@ -18,30 +18,28 @@ theme = "erikaurano-theme"
 
 [params]
   # SEO Settings
-  description = "Erika Urano is a filmmaker and artist specializing in narrative films and production design. Explore her portfolio of films, art, and creative work."
+  description = "Erika Urano is a filmmaker, editor, and artist based in New York City. She makes narrative films and production design, and helps artists and small businesses with short-form video and social content."
 
+  # LinkedIn (replaces the template's Instagram icon in the header)
+  linkedin = "https://www.linkedin.com/in/erikaurano/"
+
+  # Contact form endpoint (Formspree, pointed at hello@erikaurano.com).
+  formspree = "https://formspree.io/f/mbdndkav"
+  contactEmail = "hello@erikaurano.com"
+
+  # Primary navigation: two buckets (Video, Art) plus Contact.
+  # Sub-navigation within each bucket is defined in partials/sub-nav.html.
   [[params.navItems]]
-    name = "Films"
-    image = "images/director.gif"
+    name = "Video"
     url = "/films/"
 
   [[params.navItems]]
-    name = "Production Design"
-    url = "/production-design/"
-
-  [[params.navItems]]
-    name = "Social Media"
-    url = "/social-video-editing/"
-
-  [[params.navItems]]
     name = "Art"
-    image = "images/art.gif"
     url = "/art/"
 
   [[params.navItems]]
-    name = "About"
-    image = "images/about.gif"
-    url = "/about/"
+    name = "Contact"
+    url = "/contact/"
 
   [[params.films]]
     title = "Nowhere to Hide"

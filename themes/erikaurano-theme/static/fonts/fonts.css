@@ -35,4 +35,22 @@
   font-weight: 400 700; /* Variable font supports range 400-700 */
   font-display: swap;
   src: url('./playfair-display/playfair-display.woff2') format('woff2');
-} 
+}
+
+/* Abel - display / headings (matches the Matsuya template) */
+@font-face {
+  font-family: 'Abel';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('./abel/abel-400.woff2') format('woff2');
+}
+
+/* Source Code Pro - body / nav (variable weight, matches the Matsuya template) */
+@font-face {
+  font-family: 'Source Code Pro';
+  font-style: normal;
+  font-weight: 300 700;
+  font-display: swap;
+  src: url('./source-code-pro/source-code-pro.woff2') format('woff2');
+}

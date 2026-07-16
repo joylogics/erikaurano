@@ -43,6 +43,12 @@
       </div>
     </div>
 
+    {{ with .Params.credit }}
+    <div class="production-design-bio">
+      <p>{{ . }}</p>
+    </div>
+    {{ end }}
+
     <div class="production-design-navigation">
       <a href="/production-design/" class="back-to-production-design">← Back to Production Design</a>
     </div>

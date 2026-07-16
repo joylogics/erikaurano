@@ -1,5 +1,6 @@
 ---
 title: "Deliver Your Love"
+credit: "Short film by David Choi. Production design by Erika Urano."
 hero_image: "/production-design/deliver-your-love/hero.webp"
 weight: 5
 images:

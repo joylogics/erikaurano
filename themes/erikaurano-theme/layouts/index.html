@@ -1,65 +1,129 @@
 {{ define "main" }}
-<!-- Background Video -->
-<div class="background-reel">
-  <div class="reel-content">
-    <div class="reel-item active" id="background-fallback">
-      <!-- Solid background shows immediately -->
-    </div>
-    <div class="reel-item" id="background-video">
-      <video 
-        id="bg-video"
-        muted 
-        loop 
-        playsinline
-        preload="none">
-      </video>
-    </div>
+<div class="home">
+  <div class="home-mosaic">
+    <figure class="mosaic-item"><img src="/home/eyes-eat-first-hero.webp" alt="Still from Eyes Eat First" style="aspect-ratio:1000/558" fetchpriority="high"></figure>
+    <figure class="mosaic-item"><img src="/home/herculean.webp" alt="Herculean Dinner social video" style="aspect-ratio:1000/1775"></figure>
+    <figure class="mosaic-item"><img src="/home/room-without-walls-hero.webp" alt="Still from The Room Without Walls" style="aspect-ratio:1000/553"></figure>
+    <figure class="mosaic-item"><img src="/home/all-eyes-pose.webp" alt="All Eyes Pose, painting by Erika Urano" style="aspect-ratio:1000/1334"></figure>
+    <figure class="mosaic-item"><img src="/home/wild-remains.webp" alt="Wild Remains, painting by Erika Urano" style="aspect-ratio:1000/763"></figure>
+    <figure class="mosaic-item"><img src="/home/apple-and-pear.webp" alt="Apple and Pear, painting by Erika Urano" style="aspect-ratio:1000/846"></figure>
+    <figure class="mosaic-item"><img src="/home/dream-river.webp" alt="Dream River, painting by Erika Urano" style="aspect-ratio:1000/1341"></figure>
+    <figure class="mosaic-item"><img src="/home/since-when.webp" alt="Still from Since When" style="aspect-ratio:1000/515"></figure>
+    <figure class="mosaic-item"><img src="/home/cat-butterfly.webp" alt="Cat Butterfly, animation by Erika Urano" style="aspect-ratio:1000/583"></figure>
+    <figure class="mosaic-item"><img src="/home/fowl-hero.webp" alt="Still from Fowl" style="aspect-ratio:1000/566"></figure>
+    <figure class="mosaic-item"><img src="/home/willow.webp" alt="Willow, painting by Erika Urano" style="aspect-ratio:1000/1977"></figure>
+    <figure class="mosaic-item"><img src="/home/ton-poertefeuille.webp" alt="Still from Ton Portefeuille" style="aspect-ratio:1000/563"></figure>
+    <figure class="mosaic-item"><img src="/home/room-without-walls-03.webp" alt="Still from The Room Without Walls" style="aspect-ratio:1000/556"></figure>
+    <figure class="mosaic-item"><img src="/home/beneath-strange-gardens.webp" alt="Beneath Strange Gardens, painting by Erika Urano" style="aspect-ratio:1000/1341"></figure>
+    <figure class="mosaic-item"><img src="/home/eyes-eat-first-08.webp" alt="Still from Eyes Eat First" style="aspect-ratio:1000/561"></figure>
   </div>
-  <div class="reel-overlay"></div>
-</div>
 
-<div id="body-content">
-  <!-- Navigation is now in the header -->
+  <div class="mosaic-intro">
+    <p>I'm Erika Urano. I'm a filmmaker, artist, and I help artists and small businesses tell their story online through short form video and social media. My priority is making sure that creative people get seen. If you're making something, or trying to get it noticed, <a href="/contact/">let's talk</a>.</p>
+  </div>
 </div>
 
 <script>
-// Load background video asynchronously after critical content
-document.addEventListener('DOMContentLoaded', function() {
-  // Small delay to ensure LCP happens first
-  requestAnimationFrame(function() {
-    requestAnimationFrame(function() {
-      setTimeout(function() {
-        const video = document.getElementById('bg-video');
-        const fallback = document.getElementById('background-fallback');
-        const videoContainer = document.getElementById('background-video');
-        
-        if (video && fallback && videoContainer) {
-          // Start loading the video
-          video.src = '{{ "films/reel.mp4" | relURL }}';
-          video.preload = 'auto';
-          
-          // When video is ready to play, transition to it
-          video.addEventListener('canplay', function() {
-            video.play().then(function() {
-              // Smooth transition from fallback to video
-              videoContainer.classList.add('active');
-              setTimeout(function() {
-                fallback.classList.remove('active');
-              }, 500); // Half second overlap for smooth transition
-            }).catch(function(error) {
-              console.log('Video autoplay failed, keeping fallback background');
-            });
-          });
-          
-          // Fallback if video fails to load
-          video.addEventListener('error', function() {
-            console.log('Video failed to load, keeping fallback background');
-          });
-        }
-      }, 150); // 150ms delay after LCP
+(function () {
+  var grid = document.querySelector('.home-mosaic');
+  var intro = document.querySelector('.mosaic-intro');
+
+  /* column count + gap by breakpoint (must match the .home-mosaic CSS) */
+  function nCols() {
+    var w = window.innerWidth;
+    return w <= 460 ? 1 : w <= 768 ? 2 : w <= 1024 ? 3 : 4;
+  }
+  function colGap() { return window.innerWidth <= 768 ? 16 : 24; } /* 1rem / 1.5rem */
+
+  /* Intro width: two columns wide, but never wider than the mosaic itself, so on
+     narrow screens (where only one column fits) it trims to one-column/full width.
+     Computed from the layout, not by measuring the flex columns, so it is correct
+     whenever it runs (no dependency on the debounced masonry rebuild). */
+  function sizeIntro() {
+    if (!grid || !intro) return;
+    var cs = getComputedStyle(grid);
+    var inner = grid.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    var n = nCols(), gap = colGap();
+    var colW = (inner - (n - 1) * gap) / n;
+    intro.style.width = Math.min(colW * 2 + gap, inner) + 'px';
+  }
+
+  /* --- balanced-column masonry: each tile goes into the shortest column so the
+         columns end at roughly the same height (no vertical stretching) --- */
+  if (grid) {
+    var items = Array.prototype.slice.call(grid.querySelectorAll('.mosaic-item'));
+    var ratio = items.map(function (it) {
+      var img = it.querySelector('img');
+      /* tokens are float-aware: the HTML minifier rewrites 1000 as 1e3 */
+      var m = (img && img.getAttribute('style') || '').match(/aspect-ratio:\s*([\d.eE+-]+)\s*\/\s*([\d.eE+-]+)/);
+      return m ? parseFloat(m[2]) / parseFloat(m[1]) : 1; /* height per unit width */
     });
-  });
-});
+    var cur = 0;
+    function build() {
+      var n = nCols();
+      grid.classList.add('is-masonry');
+      while (grid.firstChild) grid.removeChild(grid.firstChild);
+      var cols = [], h = [], bucket = [];
+      for (var c = 0; c < n; c++) {
+        var d = document.createElement('div');
+        d.className = 'mosaic-col';
+        grid.appendChild(d); cols.push(d); h.push(0); bucket.push([]);
+      }
+      // assign tallest-first (LPT) into the shortest column so columns end even...
+      var order = items.map(function (_, i) { return i; })
+                       .sort(function (a, b) { return ratio[b] - ratio[a]; });
+      order.forEach(function (i) {
+        var col = 0;
+        for (var c = 1; c < n; c++) if (h[c] < h[col]) col = c;
+        bucket[col].push(i); h[col] += ratio[i];
+      });
+      // ...but render each column in the original document order
+      bucket.forEach(function (idxs, c) {
+        idxs.sort(function (a, b) { return a - b; })
+            .forEach(function (i) { cols[c].appendChild(items[i]); });
+      });
+      cur = n;
+      sizeIntro();
+    }
+    build();
+    var rt;
+    window.addEventListener('resize', function () {
+      if (nCols() === cur) return;
+      clearTimeout(rt); rt = setTimeout(build, 150);
+    });
+  }
+
+  /* --- intro card: centred in the viewport, sized to span two mosaic columns,
+         parallaxed on scroll (moves slower than the mosaic). Reduced-motion:
+         static card near the top. --- */
+  if (intro) {
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      intro.style.position = 'absolute';
+      intro.style.top = 'clamp(1.5rem, 7vh, 5rem)';
+      intro.style.transform = 'translateX(-50%)';
+      sizeIntro();
+      window.addEventListener('resize', sizeIntro);
+    } else {
+      var SPEED = 0.5; /* 1 = moves with the mosaic, 0 = pinned; 0.5 = half speed */
+      var ticking = false;
+      intro.style.top = '0';
+      function place() {
+        /* centre in the mosaic region (below the header), not the whole viewport:
+           the mosaic's absolute top == the header's footprint height */
+        var headerH = grid ? grid.getBoundingClientRect().top + window.scrollY : 0;
+        var y = (window.innerHeight + headerH - intro.offsetHeight) / 2
+                - window.scrollY * (1 - SPEED);
+        intro.style.transform = 'translateX(-50%) translateY(' + y + 'px)';
+        ticking = false;
+      }
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(place); } }
+      sizeIntro();
+      place();
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', function () { sizeIntro(); place(); });
+    }
+  }
+})();
 </script>
 {{ end }}
-

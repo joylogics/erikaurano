@@ -1,12 +1,13 @@
 {{ define "main" }}
-  <div id="body-content">
-    <div class="production-design-stack">
+  <div id="body-content" class="section-page">
+    {{ partial "sub-nav.html" . }}
+    <div class="stills-grid pd-grid">
       {{ range .Pages.ByWeight }}
-        <a href="{{ .Permalink }}" class="production-design-item">
-          <div class="production-design-image-wrapper">
+        <a class="still-card" href="{{ .Permalink }}">
+          <div class="still-media">
             <img src="{{ .Params.hero_image }}" alt="{{ .Title }}" loading="lazy">
-            <div class="production-design-overlay">
-              <h2 class="production-design-title">{{ .Title }}</h2>
+            <div class="still-overlay">
+              <h3 class="still-title">{{ .Title }}</h3>
             </div>
           </div>
         </a>

@@ -1,5 +1,6 @@
 ---
 title: "Painted Lady"
+credit: "Short film by Emily Nguyen. Production design by Erika Urano."
 hero_image: "/production-design/painted-lady/hero.webp"
 weight: 4
 images:

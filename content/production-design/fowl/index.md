@@ -1,5 +1,6 @@
 ---
 title: "FOWL"
+credit: "Short film by Don Ahmad. Production design by Erika Urano."
 hero_image: "/production-design/fowl/hero.webp"
 weight: 2
 images:
