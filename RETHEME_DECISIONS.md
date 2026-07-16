@@ -82,11 +82,9 @@ human before PROD.
 
 ## Needs action before PROD
 
-1. **Contact form backend not wired.** `config.toml` has
-   `formspree = "https://formspree.io/f/REPLACE_WITH_FORM_ID"`. Someone must
-   create a free Formspree form pointed at `hello@erikaurano.com`, confirm the
-   address once, and paste the real form id. Until then the form renders but
-   submissions go nowhere. Email + LinkedIn on the contact page work now.
+1. ~~**Contact form backend not wired.**~~ RESOLVED: Formspree form
+   `https://formspree.io/f/mbdndkav` (pointed at `hello@erikaurano.com`) wired into
+   `config.toml` and shipped to PROD.
 2. **5 production-design credits now appear nowhere.** Erika's rule moved PD-only
    films off the Films page, but these 5 have **no production-design photos** in
    the repo, so they can't be shown as image tiles: `almost-twenty`, `cupbap`,

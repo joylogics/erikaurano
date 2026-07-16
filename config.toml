@@ -23,9 +23,8 @@ theme = "erikaurano-theme"
   # LinkedIn (replaces the template's Instagram icon in the header)
   linkedin = "https://www.linkedin.com/in/erikaurano/"
 
-  # Contact form endpoint. Create a Formspree form pointed at hello@erikaurano.com
-  # and replace the id below before publishing to PROD. Free tier, no cost.
-  formspree = "https://formspree.io/f/REPLACE_WITH_FORM_ID"
+  # Contact form endpoint (Formspree, pointed at hello@erikaurano.com).
+  formspree = "https://formspree.io/f/mbdndkav"
   contactEmail = "hello@erikaurano.com"
 
   # Primary navigation: two buckets (Video, Art) plus Contact.
