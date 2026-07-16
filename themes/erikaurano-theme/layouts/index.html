@@ -28,6 +28,26 @@
   var grid = document.querySelector('.home-mosaic');
   var intro = document.querySelector('.mosaic-intro');
 
+  /* column count + gap by breakpoint (must match the .home-mosaic CSS) */
+  function nCols() {
+    var w = window.innerWidth;
+    return w <= 460 ? 1 : w <= 768 ? 2 : w <= 1024 ? 3 : 4;
+  }
+  function colGap() { return window.innerWidth <= 768 ? 16 : 24; } /* 1rem / 1.5rem */
+
+  /* Intro width: two columns wide, but never wider than the mosaic itself, so on
+     narrow screens (where only one column fits) it trims to one-column/full width.
+     Computed from the layout, not by measuring the flex columns, so it is correct
+     whenever it runs (no dependency on the debounced masonry rebuild). */
+  function sizeIntro() {
+    if (!grid || !intro) return;
+    var cs = getComputedStyle(grid);
+    var inner = grid.clientWidth - (parseFloat(cs.paddingLeft) || 0) - (parseFloat(cs.paddingRight) || 0);
+    var n = nCols(), gap = colGap();
+    var colW = (inner - (n - 1) * gap) / n;
+    intro.style.width = Math.min(colW * 2 + gap, inner) + 'px';
+  }
+
   /* --- balanced-column masonry: each tile goes into the shortest column so the
          columns end at roughly the same height (no vertical stretching) --- */
   if (grid) {
@@ -39,10 +59,6 @@
       return m ? parseFloat(m[2]) / parseFloat(m[1]) : 1; /* height per unit width */
     });
     var cur = 0;
-    function nCols() {
-      var w = window.innerWidth;
-      return w <= 460 ? 1 : w <= 768 ? 2 : w <= 1024 ? 3 : 4;
-    }
     function build() {
       var n = nCols();
       grid.classList.add('is-masonry');
@@ -67,6 +83,7 @@
             .forEach(function (i) { cols[c].appendChild(items[i]); });
       });
       cur = n;
+      sizeIntro();
     }
     build();
     var rt;
@@ -80,18 +97,6 @@
          parallaxed on scroll (moves slower than the mosaic). Reduced-motion:
          static card near the top. --- */
   if (intro) {
-    /* width = the span of the first two columns (2 cols + the gap between them),
-       capped so it never exceeds the viewport on narrow screens */
-    function sizeIntro() {
-      if (!grid) return;
-      var colEls = grid.querySelectorAll('.mosaic-col');
-      if (!colEls.length) return;
-      var w = colEls.length >= 2
-        ? colEls[1].getBoundingClientRect().right - colEls[0].getBoundingClientRect().left
-        : colEls[0].getBoundingClientRect().width;
-      intro.style.width = Math.min(w, window.innerWidth * 0.92) + 'px';
-    }
-
     var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (reduce) {
       intro.style.position = 'absolute';
