@@ -104,7 +104,11 @@
       var ticking = false;
       intro.style.top = '0';
       function place() {
-        var y = (window.innerHeight - intro.offsetHeight) / 2 - window.scrollY * (1 - SPEED);
+        /* centre in the mosaic region (below the header), not the whole viewport:
+           the mosaic's absolute top == the header's footprint height */
+        var headerH = grid ? grid.getBoundingClientRect().top + window.scrollY : 0;
+        var y = (window.innerHeight + headerH - intro.offsetHeight) / 2
+                - window.scrollY * (1 - SPEED);
         intro.style.transform = 'translateX(-50%) translateY(' + y + 'px)';
         ticking = false;
       }
