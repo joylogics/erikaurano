@@ -23,6 +23,9 @@ theme = "erikaurano-theme"
   # LinkedIn (replaces the template's Instagram icon in the header)
   linkedin = "https://www.linkedin.com/in/erikaurano/"
 
+  # Etsy shop. Individual prints are linked with `etsy_url` on content/art/drawings/*.md.
+  etsyShop = "https://www.etsy.com/shop/ErikaUrano"
+
   # Contact form endpoint (Formspree, pointed at hello@erikaurano.com).
   formspree = "https://formspree.io/f/mbdndkav"
   contactEmail = "hello@erikaurano.com"

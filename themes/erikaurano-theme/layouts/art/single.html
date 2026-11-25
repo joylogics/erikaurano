@@ -21,6 +21,12 @@
         {{ end }}
       </div>
 
+      {{ with .Params.etsy_url }}
+      <div class="art-buy">
+        <a class="etsy-button" href="{{ . }}" target="_blank" rel="noopener noreferrer">Buy a print on Etsy &#8599;</a>
+      </div>
+      {{ end }}
+
       <div class="art-content">
         <div class="art-meta">
           {{ if .Params.year }}
