@@ -95,6 +95,12 @@ s3://enthusiate.com/erika/website/
    - Convert animations to web format
 3. Upload processed files to `static/art/<type>/<piece-name>/`
 
+### Etsy Prints
+
+Set `etsy_url` in a painting's front matter (`content/art/drawings/*.md`) to show a
+"Buy a print on Etsy" button on its page and a tile on `/art/shop/`. Remove it to
+delist. The shop-wide link is `params.etsyShop` in `config.toml`.
+
 ### Website Deployment
 
 The website only uses files from the `static/` directory. When deploying:

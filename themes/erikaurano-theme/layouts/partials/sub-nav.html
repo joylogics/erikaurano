@@ -1,6 +1,6 @@
 {{/* Left-aligned sub-navigation for the Video and Art buckets.
      Video group: films / production design / social media.
-     Art group:   paintings / animation. Current item underlined via .active. */}}
+     Art group:   paintings / animation / shop. Current item underlined via .active. */}}
 {{ $sec := .Section }}
 {{ $rel := .RelPermalink }}
 {{ $group := "" }}
@@ -17,8 +17,10 @@
     <a href="/social-video-editing/" class="sub-nav-item{{ if eq $sec "social-video-editing" }} active{{ end }}">social media</a>
   {{ else if eq $group "art" }}
     {{ $isAnim := hasPrefix $rel "/art/animation" }}
-    <a href="/art/" class="sub-nav-item{{ if not $isAnim }} active{{ end }}">paintings</a>
+    {{ $isShop := hasPrefix $rel "/art/shop" }}
+    <a href="/art/" class="sub-nav-item{{ if not (or $isAnim $isShop) }} active{{ end }}">paintings</a>
     <a href="/art/animation/" class="sub-nav-item{{ if $isAnim }} active{{ end }}">animation</a>
+    <a href="/art/shop/" class="sub-nav-item{{ if $isShop }} active{{ end }}">shop</a>
   {{ end }}
 </nav>
 {{ end }}

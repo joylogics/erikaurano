@@ -1,0 +1,26 @@
+{{ define "main" }}
+  {{/* Shop page (/art/shop/). Lists every painting that has an etsy_url; tiles go to the Etsy listing. */}}
+  <div id="body-content" class="section-page">
+    {{ partial "sub-nav.html" . }}
+    <div class="shop-intro">{{ .Content }}</div>
+    {{ $paintings := .Site.GetPage "/art/drawings" }}
+    <div class="stills-grid shop-grid">
+      {{ range $i, $p := where $paintings.Pages.ByWeight ".Params.etsy_url" "not in" (slice nil "") }}
+        <a class="still-card" href="{{ $p.Params.etsy_url }}" target="_blank" rel="noopener noreferrer" aria-label="Buy a print of {{ $p.Title }} on Etsy">
+          <div class="still-media">
+            <img src="{{ with $p.Params.thumbnail }}{{ . }}{{ else }}{{ $p.Params.image }}{{ end }}" alt="{{ $p.Title }}" loading="{{ cond (lt $i 4) "eager" "lazy" }}">
+            <div class="still-overlay">
+              <h3 class="still-title">{{ $p.Title }}</h3>
+              <span class="still-ext">Buy a print on Etsy &#8599;</span>
+            </div>
+          </div>
+        </a>
+      {{ end }}
+    </div>
+    {{ with .Site.Params.etsyShop }}
+    <div class="shop-more">
+      <a class="etsy-button" href="{{ . }}" target="_blank" rel="noopener noreferrer">Visit the full shop on Etsy &#8599;</a>
+    </div>
+    {{ end }}
+  </div>
+{{ end }}

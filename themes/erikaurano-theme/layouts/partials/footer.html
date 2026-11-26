@@ -2,6 +2,7 @@
   <div class="footer-content">
     <div class="copyright">
       <p>&copy; {{ now.Format "2006" }} {{ .Site.Title }}. All rights reserved.</p>
+      {{ with .Site.Params.etsyShop }}<p><a class="footer-link" href="{{ . }}" target="_blank" rel="noopener noreferrer">Shop prints on Etsy &#8599;</a></p>{{ end }}
       <p class="rights-notice">All artwork is original work by Erika Urano. Film credits and ownership vary by project.</p>
     </div>
   </div>
